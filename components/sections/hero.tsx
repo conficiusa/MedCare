@@ -1,0 +1,84 @@
+import { CalendarCheck2, CreditCard, Globe, LockKeyhole } from "lucide-react";
+import Image from "next/image";
+import { Button } from "../ui/button";
+
+const Hero = () => {
+  return (
+    <section
+      id="#"
+      role="banner"
+      className="grid grid-cols-[500px_1fr] min-h-[calc(100dvh_-_4rem)] py-14"
+    >
+      <div>
+        <div className="flex justify-center flex-col h-full gap-4">
+          <h2 className="text-3xl font-semibold">
+            Expert Care At Your <br /> FingerTips
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            Enjoy the convenience of virtual consultations from the comfort of
+            your home, eliminating the need for long wait times and travel
+            hassles.
+          </p>
+          <ul className="grid grid-cols-2 gap-4 mt-5">
+            {[
+              {
+                icon: (
+                  <Globe strokeWidth={1.5} className="w-4 h-4 font-light" />
+                ),
+                phrase: "Anywhere, Anytime Access",
+              },
+              {
+                icon: (
+                  <LockKeyhole
+                    strokeWidth={1.5}
+                    className="w-4 h-4 font-light"
+                  />
+                ),
+                phrase: "Secure and Private",
+              },
+              {
+                icon: (
+                  <CalendarCheck2
+                    strokeWidth={1.5}
+                    className="w-4 h-4 font-light"
+                  />
+                ),
+                phrase: "Efficient Scheduling",
+              },
+              {
+                icon: (
+                  <CreditCard
+                    strokeWidth={1.5}
+                    className="w-4 h-4 font-light"
+                  />
+                ),
+                phrase: "Transparent Pricing",
+              },
+            ].map((item) => (
+              <li key={item.phrase} className="flex gap-2 items-center text-sm">
+                {item.icon}
+                <span>{item.phrase}</span>
+              </li>
+            ))}
+          </ul>
+          <div>
+            <Button className="mt-8 w-1/2" size={"lg"}>
+              Get Started
+            </Button>
+          </div>
+        </div>
+      </div>
+      <div className="relative">
+        <Image
+          src="/HeroPic.svg"
+          alt="african american sick young patient resting bed discussing healthcare treatment"
+          fill
+          className="object-cover rounded-md"
+          priority
+        />
+      </div>
+    </section>
+  );
+};
+
+export default Hero;
