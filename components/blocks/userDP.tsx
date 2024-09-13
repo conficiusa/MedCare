@@ -52,7 +52,7 @@ export default async function UserDp() {
         <form
           action={async () => {
             "use server";
-            await signOut();
+            await signOut({ redirectTo: "/" });
           }}
         >
           <button>logout</button>

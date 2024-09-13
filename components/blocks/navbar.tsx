@@ -28,21 +28,26 @@ const Navbar = async () => {
               </sup>
             </Link>
           </li>
-          <li className="flex justify-center items-center gap-2">
-            <MapPin className="w-3.5 h-3.5 font-normal" />
-            Nothern Region,Tamale
-          </li>
+
           {!session ? (
             <>
-              <SignUpPopover>
-                <Button variant={"ghost"}>Sign Up</Button>
-              </SignUpPopover>
+              <UserDp />
+
+              <Button asChild variant={"ghost"}>
+                <Link href="/sign-in"> Sign In</Link>
+              </Button>
               <Button asChild>
-                <Link href="/signin"> Sign In</Link>
+                <Link href="/sign-up"> Sign Up</Link>
               </Button>
             </>
           ) : (
-            <UserDp />
+            <>
+              <li className="flex justify-center items-center gap-2">
+                <MapPin className="w-3.5 h-3.5 font-normal" />
+                Nothern Region,Tamale
+              </li>
+              <UserDp />
+            </>
           )}
         </ul>
       </nav>

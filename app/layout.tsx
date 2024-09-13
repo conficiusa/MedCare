@@ -21,7 +21,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn("antialiased w-full", inter.className)}>
         <Navbar />
-        <main role="main">{children}</main>
+        <main role="main">
+          {children}
+          <Toaster />
+        </main>
         <Footer />
       </body>
     </html>
