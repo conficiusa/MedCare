@@ -15,7 +15,7 @@ const AccountTypeForm = () => {
   useEffect(() => {
     router.prefetch("/onboarding/patient");
     router.prefetch("/onboarding/doctor");
-  }, []);
+  }, [router]);
 
   const handleContinue = () => {
     startTransition(() => {

@@ -1,4 +1,3 @@
-
 interface Faq {
   question: string;
   answer: string;
@@ -30,8 +29,8 @@ const Faqs: Faq[] = [
 const FaqAccordion = () => {
   return (
     <div className="max-w-2xl grid divide-y-[1px]">
-      {Faqs.map((item:Faq) => (
-        <div className="flex flex-col gap-3 py-4">
+      {Faqs.map((item: Faq, idx: number) => (
+        <div className="flex flex-col gap-3 py-4" key={idx}>
           <h5 className="font-medium">{item.question}</h5>
           <p className="text-muted-foreground text-sm">{item.answer}</p>
         </div>

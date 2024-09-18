@@ -16,7 +16,7 @@ const AboutDoctor = () => {
         . With a focus on continuous learning, Sitsofe pursued board
         certification in Internal Medicine, solidifying her expertise in
         managing complex medical cases. Her dedication to patient well-being is
-        evident through her extensive professional experience at St. Luke's
+        evident through her extensive professional experience at St. Luke&apos;s
         Medical Center, where she has served as a lead physician for over a
         decade. Sitsofe is known for her empathetic approach, collaborating with
         patients to develop personalized treatment plans that address both

@@ -48,7 +48,7 @@ const SignInform = () => {
         position: "top-right",
       });
     }
-  }, [state?.message]);
+  }, [state, state?.message]);
   useEffect(() => {
     if (state?.errors && Object.keys(state?.errors).length > 0) {
       Object.keys(state.errors).forEach((field) => {
@@ -62,7 +62,7 @@ const SignInform = () => {
         }
       });
     }
-  }, [state?.errors, form]);
+  }, [state, state?.errors, form]);
   return (
     <div>
       <Form {...form}>
@@ -77,7 +77,7 @@ const SignInform = () => {
         </form>
       </Form>
       <div className="mt-4 text-center text-sm leading-8">
-        Don't have an account?{" "}
+        Don&apos;t have an account?{" "}
         <Link href="/signup" className="underline">
           Sign up
         </Link>

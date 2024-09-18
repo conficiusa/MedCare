@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 const DocCardInPerson = ({ className }: { className?: string }) => {
   return (
@@ -15,10 +16,12 @@ const DocCardInPerson = ({ className }: { className?: string }) => {
       >
         <div className="grid grid-cols-[auto_1fr] gap-4 w-full pb-4 ">
           <div className="w-16 h-16 rounded-full flex items-center justify-center border-[1px] bg-gray-100">
-            <img
+            <Image
               src="/sampleDoc.png"
               alt="A medical doctor"
               className="object-cover "
+              width={64}
+              height={64}
             />
           </div>
           <div className="flex flex-col gap-4">
