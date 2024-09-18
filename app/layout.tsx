@@ -6,6 +6,7 @@ import { inter } from "@/lib/fonts";
 import Navbar from "@/components/blocks/navbar";
 import Footer from "@/components/blocks/footer";
 import { Toaster } from "@/components/ui/sonner";
+import AuthProvider from "@/components/wrappers/sessionProvider";
 
 export const metadata: Metadata = {
   title: "Medcare Hub",
@@ -19,14 +20,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn("antialiased w-full", inter.className)}>
-        <Navbar />
-        <main role="main">
-          {children}
-          <Toaster />
-        </main>
-        <Footer />
-      </body>
+      <AuthProvider>
+        <body className={cn("antialiased w-full", inter.className)}>
+          <Navbar />
+          <main role="main">
+            {children}
+            <Toaster />
+          </main>
+          <Footer />
+        </body>
+      </AuthProvider>
     </html>
   );
 }

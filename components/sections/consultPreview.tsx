@@ -16,35 +16,37 @@ const ConsultationPreview = () => {
           Find a healthcare professional based on the type of service, symptom
           or specialty
         </p>
-        <SearchInput label="Search" containerClassName="w-1/2" />
+        <SearchInput
+          label="Search"
+          containerClassName="w-full md:w-3/5"
+          placeholder="example: symptom - flu, cold; specialty - dermatology, mental health, primary care"
+        />
         <Tabs defaultValue="online" className="mt-4">
-          <TabsList>
-            <TabsTrigger
-              value="online"
-              className="data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:border-b-2 border-primary rounded-none transition-none"
-            >
-              Online Consultation
-            </TabsTrigger>
-            <TabsTrigger
-              value="in-person"
-              className="data-[state=active]:bg-transparent focus-visible:ring-0 data-[state=active]:text-primary data-[state=active]:border-b-2 border-primary rounded-none transition-none"
-            >
-              In-Person Visit
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="online" className="max-w-6xl">
+          <div className="flex justify-between">
+            <TabsList>
+              <TabsTrigger
+                value="online"
+                className=" data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:border-b-2 border-primary rounded-none transition-none"
+              >
+                Online Consultation
+              </TabsTrigger>
+              <TabsTrigger
+                value="in-person"
+                className="data-[state=active]:bg-transparent focus-visible:ring-0 data-[state=active]:text-primary data-[state=active]:border-b-2 border-primary rounded-none transition-none"
+              >
+                In-Person Visit
+              </TabsTrigger>
+            </TabsList>
             <Link
               href="#"
-              className="text-sm flex items-center gap-1 justify-end"
+              className="text-sm items-center gap-1 font-medium hidden lg:flex"
             >
               View all <ArrowRight strokeWidth={1.8} className="w-4 h-4" />
             </Link>
-            <div className="grid overflow-x-hidden grid-flow-col auto-cols-[18rem] gap-4  [mask-image:linear-gradient(to_right,white_80%,transparent)] mt-6">
-              <DocCardOnline />
-              <DocCardOnline />
-              <DocCardOnline />
-              <DocCardOnline />
-              <DocCardOnline />
+          </div>
+
+          <TabsContent value="online" className="">
+            <div className="grid overflow-x-hidden sm:grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-10 mt-6">
               <DocCardOnline />
               <DocCardOnline />
               <DocCardOnline />
@@ -53,13 +55,7 @@ const ConsultationPreview = () => {
             </div>
           </TabsContent>
           <TabsContent value="in-person" className="max-w-6xl">
-            <Link
-              href="#"
-              className="text-sm flex items-center gap-1 justify-end"
-            >
-              View all <ArrowRight strokeWidth={1.8} className="w-4 h-4" />
-            </Link>
-            <div className="grid overflow-x-hidden grid-flow-col auto-cols-[18rem] gap-4 mt-6">
+            <div className="grid overflow-x-hidden sm:grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-10 mt-6">
               <DocCardInPerson />
               <DocCardInPerson />
               <DocCardInPerson />
@@ -69,6 +65,12 @@ const ConsultationPreview = () => {
               <DocCardInPerson />
             </div>
           </TabsContent>
+          <Link
+            href="#"
+            className="text-sm hidden max-lg:flex items-center gap-1 justify-end mt-4 font-semibold"
+          >
+            View all <ArrowRight strokeWidth={1.8} className="w-4 h-4" />
+          </Link>
         </Tabs>
       </div>
     </section>

@@ -15,7 +15,7 @@ const SignIn = () => {
         <div>
           <SignInform />
           <div className="flex items-center my-2">
-            <div className="flex-grow border-t border-muted"></div>
+          <div className="flex-grow border-t border-muted"></div>
             <span className="mx-2 text-muted-foreground text-sm">or</span>
             <div className="flex-grow border-t border-muted"></div>
           </div>

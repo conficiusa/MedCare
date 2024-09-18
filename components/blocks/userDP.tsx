@@ -55,7 +55,9 @@ export default async function UserDp() {
             await signOut({ redirectTo: "/" });
           }}
         >
-          <button>logout</button>
+          <button className="relative w-full flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent">
+            logout
+          </button>
         </form>
       </DropdownMenuContent>
     </DropdownMenu>

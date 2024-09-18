@@ -42,7 +42,7 @@ const SidebarLink: SidebarLink[] = [
 
 const Sidebar = ({ children }: SidebarProps) => {
   return (
-    <Sheet>
+    <Sheet >
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent side="left">
         <SheetHeader>

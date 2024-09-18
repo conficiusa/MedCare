@@ -19,12 +19,12 @@ const SearchInput = ({
         {label}
       </label>
       <Input
-        className="pr-14"
-        type="text"
+        className="pr-16"
+        type="search"
         id="search"
         placeholder={placeholder}
       />
-      <Button size="icon" className="absolute right-0 top-0">
+      <Button size="icon" className="absolute right-0 top-0 w-14">
         <Search />
       </Button>
     </div>

@@ -1,30 +1,30 @@
-import { Document } from "mongoose";
+import { Document, ObjectId } from "mongoose";
+import React from "react";
 
-export type ServiceCard = {
-  title: string;
-  icon: React.ReactNode;
-  description: string;
-  footer: string;
-}[];
-
-export type Faq = {
-  question: string;
-  answer: string;
-}[];
-
-//mongoose types definitions
+//////////Mongoose definitions///////////
+//////////Mongoose definitions///////////
+//////////Mongoose definitions///////////
+//////////Mongoose definitions///////////☻
+// User interface, reflecting initial sign-up and onboarding
 export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
+  image?: string;
   confirmPassword: string | undefined;
-  role?: "doctor" | "patient";
+  role?: "doctor" | "patient" | null;
   languages?: string[];
-  Country?: string;
-  Region?: string;
-  City?: string;
+  country?: string;
+  region?: string;
+  city?: string;
+  dob?: Date;
+  street?: string;
+  digitalAddress?: string;
+  phone?: string;
+  gender?: string;
 }
 
+// Doctor profile interface, extending the user
 export interface IDoctorProfile extends IUser {
   rate?: number;
   description?: string;
@@ -32,7 +32,22 @@ export interface IDoctorProfile extends IUser {
   specializations?: string[];
 }
 
+// Patient profile interface, extending the user
 export interface IPatientProfile extends IUser {
-  age?: number;
-  conditions?: string;
+  conditions?: string[];
+  medicalHistory?: string;
+  userId?: ObjectId | string;
+}
+
+////////////Application definitions///////////
+////////////Application definitions///////////
+////////////Application definitions///////////
+////////////Application definitions///////////
+////////////Application definitions///////////
+
+export interface ServiceCard {
+  title: string;
+  icon: React.ReactNode;
+  description: string;
+  footer: string;
 }

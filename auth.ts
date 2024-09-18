@@ -13,12 +13,14 @@ import { JWT } from "next-auth/jwt"; // Import the JWT type
 // Extending the default User type to include 'role'
 declare module "next-auth" {
   interface User {
-    role: string | undefined;
+    role?: string | undefined;
+    id?: string | undefined;
   }
 
   interface Session {
     user: {
-      role: string | undefined;
+      role?: string | undefined;
+      id?: string | undefined;
     } & DefaultSession["user"];
   }
 }
@@ -26,10 +28,11 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT {
     role: string | undefined;
+    id?: string | undefined;
   }
 }
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   ...authConfig,
   providers: [
     Google,
@@ -47,8 +50,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const passwordsMatch = await bcrypt.compare(password, user.password);
           if (passwordsMatch) {
             const { password, ...userWithoutPassword } = user.toObject();
-            return userWithoutPassword;
+            return { ...userWithoutPassword, id: user._id.toString() };
           }
+          return user;
         }
 
         return null;
@@ -56,22 +60,47 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      // If it's the first time JWT is being created
-      if (user?.role) {
-        token.role = user?.role;
+    async jwt({ token, user, trigger, session }) {
+      await connectToDatabase();
+      const existingOauthUser = await User.findOne({ email: user?.email });
+      if (user) {
+        token.role = user?.role || "";
+        token.id = user?.id || "";
+      }
+      if (existingOauthUser) {
+        token.id = existingOauthUser._id.toString();
+        token.role = existingOauthUser.role || "";
+      }
+      if (trigger === "update" && session) {
+        console.log("incoming session", session);
+        token = {
+          ...token,
+          role: session?.user?.role,
+          user: { ...session?.user },
+        };
+        console.log("transformed token", token);
+        return token;
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token, trigger }) {
       // Add role to the session object
-      if (token?.role) {
+      if (token) {
+        session.user.id = token?.id || "";
         session.user.role = token?.role;
+      }
+      if (trigger === "update") {
+        session.user.role = token?.role;
+        session.user.id = token?.id || "";
+        console.log("transformed session", session);
+        return session;
       }
       return session;
     },
   },
-  adapter: MongoDBAdapter(client),
+  adapter: MongoDBAdapter(client, {
+    databaseName: "Medcare",
+  }),
   session: {
     strategy: "jwt",
   },

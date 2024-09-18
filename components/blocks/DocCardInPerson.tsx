@@ -9,7 +9,7 @@ const DocCardInPerson = ({ className }: { className?: string }) => {
     <div>
       <div
         className={cn(
-          "max-w-[18rem] p-4 rounded-md bg-white divide-y-[1px]",
+          "min-w-full md:min-w-[18rem] max-w-full p-4 rounded-md bg-white divide-y-[1px]  ",
           className
         )}
       >
@@ -18,7 +18,7 @@ const DocCardInPerson = ({ className }: { className?: string }) => {
             <img
               src="/sampleDoc.png"
               alt="A medical doctor"
-              className="object-cover"
+              className="object-cover "
             />
           </div>
           <div className="flex flex-col gap-4">
@@ -41,7 +41,7 @@ const DocCardInPerson = ({ className }: { className?: string }) => {
         </div>
         <div className="pt-3">
           <p className="text-xs pb-2">Today:</p>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 flex-wrap">
             <Button className="" variant={"secondary"} size={"sm"}>
               9:00 am
             </Button>

@@ -1,5 +1,5 @@
 "use server";
-import { signIn } from "@/auth";
+import { auth, signIn, } from "@/auth";
 import { AuthError } from "next-auth";
 import { SignInSchema } from "@/lib/schema";
 import connectToDatabase from "@/lib/mongoose";
@@ -19,7 +19,7 @@ export async function authenticate(
   formData: FormData
 ): Promise<State> {
   try {
-    connectToDatabase();
+    await connectToDatabase();
     const data = Object.fromEntries(formData);
     const parsed = SignInSchema.safeParse(data);
 
@@ -63,17 +63,8 @@ export async function authenticate(
   }
 }
 
-export async function googleLogin() {
-  try {
-    await signIn("google", { callbackUrl: "/" });
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case "OAuthAccountNotLinked":
-          return "This email is linked to another account.";
-        default:
-          return "An unexpected error occurred.";
-      }
-    }
-  }
-}
+// export async function UpdatePatientSession() {
+//   const session = await auth();
+
+//   await update({ ...user, name: "Serverserver-man" });
+// }

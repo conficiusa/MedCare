@@ -3,19 +3,29 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 const DocCardOnline = ({ className }: { className?: string }) => {
   return (
-    <div className={cn("max-w-[18rem] p-4 rounded-md bg-white", className)}>
+    <div
+      className={cn(
+        " min-w-full md:min-w-[15rem] max-w-full p-4 rounded-md bg-white",
+        className
+      )}
+    >
       <div className="grid grid-cols-[auto_1fr] gap-4 w-full ">
-        <div className="w-16 h-16 rounded-full flex items-center justify-center border-[1px] bg-gray-100">
-          <img
-            src="/sampleDoc.png"
-            alt="A medical doctor"
-            className="object-cover"
-          />
+        <div className="">
+          <div className="w-16 h-16 rounded-full  border-[1px]">
+            <Image
+              src="/sampleDoc.png"
+              width={100}
+              height={100}
+              alt="A medical doctor"
+              className="object-cover"
+            />
+          </div>
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 max-sm:px-10">
           <p className="flex items-center gap-1">
             <CircleDot className="w-2 h-2 text-green-500 animate-pulse" />
             <span className="text-[10px]">Online now</span>

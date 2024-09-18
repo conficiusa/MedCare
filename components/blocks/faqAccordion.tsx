@@ -1,6 +1,9 @@
-import { Faq } from "@/lib/definitions";
 
-const Faqs: Faq = [
+interface Faq {
+  question: string;
+  answer: string;
+}
+const Faqs: Faq[] = [
   {
     question:
       "What types of medical issues can be addressed through MedCare Hub?",
@@ -27,9 +30,9 @@ const Faqs: Faq = [
 const FaqAccordion = () => {
   return (
     <div className="max-w-2xl grid divide-y-[1px]">
-      {Faqs.map((item) => (
+      {Faqs.map((item:Faq) => (
         <div className="flex flex-col gap-3 py-4">
-          <h5 className="font-semibold">{item.question}</h5>
+          <h5 className="font-medium">{item.question}</h5>
           <p className="text-muted-foreground text-sm">{item.answer}</p>
         </div>
       ))}

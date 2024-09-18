@@ -7,10 +7,10 @@ const Hero = () => {
     <section
       id="#"
       role="banner"
-      className="grid grid-cols-[500px_1fr] min-h-[calc(100dvh_-_4rem)] py-14"
+      className="grid lg:grid-cols-[500px_1fr] min-h-[calc(100dvh_-_4rem)] lg:py-14 max-lg:pb-14 max-lg:grid-rows-[0.6fr_1fr]"
     >
-      <div>
-        <div className="flex justify-center flex-col h-full gap-4">
+      <div className="py-8">
+        <div className="flex justify-center flex-col h-full gap-4 max-lg:items-center max-lg:text-center">
           <h2 className="text-3xl font-semibold">
             Expert Care At Your <br /> FingerTips
           </h2>
@@ -61,7 +61,7 @@ const Hero = () => {
               </li>
             ))}
           </ul>
-          <div>
+          <div className="w-full">
             <Button className="mt-8 w-1/2" size={"lg"}>
               Get Started
             </Button>
@@ -73,6 +73,7 @@ const Hero = () => {
           src="/HeroPic.svg"
           alt="african american sick young patient resting bed discussing healthcare treatment"
           fill
+          sizes="100%"
           className="object-cover rounded-md"
           priority
         />
