@@ -162,6 +162,10 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   }),
   session: {
     strategy: "jwt",
+    maxAge: 24 * 60 * 60,
+  },
+  jwt: {
+    maxAge: 24 * 60 * 60,
   },
   secret: process.env.AUTH_SECRET,
 });
