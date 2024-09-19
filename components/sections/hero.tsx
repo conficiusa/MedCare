@@ -75,6 +75,8 @@ const Hero = () => {
           fill
           sizes="100%"
           className="object-cover lg:object-cover rounded-md"
+          placeholder="blur"
+          blurDataURL="LAH2iu008|00~D4oIT.6bXOA_38{"
           priority
         />
       </div>

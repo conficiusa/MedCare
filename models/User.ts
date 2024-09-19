@@ -109,6 +109,9 @@ UserSchema.pre<IUser>("save", function (next) {
       .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
       .join(" ");
   }
+  if (this.isModified("region")) {
+    this.region = this.region + " Region";
+  }
   next();
 });
 

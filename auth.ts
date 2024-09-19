@@ -15,12 +15,28 @@ declare module "next-auth" {
   interface User {
     role?: string | undefined;
     id?: string | undefined;
+    region?: string | undefined;
+    city?: string | undefined;
+    street?: string | undefined;
+    digitalAddress?: string | undefined;
+    phone?: string | undefined;
+    languages?: string[] | undefined;
+    dob?: Date | undefined;
+    gender?: string | undefined;
   }
 
   interface Session {
     user: {
       role?: string | undefined;
       id?: string | undefined;
+      region?: string | undefined;
+      city?: string | undefined;
+      street?: string | undefined;
+      digitalAddress?: string | undefined;
+      phone?: string | undefined;
+      languages?: string[] | undefined;
+      dob?: Date | undefined;
+      gender?: string | undefined;
     } & DefaultSession["user"];
   }
 }
@@ -29,6 +45,14 @@ declare module "next-auth/jwt" {
   interface JWT {
     role: string | undefined;
     id?: string | undefined;
+    region?: string | undefined;
+    city?: string | undefined;
+    street?: string | undefined;
+    digitalAddress?: string | undefined;
+    phone?: string | undefined;
+    languages?: string[] | undefined;
+    dob?: Date;
+    gender?: string | undefined;
   }
 }
 
@@ -70,12 +94,30 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       if (existingOauthUser) {
         token.id = existingOauthUser._id.toString();
         token.role = existingOauthUser.role || "";
+        token.region = existingOauthUser.region || "";
+        token.city = existingOauthUser.city || "";
+        token.street = existingOauthUser.street || "";
+        token.digitalAddress = existingOauthUser.digitalAddress || "";
+        token.phone = existingOauthUser.phone || "";
+        token.languages = existingOauthUser.languages || [];
+        token.dob = existingOauthUser.dob || "";
+        token.gender = existingOauthUser.gender || "";
       }
       if (trigger === "update" && session) {
+        const updatedUser = await User.findOne({ email: session?.user.email });
         console.log("incoming session", session);
+        console.log("updatedUser", updatedUser);
         token = {
           ...token,
           role: session?.user?.role,
+          region: updatedUser?.region,
+          city: updatedUser?.city,
+          street: updatedUser?.street,
+          digitalAddress: updatedUser?.digitalAddress,
+          phone: updatedUser?.phone,
+          languages: updatedUser?.languages,
+          gender: updatedUser?.gender,
+          dob: updatedUser?.dob,
           user: { ...session?.user },
         };
         console.log("transformed token", token);
@@ -88,10 +130,27 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       if (token) {
         session.user.id = token?.id || "";
         session.user.role = token?.role;
+        session.user.region = token?.region;
+        session.user.city = token?.city;
+        session.user.street = token?.street;
+        session.user.digitalAddress = token?.digitalAddress;
+        session.user.phone = token?.phone;
+        session.user.languages = token?.languages;
+        session.user.dob = token?.dob;
+        session.user.gender = token?.gender;
+        console.log("transformed session", session);
       }
       if (trigger === "update") {
         session.user.role = token?.role;
         session.user.id = token?.id || "";
+        session.user.region = token?.region;
+        session.user.city = token?.city;
+        session.user.street = token?.street;
+        session.user.digitalAddress = token?.digitalAddress;
+        session.user.phone = token?.phone;
+        session.user.languages = token?.languages;
+        session.user.dob = token?.dob;
+        session.user.gender = token?.gender;
         console.log("transformed session", session);
         return session;
       }
