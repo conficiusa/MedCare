@@ -12,7 +12,7 @@ export const authConfig: NextAuthConfig = {
     async authorized({ auth, request }) {
       const token = await getToken({
         req: request,
-        secret: process.env.AUTH_SECRET,
+        secret: process.env.AUTH_SECRET as string,
         secureCookie: process.env.NODE_ENV === "production",
         salt:
           process.env.NODE_ENV === "production"
