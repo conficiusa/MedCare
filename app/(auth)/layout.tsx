@@ -7,7 +7,7 @@ export default function AuthLayout({
 }>) {
   return (
     <section className="container flex items-center justify-center mb-20">
-      <div className="w-full bg-gradient-to-t from-teal-50 lg:grid lg:min-h-[85dvh] lg:grid-cols-2 mt-10 max-w-6xl mx-auto">
+      <div className="w-full bg-gradient-to-t lg:from-teal-50 lg:grid lg:min-h-[85dvh] lg:grid-cols-2 mt-10 max-w-6xl mx-auto">
         <div className="hidden bg-muted lg:block rounded-l-md">
           <div className="relative w-full h-full">
             <Image

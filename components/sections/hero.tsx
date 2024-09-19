@@ -19,7 +19,7 @@ const Hero = () => {
             your home, eliminating the need for long wait times and travel
             hassles.
           </p>
-          <ul className="grid grid-cols-2 gap-4 mt-5">
+          <ul className="grid sm:grid-cols-2 sm:gap-4 gap-2 mt-5">
             {[
               {
                 icon: (
@@ -68,13 +68,13 @@ const Hero = () => {
           </div>
         </div>
       </div>
-      <div className="relative">
+      <div className="relative flex items-center">
         <Image
           src="/HeroPic.svg"
           alt="african american sick young patient resting bed discussing healthcare treatment"
           fill
           sizes="100%"
-          className="object-cover rounded-md"
+          className="object-cover lg:object-cover rounded-md"
           priority
         />
       </div>

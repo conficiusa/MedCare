@@ -6,13 +6,13 @@ import Link from "next/link";
 const SignUp = ({ searchParams }: { searchParams: { role?: string } }) => {
   const role = searchParams.role;
   return (
-    <div className="flex pt-36 items-center flex-col px-20">
-      <div className="flex flex-col gap-10 flex-1">
+    <div className="flex lg:pt-36 items-center flex-col lg:px-20 max-lg:h-[85dvh] justify-center max-lg:gap-10">
+      <div className="flex flex-col gap-10 lg:flex-1 max-lg:text-center">
         <div>
           <h3 className="text-2xl font-semibold"> Welcome to MedCare Hub</h3>
           <p className="text-muted-foreground text-sm">
             You are just a few steps away from getting the best health care from
-            the comfor of your home
+            the comfort of your home
           </p>
         </div>
         <div className="flex flex-col gap-4">
@@ -35,7 +35,7 @@ const SignUp = ({ searchParams }: { searchParams: { role?: string } }) => {
           </Link>
         </div>
       </div>
-      <div className="pb-6 w-full">
+      <div className="w-full max-lg:text-center">
         <p className="text-sm text-muted-foreground">
           By Signing up you agree to our <br />{" "}
           <Link href={"#"} className="text-black font-medium underline">

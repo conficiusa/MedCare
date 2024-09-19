@@ -7,8 +7,8 @@ import DocCardInPerson from "@/components/blocks/DocCardInPerson";
 
 const ConsultationPreview = () => {
   return (
-    <section className="bg-muted min-h-[500px] my-16 rounded-sm">
-      <div className="p-10">
+    <section className="sm:bg-muted min-h-[500px] my-16 rounded-sm ">
+      <div className="sm:p-10">
         <h4 className="font-semibold mb-6">
           Speak to a Healthcare Professional Today
         </h4>
@@ -23,16 +23,16 @@ const ConsultationPreview = () => {
         />
         <Tabs defaultValue="online" className="mt-4">
           <div className="flex justify-between">
-            <TabsList>
+            <TabsList className="bg-transparent">
               <TabsTrigger
                 value="online"
-                className=" data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:border-b-2 border-primary rounded-none transition-none"
+                className="data-[state=active]:bg-transparent focus-visible:ring-0 data-[state=active]:text-primary data-[state=active]:border-b-2 border-primary rounded-none transition-none data-[state=active]:shadow-none"
               >
                 Online Consultation
               </TabsTrigger>
               <TabsTrigger
                 value="in-person"
-                className="data-[state=active]:bg-transparent focus-visible:ring-0 data-[state=active]:text-primary data-[state=active]:border-b-2 border-primary rounded-none transition-none"
+                className="data-[state=active]:bg-transparent focus-visible:ring-0 data-[state=active]:text-primary data-[state=active]:border-b-2 border-primary rounded-none transition-none data-[state=active]:shadow-none"
               >
                 In-Person Visit
               </TabsTrigger>
@@ -46,7 +46,7 @@ const ConsultationPreview = () => {
           </div>
 
           <TabsContent value="online" className="">
-            <div className="grid overflow-x-hidden sm:grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-10 mt-6">
+            <div className="grid overflow-x-hidden sm:grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-10 mt-6 py-2">
               <DocCardOnline />
               <DocCardOnline />
               <DocCardOnline />

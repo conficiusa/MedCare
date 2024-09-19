@@ -9,7 +9,7 @@ const DocCardOnline = ({ className }: { className?: string }) => {
   return (
     <div
       className={cn(
-        " min-w-full md:min-w-[15rem] max-w-full p-4 rounded-md bg-white",
+        " min-w-full md:min-w-[15rem] max-w-full p-4 rounded-md bg-white max-sm:shadow-sm",
         className
       )}
     >
