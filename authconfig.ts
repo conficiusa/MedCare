@@ -13,7 +13,7 @@ export const authConfig: NextAuthConfig = {
       const token = await getToken({
         req: request,
         secret: process.env.AUTH_SECRET as string,
-        salt: "authjs.session-token",
+        salt: "_Secure-authjs.session-token",
       });
 
       const isLoggedIn = !!auth?.user;
