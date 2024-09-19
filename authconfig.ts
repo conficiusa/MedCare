@@ -12,8 +12,12 @@ export const authConfig: NextAuthConfig = {
     async authorized({ auth, request }) {
       const token = await getToken({
         req: request,
-        secret: process.env.AUTH_SECRET as string,
-        salt: "_Secure-authjs.session-token",
+        secret: process.env.AUTH_SECRET,
+        secureCookie: process.env.NODE_ENV === "production",
+        salt:
+          process.env.NODE_ENV === "production"
+            ? "__Secure-authjs.session-token"
+            : "authjs.session-token",
       });
 
       const isLoggedIn = !!auth?.user;
