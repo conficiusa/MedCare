@@ -9,11 +9,21 @@ import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useCreateAccount } from "@/lib/formSubmissions";
+import { useTransition } from "react";
+import { authenticate, State } from "@/lib/actions";
+import { useFormState } from "react-dom";
 
+const initialState: State = {
+  message: "",
+  errors: {},
+};
 const SignUpform = () => {
+  const [isPending, startTransition] = useTransition();
+  const [state, formAction] = useFormState(authenticate, initialState);
+
   //form initialization
   const form = useForm<z.output<typeof SignUpSchema>>({
-    // resolver: zodResolver(SignUpSchema),
+    resolver: zodResolver(SignUpSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -22,6 +32,21 @@ const SignUpform = () => {
     },
   });
 
+  const handleSubmit = (data: z.output<typeof SignUpSchema>) => {
+    startTransition(async () => {
+      try {
+        const { email, password } = data;
+        const formData = new FormData();
+        formData.append("email", email);
+        formData.append("password", password);
+        await onCreateAccount(data);
+        formAction(formData);
+      } catch (error) {
+        console.error(error)
+      }
+    });
+  };
+
   //form submission
   const { onCreateAccount } = useCreateAccount();
   return (
@@ -29,7 +54,7 @@ const SignUpform = () => {
       <Form {...form}>
         <form
           className="grid gap-2"
-          onSubmit={form.handleSubmit(onCreateAccount)}
+          onSubmit={form.handleSubmit(handleSubmit)}
         >
           <FormBuilder
             name="name"
@@ -52,7 +77,7 @@ const SignUpform = () => {
           >
             <Input placeholder="confirm password" type="password" />
           </FormBuilder>
-          <Button className="mt-6" type="submit">
+          <Button className="mt-6" type="submit" disabled={isPending}>
             Create Account
           </Button>
         </form>

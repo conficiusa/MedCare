@@ -9,6 +9,8 @@ import { z } from "zod";
 import User from "@/models/User";
 import connectToDatabase from "@/lib/mongoose";
 import { JWT } from "next-auth/jwt"; // Import the JWT type
+import Resend from "next-auth/providers/resend"
+
 
 // Extending the default User type to include 'role'
 declare module "next-auth" {
@@ -60,6 +62,9 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   ...authConfig,
   providers: [
     Google,
+    Resend({
+      from: "no-reply@medcare.onresend.com",
+    }),
     Credentials({
       async authorize(credentials) {
         await connectToDatabase();

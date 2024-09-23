@@ -19,7 +19,9 @@ export async function authenticate(
   formData: FormData
 ): Promise<State> {
   try {
-    await connectToDatabase();
+    await connectToDatabase().catch((error:any) => {
+      return {message:"Unable to Connect to server"}
+    });
     const data = Object.fromEntries(formData);
     const parsed = SignInSchema.safeParse(data);
 

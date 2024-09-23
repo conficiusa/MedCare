@@ -5,14 +5,15 @@ import { PatientOnboardingSchema, SignUpSchema } from "./schema";
 import { useRouter } from "next/navigation";
 import { getSession, UpdateSession } from "next-auth/react";
 import { Session } from "next-auth";
+import { toast } from "sonner";
 
 export const useCreateAccount = () => {
   const onCreateAccount = async (data: z.output<typeof SignUpSchema>) => {
     try {
-      const response = await axios.post("/api/auth/signup", data);
-      console.log(response);
-    } catch (error) {
-      console.log(error);
+      await axios.post("/api/auth/signup", data);
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+      console.log(error)
     }
   };
   return { onCreateAccount };

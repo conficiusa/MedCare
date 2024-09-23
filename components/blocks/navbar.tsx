@@ -2,7 +2,7 @@ import { MapPin, Menu } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Sidebar from "@/components/blocks/sidebar";
-import { auth } from "@/auth";
+import { auth, signIn } from "@/auth";
 import UserDp from "@/components/blocks/userDP";
 import { cn } from "@/lib/utils";
 
@@ -36,6 +36,16 @@ const Navbar = async () => {
 
           {!session ? (
             <>
+              <form
+                action={async () => {
+                  "use server";
+                  await signIn("resend", {
+                    email: "addawebadua@gmail.com",
+                  });
+                }}
+              >
+                <Button variant={"ghost"}>resend</Button>
+              </form>
               <Button asChild variant={"ghost"}>
                 <Link href="/sign-in"> Sign In</Link>
               </Button>
