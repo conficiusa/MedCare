@@ -7,6 +7,7 @@ import Navbar from "@/components/blocks/navbar";
 import Footer from "@/components/blocks/footer";
 import { Toaster } from "@/components/ui/sonner";
 import AuthProvider from "@/components/wrappers/sessionProvider";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: "Medcare Hub",
@@ -26,6 +27,7 @@ export default function RootLayout({
           <main role="main">
             {children}
             <Toaster />
+            <Analytics />
           </main>
           <Footer />
         </body>
