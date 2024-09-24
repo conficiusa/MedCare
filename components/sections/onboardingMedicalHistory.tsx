@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { motion } from "framer-motion";
-import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardHeader, CardTitle } from "@/components/ui/card";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { PatientOnboardingSchema } from "@/lib/schema";
@@ -47,7 +47,7 @@ const OnBoardingMedicalHistory = ({
             Medical History
           </CardTitle>
         </CardHeader>
-        <CardContent className="grid gap-6">
+        <div className="grid gap-6">
           <MultiSelector
             defaultOptions={conditions}
             form={form}
@@ -77,7 +77,7 @@ const OnBoardingMedicalHistory = ({
           <Button className="w-full mt-4" onClick={handleNext} type="button">
             Continue
           </Button>
-        </CardContent>
+        </div>
       </div>
     </motion.div>
   );

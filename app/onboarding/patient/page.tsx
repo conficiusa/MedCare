@@ -162,7 +162,7 @@ export default function Component() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
-                className="flex flex-col items-center justify-center px-4"
+                className="flex flex-col items-center justify-center sm:px-4"
               >
                 <Form {...form}>
                   <form className="w-full">{renderStepContent()}</form>

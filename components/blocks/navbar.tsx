@@ -19,11 +19,16 @@ const Navbar = async () => {
               </Button>
             </Sidebar>
           </div>
-          <h1 className="text-xl font-semibold"> MedCare Hub</h1>
+          <h1 className="text-xl md:text-lg lg:text-xl font-semibold">
+            {" "}
+            MedCare Hub
+          </h1>
         </div>
-        <div className="flex sm:hidden">
-          <UserDp />
-        </div>
+        {session && (
+          <div className="flex sm:hidden">
+            <UserDp />
+          </div>
+        )}
         <ul className="text-sm sm:flex gap-8 items-center hidden ">
           <li className="hidden md:block">
             <Link href="/referral">
@@ -36,16 +41,6 @@ const Navbar = async () => {
 
           {!session ? (
             <>
-              <form
-                action={async () => {
-                  "use server";
-                  await signIn("resend", {
-                    email: "addawebadua@gmail.com",
-                  });
-                }}
-              >
-                <Button variant={"ghost"}>resend</Button>
-              </form>
               <Button asChild variant={"ghost"}>
                 <Link href="/sign-in"> Sign In</Link>
               </Button>
@@ -55,10 +50,13 @@ const Navbar = async () => {
             </>
           ) : (
             <>
-              <li className="flex justify-center items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 font-normal" />
-                {session.user.region}, {session.user.city}
-              </li>
+              {session.user.region && session.user.city && (
+                <li className="flex justify-center items-center gap-2">
+                  <MapPin className="w-3.5 h-3.5 font-normal" />
+                  {session.user.region}, {session.user.city}
+                </li>
+              )}
+
               <UserDp />
             </>
           )}

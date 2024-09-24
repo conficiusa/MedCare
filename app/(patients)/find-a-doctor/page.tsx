@@ -29,7 +29,7 @@ const FindDoctor = () => {
         </p>
         <SearchInput
           label="search doctor"
-          containerClassName="w-3/5"
+          containerClassName="md:w-3/5"
           placeholder="example: symptom - flu, cold; specialty - dermatology, mental health, primary care"
         />
         <Tabs defaultValue="online" className="mt-4">

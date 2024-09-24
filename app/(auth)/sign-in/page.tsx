@@ -17,7 +17,7 @@ export default function SignInPage() {
           <ChevronLeft className="w-4 h-4 mr-1" />
           Back to home
         </Link>
-        <div className="flex items-center">
+        <div className="sm:flex  hidden items-center" >
           <svg
             className="w-8 h-8 mr-2"
             viewBox="0 0 24 24"
@@ -42,7 +42,7 @@ export default function SignInPage() {
           <h1 className="text-xl font-semibold">MedCare Hub</h1>
         </div>
       </div>
-      <h2 className="text-3xl font-bold mb-2">Welcome back</h2>
+      <h2 className="sm:text-3xl text-2xl font-bold mb-2">Welcome back</h2>
       <p className="text-gray-600 mb-8">Sign in to your account to continue</p>
       <form action={googleSignIn}>
         <Button

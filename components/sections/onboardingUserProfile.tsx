@@ -1,7 +1,6 @@
 "use client";
 import * as React from "react";
-import { motion } from "framer-motion";
-import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {  CardHeader, CardTitle } from "@/components/ui/card";
 import { FormBuilder } from "@/components/blocks/formBuilder";
 import { PatientOnboardingSchema } from "@/lib/schema";
 import { UseFormReturn } from "react-hook-form";
@@ -49,7 +48,7 @@ const OnboardingUserProfile = ({
           Welcome Aboard! {session?.user?.name?.split(" ")[0]}
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <div className="space-y-3">
         <MultiSelector
           defaultOptions={languages}
           form={form}
@@ -88,7 +87,7 @@ const OnboardingUserProfile = ({
         <Button className="w-full mt-4" onClick={handleNext} type="button">
           Continue
         </Button>
-      </CardContent>
+      </div>
     </div>
   );
 };

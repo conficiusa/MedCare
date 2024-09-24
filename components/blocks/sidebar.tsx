@@ -47,7 +47,7 @@ const Sidebar = ({ children }: SidebarProps) => {
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent side="left">
         <SheetHeader>
-          <SheetTitle autoFocus>MedCare Hub</SheetTitle>
+          <SheetTitle >MedCare Hub</SheetTitle>
           <SearchInput label="Search" placeholder="search" />
         </SheetHeader>
         <div className="overflow-auto">

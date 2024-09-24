@@ -1,7 +1,6 @@
 "use client";
 import * as React from "react";
-import { motion } from "framer-motion";
-import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {  CardHeader, CardTitle } from "@/components/ui/card";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { PatientOnboardingSchema } from "@/lib/schema";
@@ -44,7 +43,7 @@ const OnboardingAddress = ({
           Location & Address
         </CardTitle>
       </CardHeader>
-      <CardContent className="grid gap-4">
+      <div className="grid gap-4">
         <SelectComponent
           name="region"
           label="Choose your region"
@@ -68,7 +67,7 @@ const OnboardingAddress = ({
         <Button className="w-full mt-4" onClick={handleNext} type="button">
           Continue
         </Button>
-      </CardContent>
+      </div>
     </div>
   );
 };
