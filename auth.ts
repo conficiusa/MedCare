@@ -9,8 +9,7 @@ import { z } from "zod";
 import User from "@/models/User";
 import connectToDatabase from "@/lib/mongoose";
 import { JWT } from "next-auth/jwt"; // Import the JWT type
-import Resend from "next-auth/providers/resend"
-
+import Resend from "next-auth/providers/resend";
 
 // Extending the default User type to include 'role'
 declare module "next-auth" {
@@ -25,6 +24,7 @@ declare module "next-auth" {
     languages?: string[] | undefined;
     dob?: Date | undefined;
     gender?: string | undefined;
+    image?: string | undefined | null;
   }
 
   interface Session {
@@ -39,6 +39,7 @@ declare module "next-auth" {
       languages?: string[] | undefined;
       dob?: Date | undefined;
       gender?: string | undefined;
+      image?: string | undefined | null;
     } & DefaultSession["user"];
   }
 }
@@ -55,6 +56,7 @@ declare module "next-auth/jwt" {
     languages?: string[] | undefined;
     dob?: Date;
     gender?: string | undefined;
+    image?: string | undefined | null;
   }
 }
 
@@ -107,6 +109,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         token.languages = existingOauthUser.languages || [];
         token.dob = existingOauthUser.dob || "";
         token.gender = existingOauthUser.gender || "";
+        token.image = existingOauthUser.image || "";
       }
       if (trigger === "update" && session) {
         const updatedUser = await User.findOne({ email: session?.user.email });
@@ -123,6 +126,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
           languages: updatedUser?.languages,
           gender: updatedUser?.gender,
           dob: updatedUser?.dob,
+          image: updatedUser?.image,
           user: { ...session?.user },
         };
         console.log("transformed token", token);
@@ -143,7 +147,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         session.user.languages = token?.languages;
         session.user.dob = token?.dob;
         session.user.gender = token?.gender;
-        console.log("transformed session", session);
+        session.user.image = token?.image;
       }
       if (trigger === "update") {
         session.user.role = token?.role;
@@ -155,6 +159,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         session.user.phone = token?.phone;
         session.user.languages = token?.languages;
         session.user.dob = token?.dob;
+        session.user.image = token?.image;
         session.user.gender = token?.gender;
         console.log("transformed session", session);
         return session;

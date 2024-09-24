@@ -10,12 +10,28 @@ import MultiSelector from "@/components/blocks/multipleSelector";
 import { conditions } from "@/lib/data";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import validateStep from "@/hooks/validateStep";
+import { Step } from "@/app/onboarding/patient/page";
+import { Button } from "@/components/ui/button";
 
 const OnBoardingMedicalHistory = ({
   form,
+  currentStep,
+  setCurrentStep,
+  steps,
 }: {
   form: UseFormReturn<z.output<typeof PatientOnboardingSchema>>;
+  currentStep: Step;
+  steps: Step[];
+  setCurrentStep: (step: Step) => void;
 }) => {
+  const handleNext = async () => {
+    const isValid = await validateStep(form, ["conditions", "medicalHistory"]);
+    const currentIndex = steps.indexOf(currentStep);
+    if (isValid) {
+      setCurrentStep(steps[currentIndex + 1]);
+    }
+  };
   return (
     <motion.div
       key="step2"
@@ -58,6 +74,9 @@ const OnBoardingMedicalHistory = ({
               className="resize-none"
             />
           </FormBuilder>
+          <Button className="w-full mt-4" onClick={handleNext} type="button">
+            Continue
+          </Button>
         </CardContent>
       </div>
     </motion.div>

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { date, z } from "zod";
 
 const multiSelectSchema = z.object({
   label: z.string(),
@@ -38,9 +38,36 @@ export const PatientOnboardingSchema = z.object({
     .max(4, "You can only select up to 4 languages"),
   gender: z.string().min(1, "Please enter your gender"),
   phone: z.string(),
+  image: z
+    .string()
+    .nullable()
+    .refine(
+      (file) => {
+        if (!file) return true;
+        // Determine the Base64 prefix length dynamically
+        const base64Prefix = file.substring(0, file.indexOf(",") + 1);
+        const base64Length = file.length - base64Prefix.length;
+        const sizeInBytes = (base64Length * 3) / 4;
+        return sizeInBytes < 4000000; // 4MB
+      },
+      {
+        message: "File size must be less than 4MB",
+        path: ["image"],
+      }
+    ),
   dob: z
-    .date()
-    .refine((date) => date <= new Date(), "Please enter a valid date of birth"),
+    .date({
+      required_error: "Please enter your date of birth",
+    })
+    .nullable()
+    .refine(
+      (date) => date && date <= new Date(),
+      "Please enter a valid date of birth"
+    )
+    .refine(
+      (date) => !date || date >= new Date(1900, 1, 1),
+      "Please enter a valid date of birth"
+    ),
   role: z.string().min(1, "Please enter your role"),
   region: z.string().min(1, "Please enter your region"),
   city: z.string().min(1, "Please enter your city/town"),

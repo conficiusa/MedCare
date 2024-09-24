@@ -14,6 +14,7 @@ export const useCreateAccount = () => {
     } catch (error: any) {
       toast.error(error.response.data.message);
       console.log(error)
+      throw error;
     }
   };
   return { onCreateAccount };
@@ -22,7 +23,6 @@ export const usePatientOnboard = (
   session: Session | null,
   update: UpdateSession
 ) => {
-  const router = useRouter();
   const onPatientOnboard = async (
     data: z.output<typeof PatientOnboardingSchema>
   ) => {

@@ -65,3 +65,63 @@ export const FormBuilder = ({
     />
   );
 };
+
+interface FormBuilderWIthIconsProps extends FormBuilderProps {
+  icon: React.ReactNode;
+  iconClassName?: string;
+  endIcon?: React.ReactNode;
+}
+export const FormBuilderWithIcons = ({
+  name,
+  label,
+  children,
+  description,
+  message,
+  control,
+  messageClassName,
+  descriptionClassName,
+  labelClassName,
+  icon,
+  iconClassName,
+  endIcon,
+  ...rest
+}: FormBuilderWIthIconsProps) => {
+  return (
+    <FormField
+      name={name}
+      control={control}
+      render={({ field }) => (
+        <FormItem {...rest}>
+          <FormLabel htmlFor={name} className={cn("", labelClassName)}>
+            {label}
+          </FormLabel>
+          <FormControl>
+            <div className="relative">
+              {React.isValidElement(icon)
+                ? React.cloneElement(icon, {
+                    ...(icon.props as any),
+                    className: cn(
+                      "w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400",
+                      iconClassName
+                    ),
+                  })
+                : icon}
+              {React.isValidElement(children) ? (
+                React.cloneElement(children, field)
+              ) : (
+                <>{children}</>
+              )}
+              {endIcon}
+            </div>
+          </FormControl>
+          {message && <FormMessage className={cn("", messageClassName)} />}
+          {description && (
+            <FormDescription className={cn("", descriptionClassName)}>
+              {description}
+            </FormDescription>
+          )}
+        </FormItem>
+      )}
+    />
+  );
+};

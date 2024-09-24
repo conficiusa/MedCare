@@ -1,24 +1,47 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { SignUpSchema } from "@/lib/schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormBuilder } from "@/components/blocks/formBuilder";
-import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useCreateAccount } from "@/lib/formSubmissions";
-import { useTransition } from "react";
 import { authenticate, State } from "@/lib/actions";
 import { useFormState } from "react-dom";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SignUpSchema } from "@/lib/schema";
+import { useState, useTransition } from "react";
+import { Mail, Lock, Eye, EyeOff, User } from "lucide-react";
+import { Form } from "@/components/ui/form";
+import { FormBuilderWithIcons } from "./formBuilder";
+import { useCreateAccount } from "@/lib/formSubmissions";
+import { Button } from "@/components/ui/button";
 
+const PasswordIcon = ({
+  showPassword,
+  setShowPassword,
+}: {
+  showPassword: boolean;
+  setShowPassword: (showPassword: boolean) => void;
+}) => {
+  return (
+    <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-500"
+    >
+      {showPassword ? (
+        <EyeOff className="h-5 w-5" aria-hidden="true" />
+      ) : (
+        <Eye className="h-5 w-5" aria-hidden="true" />
+      )}
+    </button>
+  );
+};
 const initialState: State = {
   message: "",
   errors: {},
 };
 const SignUpform = () => {
   const [isPending, startTransition] = useTransition();
+  const [showPassword, setShowPassword] = useState(false);
   const [state, formAction] = useFormState(authenticate, initialState);
 
   //form initialization
@@ -33,6 +56,7 @@ const SignUpform = () => {
   });
 
   const handleSubmit = (data: z.output<typeof SignUpSchema>) => {
+    console.log(data);
     startTransition(async () => {
       try {
         const { email, password } = data;
@@ -42,7 +66,7 @@ const SignUpform = () => {
         await onCreateAccount(data);
         formAction(formData);
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
     });
   };
@@ -52,33 +76,61 @@ const SignUpform = () => {
   return (
     <div>
       <Form {...form}>
-        <form
-          className="grid gap-2"
-          onSubmit={form.handleSubmit(handleSubmit)}
-        >
-          <FormBuilder
+        <form className="space-y-4" onSubmit={form.handleSubmit(handleSubmit)}>
+          <FormBuilderWithIcons
             name="name"
             label="Full name"
-            message={true}
-            description={"please input your first name first then other names"}
+            icon={<User />}
+            description={"First name then other names"}
           >
-            <Input placeholder="Full name" />
-          </FormBuilder>
-          <FormBuilder name="email" label="email" message={true}>
-            <Input placeholder="email" type="email" />
-          </FormBuilder>
-          <FormBuilder name="password" label="Password" message={true}>
-            <Input placeholder="enter your password" type="password" />
-          </FormBuilder>
-          <FormBuilder
+            <Input className="pl-10" placeholder={"Enter your full name"} />
+          </FormBuilderWithIcons>
+          <FormBuilderWithIcons name="email" label="Email" icon={<Mail />}>
+            <Input className="pl-10" placeholder={"Enter your email"} />
+          </FormBuilderWithIcons>
+          <FormBuilderWithIcons
+            name="password"
+            label="Password"
+            icon={<Lock />}
+            endIcon={
+              <PasswordIcon
+                showPassword={showPassword}
+                setShowPassword={setShowPassword}
+              />
+            }
+          >
+            <Input
+              type={showPassword ? "text" : "password"}
+              className="pl-10 pr-10"
+              placeholder="Enter your password"
+            />
+          </FormBuilderWithIcons>
+          <FormBuilderWithIcons
             name="confirmPassword"
-            label="Confirm Password"
-            message={true}
+            label="Enter your password again"
+            message
+            icon={<Lock />}
+            endIcon={
+              <PasswordIcon
+                showPassword={showPassword}
+                setShowPassword={setShowPassword}
+              />
+            }
           >
-            <Input placeholder="confirm password" type="password" />
-          </FormBuilder>
-          <Button className="mt-6" type="submit" disabled={isPending}>
-            Create Account
+            <Input
+              type={showPassword ? "text" : "password"}
+              className="pl-10 pr-10"
+              placeholder="Enter your password"
+            />
+          </FormBuilderWithIcons>
+
+          <Button
+            className="w-full bg-green-600 hover:bg-green-700 text-white"
+            type="submit"
+            onClick={form.handleSubmit(handleSubmit)}
+            disabled={isPending}
+          >
+            Create account
           </Button>
         </form>
       </Form>

@@ -1,5 +1,5 @@
 "use server";
-import { auth, signIn, } from "@/auth";
+import { auth, signIn } from "@/auth";
 import { AuthError } from "next-auth";
 import { SignInSchema } from "@/lib/schema";
 import connectToDatabase from "@/lib/mongoose";
@@ -19,8 +19,8 @@ export async function authenticate(
   formData: FormData
 ): Promise<State> {
   try {
-    await connectToDatabase().catch((error:any) => {
-      return {message:"Unable to Connect to server"}
+    await connectToDatabase().catch((error: any) => {
+      return { message: "Unable to Connect to server" };
     });
     const data = Object.fromEntries(formData);
     const parsed = SignInSchema.safeParse(data);
@@ -53,7 +53,12 @@ export async function authenticate(
       switch (error.type) {
         case "CredentialsSignin":
           return {
-            message: "Invalid email or password.",
+            message: "Invalid Credentials",
+          };
+        case "CallbackRouteError":
+          return {
+            message:
+              "This account was likely created with a different provider.",
           };
         default:
           return {
@@ -65,8 +70,29 @@ export async function authenticate(
   }
 }
 
-// export async function UpdatePatientSession() {
-//   const session = await auth();
-
-//   await update({ ...user, name: "Serverserver-man" });
-// }
+export const googleSignIn = async () => {
+  try {
+    await signIn("google", {
+      callbackUrl: "/find-a-doctor",
+      redirectTo: "/find-a-doctor",
+    });
+  } catch (error: any) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "OAuthSignInError":
+          return {
+            message: "Could not sign in with Google",
+          };
+        case "CallbackRouteError":
+          return {
+            message: "This email is linked to a another account",
+          };
+        default:
+          return {
+            message: "An unexpected error occurred.",
+          };
+      }
+    }
+    throw error;
+  }
+};

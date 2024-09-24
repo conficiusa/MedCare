@@ -70,7 +70,7 @@ const CalenderDatePicker = ({
               </PopoverContent>
             </Popover>
           </FormControl>
-          <FormMessage />
+          {/* <FormMessage /> */}
         </FormItem>
       )}
     />

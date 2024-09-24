@@ -58,6 +58,7 @@ const MultiSelector = ({
                 groupBy={groupBy}
                 maxSelected={maxSelected}
                 onMaxSelected={onMaxSelected}
+              
                 {...rest}
                 {...field}
               />
