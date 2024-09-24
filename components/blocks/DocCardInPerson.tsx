@@ -37,7 +37,13 @@ const DocCardInPerson = ({ className }: { className?: string }) => {
               </p>
             </div>
             <div>
-              <img src="/rating.png" alt="rating stars" />
+              <Image
+                width={80}
+                height={50}
+                className="object-cover w-auto h-auto"
+                src="/rating.png"
+                alt="rating stars"
+              />
             </div>
             <p className="text-sm font-medium">Rate: GHS50.00</p>
           </div>

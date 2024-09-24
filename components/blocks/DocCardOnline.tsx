@@ -38,7 +38,13 @@ const DocCardOnline = ({ className }: { className?: string }) => {
             </p>
           </div>
           <div>
-            <img src="/rating.png" alt="rating stars" />
+            <Image
+              src="/rating.png"
+              alt="rating stars"
+              width={80}
+              height={50}
+              className="obejct-cover w-auto h-auto"
+            />
           </div>
           <p className="text-sm font-medium">Rate: GHS50.00</p>
         </div>

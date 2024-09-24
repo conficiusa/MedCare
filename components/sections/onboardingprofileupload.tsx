@@ -27,6 +27,7 @@ export default function ProfileUpload({
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageInput = form.watch("image");
 
   const handleDragEnter = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -45,63 +46,69 @@ export default function ProfileUpload({
     e.stopPropagation();
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      handleFileUpload(file);
-    }
-  }, []);
-
-  const handleFileUpload = useCallback(async (file: File) => {
-    if (!file.type.startsWith("image/")) {
-      toast.error("Invalid file type", {
-        description: "Please upload an image file.",
-      });
-      return;
-    }
-
-    if (file.size > 4 * 1024 * 1024) {
-      toast.error("File too large", {
-        description: "Please upload an image smaller than 4MB.",
-      });
-      return;
-    }
-
-    setIsUploading(true);
-    setUploadProgress(0);
-
-    const reader = new FileReader();
-    reader.onloadstart = () => {
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += 10;
-        setUploadProgress(progress);
-        if (progress >= 100) {
-          clearInterval(interval);
-          setIsUploading(false);
-        }
-      }, 100);
-    };
-    reader.onloadend = async () => {
-      form.setValue("image", reader.result as string);
-      const isValid = await validateStep(form, "image");
-      console.log(isValid);
-      if (!isValid) {
-        console.log(form.formState.errors.image);
-        toast.error(form.formState.errors.image?.message);
-        form.setValue("image", null);
+  const handleFileUpload = useCallback(
+    async (file: File) => {
+      if (!file.type.startsWith("image/")) {
+        toast.error("Invalid file type", {
+          description: "Please upload an image file.",
+        });
         return;
       }
-      setProfilePicture(reader.result as string);
-      setIsUploading(false);
-      setUploadProgress(100);
-    };
-    reader.readAsDataURL(file);
-  }, []);
+
+      if (file.size > 4 * 1024 * 1024) {
+        toast.error("File too large", {
+          description: "Please upload an image smaller than 4MB.",
+        });
+        return;
+      }
+
+      setIsUploading(true);
+      setUploadProgress(0);
+
+      const reader = new FileReader();
+      reader.onloadstart = () => {
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += 10;
+          setUploadProgress(progress);
+          if (progress >= 100) {
+            clearInterval(interval);
+            setIsUploading(false);
+          }
+        }, 100);
+      };
+      reader.onloadend = async () => {
+        form.setValue("image", reader.result as string);
+        const isValid = await validateStep(form, "image");
+        console.log(isValid);
+        if (!isValid) {
+          console.log(form.formState.errors.image);
+          toast.error(form.formState.errors.image?.message);
+          form.setValue("image", null);
+          return;
+        }
+        setProfilePicture(reader.result as string);
+        setIsUploading(false);
+        setUploadProgress(100);
+      };
+      reader.readAsDataURL(file);
+    },
+    [form]
+  );
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsDragging(false);
+
+      const file = e.dataTransfer.files[0];
+      if (file) {
+        handleFileUpload(file);
+      }
+    },
+    [handleFileUpload]
+  );
 
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,15 +127,15 @@ export default function ProfileUpload({
   }, [form]);
 
   useEffect(() => {
-    if (form.watch("image")) {
+    if (imageInput) {
       if (!profilePicture) {
-        const imageFile = form.watch("image");
+        const imageFile = imageInput;
         if (imageFile) {
           setProfilePicture(imageFile);
         }
       }
     }
-  }, [form.watch("image"), profilePicture]);
+  }, [imageInput, profilePicture]);
 
   return (
     <div className="space-y-6 w-full max-w-md mx-auto">
