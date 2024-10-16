@@ -56,7 +56,6 @@ const SignUpform = () => {
   });
 
   const handleSubmit = (data: z.output<typeof SignUpSchema>) => {
-    console.log(data);
     startTransition(async () => {
       try {
         const { email, password } = data;

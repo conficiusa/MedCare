@@ -13,7 +13,6 @@ export const useCreateAccount = () => {
       await axios.post("/api/auth/signup", data);
     } catch (error: any) {
       toast.error(error.response.data.message);
-      console.log(error)
       throw error;
     }
   };
@@ -35,10 +34,6 @@ export const usePatientOnboard = (
       const response = await axios.patch("/api/users/onboarding", preparedData);
 
       await update({ ...session, user: { ...session?.user, role: "patient" } });
-      console.log("updated session", session);
-      // router.push("/find-a-doctor");
-
-      console.log(response);
     } catch (error) {
       throw error;
     }

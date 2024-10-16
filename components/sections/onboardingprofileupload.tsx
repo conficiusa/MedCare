@@ -80,9 +80,7 @@ export default function ProfileUpload({
       reader.onloadend = async () => {
         form.setValue("image", reader.result as string);
         const isValid = await validateStep(form, "image");
-        console.log(isValid);
         if (!isValid) {
-          console.log(form.formState.errors.image);
           toast.error(form.formState.errors.image?.message);
           form.setValue("image", null);
           return;

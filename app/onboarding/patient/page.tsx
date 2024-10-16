@@ -19,6 +19,7 @@ import { useSession } from "next-auth/react";
 import OnboardingProfileUpload from "@/components/sections/onboardingprofileupload";
 import { usePatientOnboard } from "@/lib/formSubmissions";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export type Step = "details" | "location" | "history" | "profile" | "welcome";
 export default function Component() {
@@ -36,7 +37,7 @@ export default function Component() {
         await onPatientOnboard(data);
         router.push("/find-a-doctor");
       } catch (error: any) {
-        console.log(error);
+        toast.error(error.message);
       }
     });
   };

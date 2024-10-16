@@ -11,7 +11,6 @@ export const PATCH = auth(async function PATCH(req) {
   try {
     //geting the user session
     const session = await auth();
-    console.log(session?.user.id, "session");
     // Connect to the database
     await connectToDatabase();
 
@@ -47,7 +46,6 @@ export const PATCH = auth(async function PATCH(req) {
         blob = await put(`profiles/${filename}`, buffer, {
           access: "public",
         });
-        console.log(blob);
       } catch (uploadError) {
         console.error("Image upload failed:", uploadError);
         return NextResponse.json(

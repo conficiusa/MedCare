@@ -113,8 +113,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       }
       if (trigger === "update" && session) {
         const updatedUser = await User.findOne({ email: session?.user.email });
-        console.log("incoming session", session);
-        console.log("updatedUser", updatedUser);
+      
         token = {
           ...token,
           role: session?.user?.role,
@@ -129,7 +128,6 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
           image: updatedUser?.image,
           user: { ...session?.user },
         };
-        console.log("transformed token", token);
         return token;
       }
       return token;
@@ -161,7 +159,6 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         session.user.dob = token?.dob;
         session.user.image = token?.image;
         session.user.gender = token?.gender;
-        console.log("transformed session", session);
         return session;
       }
       return session;
