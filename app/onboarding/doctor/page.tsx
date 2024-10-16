@@ -376,7 +376,7 @@ export default function Component() {
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-teal-50 via-purple-50 to-blue-50  flex items-center justify-center p-4">
+    <div className="min-h-[100dvh] bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-teal-50 via-purple-50 to-blue-50  flex items-center justify-center p-4">
       <Card className="w-full max-w-4xl mx-auto overflow-hidden">
         <div className="p-8">
           <div className="flex justify-between mb-12">

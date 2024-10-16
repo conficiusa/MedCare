@@ -1,3 +1,4 @@
+"use client";
 import {
   Sheet,
   SheetContent,
@@ -7,8 +8,8 @@ import {
 } from "@/components/ui/sheet";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import SearchInput from "@/components/ui/search";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 interface SidebarProps {
   children: React.ReactNode;
@@ -42,13 +43,14 @@ const SidebarLink: SidebarLink[] = [
 ];
 
 const Sidebar = ({ children }: SidebarProps) => {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent side="left">
         <SheetHeader>
-          <SheetTitle >MedCare Hub</SheetTitle>
-          <SearchInput label="Search" placeholder="search" />
+          <SheetTitle>MedCare Hub</SheetTitle>
         </SheetHeader>
         <div className="overflow-auto">
           <nav className="flex flex-col divide-y-[1px] text-sm mt-8">
@@ -57,6 +59,7 @@ const Sidebar = ({ children }: SidebarProps) => {
                 href={link.href}
                 key={idx}
                 className="py-3 flex items-center justify-between"
+                onClick={() => setOpen(false)}
               >
                 {link.label} {link.icon}
               </Link>
@@ -65,6 +68,7 @@ const Sidebar = ({ children }: SidebarProps) => {
             <Link
               href="/referral"
               className="py-3 flex items-center justify-between mt-8"
+              onClick={() => setOpen(false)}
             >
               Refer a friend{" "}
               <sup className="bg-teal-100 text-primary p-[0.2rem] text-xs rounded">
@@ -74,6 +78,7 @@ const Sidebar = ({ children }: SidebarProps) => {
             <Link
               href={"/listings"}
               className="py-3 flex items-center justify-between"
+              onClick={() => setOpen(false)}
             >
               List your practice{" "}
               <ChevronRight strokeWidth={1.8} className="w-4 h-4" />
@@ -83,6 +88,7 @@ const Sidebar = ({ children }: SidebarProps) => {
             <Link
               href={"/about"}
               className="py-3 flex items-center justify-between"
+              onClick={() => setOpen(false)}
             >
               About Us
             </Link>
@@ -95,12 +101,21 @@ const Sidebar = ({ children }: SidebarProps) => {
           </nav>
           <div className="hidden max-sm:flex mt-10 flex-col gap-2">
             <Link href={"/sign-in"} className="w-full">
-              <Button className="w-full" variant={"outline"} size="sm">
+              <Button
+                className="w-full"
+                variant={"outline"}
+                size="sm"
+                onClick={() => setOpen(false)}
+              >
                 Sign in
               </Button>
             </Link>
             <Link href={"/sign-up"} className="w-full">
-              <Button className="w-full" size="sm">
+              <Button
+                className="w-full"
+                size="sm"
+                onClick={() => setOpen(false)}
+              >
                 Sign up
               </Button>
             </Link>

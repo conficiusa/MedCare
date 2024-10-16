@@ -1,7 +1,9 @@
+"use client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 interface SearchInputProps {
   label: string;
@@ -13,6 +15,8 @@ const SearchInput = ({
   containerClassName,
   placeholder,
 }: SearchInputProps) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
   return (
     <div className={cn("relative", containerClassName)}>
       <label htmlFor="search" className="sr-only">
@@ -23,6 +27,7 @@ const SearchInput = ({
         type="search"
         id="search"
         placeholder={placeholder}
+        autoFocus={false}
       />
       <Button size="icon" className="absolute right-0 top-0 w-14">
         <Search />
