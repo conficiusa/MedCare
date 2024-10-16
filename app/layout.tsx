@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
+import { addMaximumScaleToMetaViewport, checkIsIOS, cn } from "@/lib/utils";
 import { inter } from "@/lib/fonts";
 import Navbar from "@/components/blocks/navbar";
 import Footer from "@/components/blocks/footer";
@@ -19,6 +18,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const disableIosTextFieldZoom = addMaximumScaleToMetaViewport;
+  if (checkIsIOS()) {
+    disableIosTextFieldZoom();
+  }
   return (
     <html lang="en">
       <AuthProvider>

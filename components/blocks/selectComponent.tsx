@@ -24,6 +24,7 @@ interface SelectComponentProps {
   message?: boolean | null;
   description?: string | null;
   empty?: string;
+  [key: string]: any;
 }
 
 export default function SelectComponent({

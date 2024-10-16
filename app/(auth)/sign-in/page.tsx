@@ -75,7 +75,7 @@ export default function SignInPage() {
           Sign in with Google
         </Button>
       </form>
-      <div className="relative my-6">
+      <div className="relative my-3">
         <Separator />
         <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-sm text-gray-500">
           Or continue with
@@ -86,7 +86,7 @@ export default function SignInPage() {
         Don&apos;t have an account?{" "}
         <Link
           href="/sign-up"
-          className="font-medium text-green-600 hover:text-green-500"
+          className="font-medium"
         >
           Sign up
         </Link>

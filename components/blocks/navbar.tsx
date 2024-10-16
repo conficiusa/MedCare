@@ -33,7 +33,7 @@ const Navbar = async () => {
           <li className="hidden md:block">
             <Link href="/referral">
               Refer a friend{" "}
-              <sup className="bg-teal-100 text-primary p-[0.2rem] text-xs rounded">
+              <sup className="bg-green-100 text-primary p-[0.2rem] text-xs rounded">
                 10% off
               </sup>
             </Link>

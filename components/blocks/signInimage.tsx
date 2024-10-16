@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 const SignInimage = () => {
   return (
-    <div className="w-full md:w-1/2 bg-green-600 text-white md:flex flex-col justify-center items-center p-12 hidden">
+    <div className="w-full md:w-1/2 bg-primary text-white md:flex flex-col justify-center items-center p-12 hidden">
       <div className="max-w-md text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
