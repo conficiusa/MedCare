@@ -7,6 +7,7 @@ import Footer from "@/components/blocks/footer";
 import { Toaster } from "@/components/ui/sonner";
 import AuthProvider from "@/components/wrappers/sessionProvider";
 import { Analytics } from "@vercel/analytics/react";
+import Providers from "@/components/wrappers/providers";
 
 export const metadata: Metadata = {
   title: "Medcare Hub",
@@ -18,22 +19,21 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const disableIosTextFieldZoom = addMaximumScaleToMetaViewport;
-  if (checkIsIOS()) {
-    disableIosTextFieldZoom();
-  }
+
   return (
     <html lang="en">
       <AuthProvider>
-        <body className={cn("antialiased w-full", inter.className)}>
-          <Navbar />
-          <main role="main">
-            {children}
-            <Toaster />
-            <Analytics />
-          </main>
-          <Footer />
-        </body>
+        <Providers>
+          <body className={cn("antialiased w-full", inter.className)}>
+            <Navbar />
+            <main role="main">
+              {children}
+              <Toaster />
+              <Analytics />
+            </main>
+            <Footer />
+          </body>
+        </Providers>
       </AuthProvider>
     </html>
   );
