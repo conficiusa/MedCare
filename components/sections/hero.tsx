@@ -7,7 +7,7 @@ const Hero = () => {
     <section
       id="#"
       role="banner"
-      className="grid lg:grid-cols-[500px_1fr] min-h-[calc(100dvh_-_4rem)] lg:py-14 max-lg:pb-14 max-lg:grid-rows-[0.6fr_1fr]"
+      className="grid lg:grid-cols-[500px_1fr] min-h-[calc(100dvh_-_4rem)] lg:py-14  max-lg:grid-rows-[0.6fr_1fr]"
     >
       <div className="py-8">
         <div className="flex justify-center flex-col h-full gap-4 max-lg:items-center max-lg:text-center">
@@ -19,13 +19,13 @@ const Hero = () => {
             your home, eliminating the need for long wait times and travel
             hassles.
           </p>
-          <ul className="grid sm:grid-cols-2 sm:gap-4 gap-2 mt-5">
+          <ul className="grid grid-cols-2 gap-x-6 gap-y-2 sm:gap-y-4 mt-5">
             {[
               {
                 icon: (
                   <Globe strokeWidth={1.5} className="w-4 h-4 font-light" />
                 ),
-                phrase: "Anywhere, Anytime Access",
+                phrase: "Anywhere, Anytime",
               },
               {
                 icon: (
@@ -61,20 +61,32 @@ const Hero = () => {
               </li>
             ))}
           </ul>
-          <div className="w-full">
-            <Button className="mt-8 w-1/2" size={"lg"}>
+          <div className="w-full flex max-lg:justify-center">
+            <Button className="mt-8 w-1/2 max-lg:mx-auto" size={"lg"}>
               Get Started
             </Button>
           </div>
         </div>
       </div>
-      <div className="relative flex items-center">
+      <div className="relative hidden sm:flex items-center">
         <Image
-          src="/HeroPic.svg"
+          src="/HeroPic.webp"
           alt="african american sick young patient resting bed discussing healthcare treatment"
           fill
           sizes="100%"
           className="object-cover lg:object-cover rounded-md"
+          placeholder="blur"
+          blurDataURL="LAH2iu008|00~D4oIT.6bXOA_38{"
+          priority
+        />
+      </div>
+      <div className="relative max-sm:flex hidden items-center">
+        <Image
+          src="/HeroPic.webp"
+          alt="african american sick young patient resting bed discussing healthcare treatment"
+          fill
+          sizes="100%"
+          className=" rounded-md aspect-video object-contain"
           placeholder="blur"
           blurDataURL="LAH2iu008|00~D4oIT.6bXOA_38{"
           priority

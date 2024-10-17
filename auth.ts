@@ -64,9 +64,6 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   ...authConfig,
   providers: [
     Google,
-    Resend({
-      from: "no-reply@medcare.onresend.com",
-    }),
     Credentials({
       async authorize(credentials) {
         await connectToDatabase();
@@ -113,7 +110,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       }
       if (trigger === "update" && session) {
         const updatedUser = await User.findOne({ email: session?.user.email });
-      
+
         token = {
           ...token,
           role: session?.user?.role,
@@ -169,10 +166,10 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   }),
   session: {
     strategy: "jwt",
-    maxAge: 24 * 60 * 60,
+    maxAge: 7 * 24 * 60 * 60,
   },
   jwt: {
-    maxAge: 24 * 60 * 60,
+    maxAge: 7 * 24 * 60 * 60,
   },
   secret: process.env.AUTH_SECRET,
 });

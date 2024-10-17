@@ -6,10 +6,12 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const AccountTypeForm = () => {
   const [accountType, setAccountType] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
   const router = useRouter();
 
   useEffect(() => {
@@ -24,7 +26,7 @@ const AccountTypeForm = () => {
   };
 
   return (
-    <div>
+    <div className={cn(isPending && "pointer-events-none")}>
       <RadioGroup
         onValueChange={setAccountType}
         className="flex flex-col space-y-4"

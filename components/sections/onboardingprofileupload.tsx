@@ -17,10 +17,12 @@ export default function ProfileUpload({
   form,
   steps,
   setCurrentStep,
+  image,
 }: {
   form: UseFormReturn<z.output<typeof PatientOnboardingSchema>>;
   steps: Step[];
   setCurrentStep: (step: Step) => void;
+  image?: string | null;
 }) {
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -161,22 +163,28 @@ export default function ProfileUpload({
           ref={fileInputRef}
         />
         <AnimatePresence mode="wait">
-          {profilePicture ? (
+          {profilePicture || image ? (
             <motion.div
               key="preview"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.3 }}
-              className="relative inline-block"
+              className="relative inline-block w-full h-full  "
             >
-              <Avatar className="w-40 h-40 mx-auto">
-                <AvatarImage src={profilePicture} alt="Profile" />
-                <AvatarFallback>
+              <Avatar className="w-full h-full  mx-auto rounded-md object-cover justify-center">
+                <AvatarImage
+                  src={
+                    profilePicture ? profilePicture : image ? image : undefined
+                  }
+                  alt="Profile"
+                  className="rounded-none object-cover"
+                />
+                <AvatarFallback className="w-40 h-40 self-center">
                   <User className="w-20 h-20 text-gray-400" />
                 </AvatarFallback>
               </Avatar>
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black bg-opacity-50 rounded-full">
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black bg-opacity-50 rounded-md">
                 <div className="space-x-2 space-y-2">
                   <Button
                     size="sm"
@@ -188,16 +196,18 @@ export default function ProfileUpload({
                     <Edit2 className="w-4 h-4 mr-1" />
                     Edit
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    type="button"
-                    onClick={removeProfilePicture}
-                    className="bg-white text-red-600 hover:text-white"
-                  >
-                    <X className="w-4 h-4 mr-1" />
-                    Remove
-                  </Button>
+                  {profilePicture && (
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      type="button"
+                      onClick={removeProfilePicture}
+                      className="bg-white text-red-600 hover:text-white"
+                    >
+                      <X className="w-4 h-4 mr-1" />
+                      Remove
+                    </Button>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -213,12 +223,12 @@ export default function ProfileUpload({
               <div className="flex justify-center">
                 <Avatar className="w-40 h-40">
                   <AvatarFallback>
-                    <User className="w-20 h-20 text-gray-400" />
+                    <User className="w-20 h-20 text-muted-foreground" />
                   </AvatarFallback>
                 </Avatar>
               </div>
               <div className="space-y-2">
-                <p className="text-gray-600">
+                <p className="text-muted-foreground">
                   Drag and drop your profile picture here, or click to select a
                   file
                 </p>

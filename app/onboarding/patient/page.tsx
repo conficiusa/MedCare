@@ -23,7 +23,7 @@ import { toast } from "sonner";
 
 export type Step = "details" | "location" | "history" | "profile" | "welcome";
 export default function Component() {
-  const [currentStep, setCurrentStep] = useState<Step>("profile");
+  const [currentStep, setCurrentStep] = useState<Step>("details");
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -119,6 +119,7 @@ export default function Component() {
             form={form}
             steps={steps}
             setCurrentStep={setCurrentStep}
+            image={session?.user?.image}
           />
         );
       case "welcome":

@@ -5,8 +5,22 @@ import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import SignInform from "@/components/blocks/signInform";
 import { googleSignIn } from "@/lib/actions";
+import { useTransition } from "react";
+import { toast } from "sonner";
 
 export default function SignInPage() {
+  const [isPending, startTransition] = useTransition();
+
+  const handleGoogleSignIn = async () => {
+    startTransition(async () => {
+      try {
+        await googleSignIn();
+      } catch (error: any) {
+        toast.error(error.message);
+      }
+    });
+  };
+
   return (
     <div className="w-full md:w-1/2 p-8 md:p-12">
       <div className="flex items-center justify-between mb-8">
@@ -17,7 +31,7 @@ export default function SignInPage() {
           <ChevronLeft className="w-4 h-4 mr-1" />
           Back to home
         </Link>
-        <div className="sm:flex  hidden items-center" >
+        <div className="sm:flex  hidden items-center">
           <svg
             className="w-8 h-8 mr-2"
             viewBox="0 0 24 24"
@@ -44,9 +58,10 @@ export default function SignInPage() {
       </div>
       <h2 className="sm:text-3xl text-2xl font-bold mb-2">Welcome back</h2>
       <p className="text-gray-600 mb-8">Sign in to your account to continue</p>
-      <form action={googleSignIn}>
+      <form action={handleGoogleSignIn}>
         <Button
           variant="outline"
+          disabled={isPending}
           className="w-full mb-4 bg-white hover:bg-gray-50 text-gray-900 border border-gray-300"
         >
           <svg
@@ -84,10 +99,7 @@ export default function SignInPage() {
       <SignInform />
       <p className="mt-6 text-sm text-center text-gray-600">
         Don&apos;t have an account?{" "}
-        <Link
-          href="/sign-up"
-          className="font-medium"
-        >
+        <Link href="/sign-up" className="font-medium">
           Sign up
         </Link>
       </p>

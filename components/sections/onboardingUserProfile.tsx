@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import {  CardHeader, CardTitle } from "@/components/ui/card";
+import { CardHeader, CardTitle } from "@/components/ui/card";
 import { FormBuilder } from "@/components/blocks/formBuilder";
 import { PatientOnboardingSchema } from "@/lib/schema";
 import { UseFormReturn } from "react-hook-form";
@@ -77,6 +77,7 @@ const OnboardingUserProfile = ({
             placeholder="Phone number"
             className="duration-300"
             defaultCountry="GH"
+            international={false}
           />
         </FormBuilder>
         <DatePickerForm

@@ -2,7 +2,7 @@ import { MapPin, Menu } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Sidebar from "@/components/blocks/sidebar";
-import { auth, signIn } from "@/auth";
+import { auth } from "@/auth";
 import UserDp from "@/components/blocks/userDP";
 import { cn } from "@/lib/utils";
 

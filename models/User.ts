@@ -1,6 +1,6 @@
 import { Model, model, models, Schema } from "mongoose";
 import bcrypt from "bcrypt";
-import { IDoctorProfile, IPatientProfile, IUser } from "@/lib/definitions";
+import { IUser } from "@/lib/definitions";
 
 // User Schema
 const UserSchema = new Schema<IUser, Model<IUser>>(

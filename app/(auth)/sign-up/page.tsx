@@ -5,8 +5,21 @@ import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import SignUpform from "@/components/blocks/signUpform";
 import { googleSignIn } from "@/lib/actions";
+import { useTransition } from "react";
+import { toast } from "sonner";
 
 export default function SignUpPage() {
+  const [isPending, startTransition] = useTransition();
+
+  const handleGoogleSignIn = async () => {
+    startTransition(async () => {
+      try {
+        await googleSignIn();
+      } catch (error: any) {
+        toast.error(error.message);
+      }
+    });
+  };
   return (
     <div className="w-full md:w-1/2 p-8 md:p-12">
       <div className="flex items-center justify-between mb-8">
@@ -46,7 +59,7 @@ export default function SignUpPage() {
       <p className="text-gray-600 mb-8">
         You are a step away from accessing the best healthcare services
       </p>
-      <form action={googleSignIn}>
+      <form action={handleGoogleSignIn}>
         <Button
           variant="outline"
           className="w-full mb-4 bg-white hover:bg-gray-50 text-gray-900 border border-gray-300"
@@ -86,10 +99,7 @@ export default function SignUpPage() {
       <SignUpform />
       <p className="mt-6 text-sm text-center text-gray-600">
         Already have an account?{" "}
-        <Link
-          href="/sign-in"
-          className="font-medium"
-        >
+        <Link href="/sign-in" className="font-medium">
           Sign in
         </Link>
       </p>
