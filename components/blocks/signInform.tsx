@@ -3,14 +3,13 @@
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { authenticate, State } from "@/lib/actions";
-import { useFormState, useFormStatus } from "react-dom";
+import { emailAuth } from "@/lib/actions";
+import { useFormStatus } from "react-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignInSchema } from "@/lib/schema";
-import { useEffect, useState } from "react";
-import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { useTransition } from "react";
+import { Mail } from "lucide-react";
 import { toast } from "sonner";
 import { Form } from "@/components/ui/form";
 import { FormBuilderWithIcons } from "./formBuilder";
@@ -36,95 +35,39 @@ export const SubmitButton = ({
     </Button>
   );
 };
-const initialState: State = {
-  message: "",
-  errors: {},
-};
-const SignInform = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [state, formAction] = useFormState(authenticate, initialState);
 
+const SignInform = () => {
+  const [isPending, startTransition] = useTransition();
   const form = useForm<z.output<typeof SignInSchema>>({
     resolver: zodResolver(SignInSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   });
 
-  useEffect(() => {
-    if (state?.message) {
-      toast.error(state?.message, {
-        position: "top-left",
-      });
-    }
-  }, [state, state?.message]);
-
-  useEffect(() => {
-    if (state?.errors && Object.keys(state?.errors).length > 0) {
-      Object.keys(state.errors).forEach((field) => {
-        const errorMessage =
-          state.errors![field as keyof typeof state.errors]?.[0]; // Get the first error message
-        if (errorMessage) {
-          form.setError(field as keyof z.output<typeof SignInSchema>, {
-            type: "manual",
-            message: errorMessage,
-          });
-        }
-      });
-    }
-  }, [state, state?.errors, form]);
-
+  const handleSignIn = async (data: z.output<typeof SignInSchema>) => {
+    const res = await emailAuth(data);
+    startTransition(async () => {
+      if (res) {
+        toast.error(res.type, {
+          description: res.message,
+        });
+      }
+    });
+  };
   return (
     <div>
       <Form {...form}>
-        <form className="space-y-4" action={formAction}>
+        <form className="space-y-10" onSubmit={form.handleSubmit(handleSignIn)}>
           <FormBuilderWithIcons name="email" label="Email" icon={<Mail />}>
             <Input className="pl-10" placeholder={"Enter your email"} />
           </FormBuilderWithIcons>
-          <FormBuilderWithIcons
-            name="password"
-            label="Password"
-            icon={<Lock />}
-            endIcon={
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-500"
-              >
-                {showPassword ? (
-                  <EyeOff className="h-5 w-5" aria-hidden="true" />
-                ) : (
-                  <Eye className="h-5 w-5" aria-hidden="true" />
-                )}
-              </button>
-            }
+          <Button
+            className="w-full mt-5"
+            disabled={form.formState.isSubmitting || isPending}
           >
-            <Input
-              type={showPassword ? "text" : "password"}
-              className="pl-10 pr-10"
-              placeholder="Enter your password"
-            />
-          </FormBuilderWithIcons>
-
-          <div className="flex items-center justify-between">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                className="form-checkbox h-4 w-4 text-green-600"
-              />
-              <span className="ml-2 text-sm text-gray-600">Remember me</span>
-            </label>
-            <Link
-              href="#"
-              className="text-sm text-green-600 hover:text-green-500"
-            >
-              Forgot password?
-            </Link>
-          </div>
-          <SubmitButton className="w-full bg-green-600 hover:bg-green-700 text-white">
-            Sign in
-          </SubmitButton>
+            Continue
+          </Button>
         </form>
       </Form>
     </div>

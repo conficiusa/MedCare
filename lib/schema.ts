@@ -1,4 +1,4 @@
-import { date, z } from "zod";
+import {  z } from "zod";
 
 const multiSelectSchema = z.object({
   label: z.string(),
@@ -28,7 +28,6 @@ export const SignInSchema = z.object({
     .string()
     .min(1, "please enter your email")
     .email("Please enter a valid email"),
-  password: z.string().min(1, "Please enter your password"),
 });
 
 export const PatientOnboardingSchema = z.object({

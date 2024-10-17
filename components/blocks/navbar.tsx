@@ -2,9 +2,8 @@ import { MapPin, Menu } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Sidebar from "@/components/blocks/sidebar";
-import { auth } from "@/auth";
+import { auth} from "@/auth";
 import UserDp from "@/components/blocks/userDP";
-import { cn } from "@/lib/utils";
 
 const Navbar = async () => {
   const session = await auth();
@@ -12,7 +11,7 @@ const Navbar = async () => {
     <header className="container sticky top-0 left-0 py-4 bg-background/95 duration-500 flex items-center w-full z-50 backdrop-blur-[5.9px] backdrop-saturate-[180%] border-b-[1px]">
       <nav className="flex w-full justify-between">
         <div className="flex items-center  gap-4 max-sm:w-full">
-          <div className={cn("", !session && "max-sm:flex-1")}>
+          <div>
             <Sidebar>
               <Button size={"icon"} variant="ghost">
                 <Menu className="w-5 h-5" />
@@ -24,10 +23,14 @@ const Navbar = async () => {
             MedCare Hub
           </h1>
         </div>
-        {session && (
+        {session ? (
           <div className="flex sm:hidden">
             <UserDp />
           </div>
+        ) : (
+          <Button asChild className="px-8 flex sm:hidden">
+            <Link href="/sign-in"> Join or Sign In</Link>
+          </Button>
         )}
         <ul className="text-sm sm:flex gap-8 items-center hidden ">
           <li className="hidden md:block">
@@ -41,11 +44,8 @@ const Navbar = async () => {
 
           {!session ? (
             <>
-              <Button asChild variant={"ghost"}>
-                <Link href="/sign-in"> Sign In</Link>
-              </Button>
-              <Button asChild>
-                <Link href="/sign-up"> Sign Up</Link>
+              <Button asChild className="px-10">
+                <Link href="/sign-in"> Join or Sign In</Link>
               </Button>
             </>
           ) : (

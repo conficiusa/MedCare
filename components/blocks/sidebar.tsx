@@ -107,16 +107,7 @@ const Sidebar = ({ children }: SidebarProps) => {
                 size="sm"
                 onClick={() => setOpen(false)}
               >
-                Sign in
-              </Button>
-            </Link>
-            <Link href={"/sign-up"} className="w-full">
-              <Button
-                className="w-full"
-                size="sm"
-                onClick={() => setOpen(false)}
-              >
-                Sign up
+                Join or Sign In
               </Button>
             </Link>
           </div>

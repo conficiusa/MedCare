@@ -16,10 +16,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
       <AuthProvider>
@@ -27,6 +28,7 @@ export default function RootLayout({
           <body className={cn("antialiased w-full", inter.className)}>
             <Navbar />
             <main role="main">
+              {modal}
               {children}
               <Toaster />
               <Analytics />

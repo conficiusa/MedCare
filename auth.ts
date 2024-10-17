@@ -3,13 +3,13 @@ import { authConfig } from "@/authconfig";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import client from "@/lib/mongodb";
 import Google from "next-auth/providers/google";
+import EmailProvider from "next-auth/providers/nodemailer";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { z } from "zod";
 import User from "@/models/User";
 import connectToDatabase from "@/lib/mongoose";
 import { JWT } from "next-auth/jwt"; // Import the JWT type
-import Resend from "next-auth/providers/resend";
 
 // Extending the default User type to include 'role'
 declare module "next-auth" {
@@ -64,6 +64,17 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   ...authConfig,
   providers: [
     Google,
+    EmailProvider({
+      server: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: process.env.EMAIL_SERVER_PORT,
+        auth: {
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD,
+        },
+      },
+      from: process.env.EMAIL_FROM,
+    }),
     Credentials({
       async authorize(credentials) {
         await connectToDatabase();
