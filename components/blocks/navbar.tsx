@@ -2,7 +2,7 @@ import { MapPin, Menu } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Sidebar from "@/components/blocks/sidebar";
-import { auth} from "@/auth";
+import { auth } from "@/auth";
 import UserDp from "@/components/blocks/userDP";
 
 const Navbar = async () => {
@@ -18,7 +18,7 @@ const Navbar = async () => {
               </Button>
             </Sidebar>
           </div>
-          <h1 className="text-xl md:text-lg lg:text-xl font-semibold">
+          <h1 className="text-lg md:text-lg lg:text-xl font-semibold">
             {" "}
             MedCare Hub
           </h1>
@@ -28,7 +28,7 @@ const Navbar = async () => {
             <UserDp />
           </div>
         ) : (
-          <Button asChild className="px-8 flex sm:hidden">
+          <Button asChild className="flex sm:hidden" size={"sm"}>
             <Link href="/sign-in"> Join or Sign In</Link>
           </Button>
         )}

@@ -32,6 +32,7 @@ export async function emailAuth(email: z.output<typeof SignInSchema>) {
     }
     await signIn("nodemailer", parsed.data);
   } catch (error: any) {
+    console.log(error);
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
