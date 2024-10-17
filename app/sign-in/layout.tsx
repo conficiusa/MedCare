@@ -3,13 +3,7 @@ import SignInimage from "@/components/blocks/signInimage";
 import AnimationWrapper from "@/components/wrappers/animationWrapper";
 import React from "react";
 
-const AuthLayout = ({
-  children,
-  modal,
-}: {
-  children: React.ReactNode;
-  modal: React.ReactNode;
-}) => {
+const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="min-h-[100dvh] bg-gray-100 flex items-center justify-center p-4">
       <AnimationWrapper className="w-full max-w-6xl">
