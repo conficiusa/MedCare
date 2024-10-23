@@ -1,4 +1,4 @@
-import {  z } from "zod";
+import { z } from "zod";
 
 const multiSelectSchema = z.object({
   label: z.string(),
@@ -70,8 +70,6 @@ export const PatientOnboardingSchema = z.object({
   role: z.string().min(1, "Please enter your role"),
   region: z.string().min(1, "Please enter your region"),
   city: z.string().min(1, "Please enter your city/town"),
-  digitalAddress: z.string().min(1, "Please enter your digital address"),
-  street: z.string().min(1, "Please enter your street"),
   country: z.string().min(1, "Please enter your country"),
   conditions: z
     .array(multiSelectSchema)

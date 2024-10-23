@@ -1,30 +1,28 @@
-import mongoose, { Model, model, models, Schema } from "mongoose";
-import { IDoctorProfile } from "@/lib/definitions";
-import User from "@/models/User";
+import { DoctorInfo } from "@/lib/definitions";
+import { Schema } from "mongoose";
 
-const DoctorSchema = new Schema<IDoctorProfile, Model<IDoctorProfile>>(
+export const DoctorInfoSchema = new Schema<DoctorInfo>(
   {
+    specialties: {
+      type: [String],
+      required: [true, "Specialties are required"],
+    },
+    experience: {
+      type: String,
+      required: [true, "Experience is required"],
+    },
     rate: {
       type: Number,
       required: [true, "Rate is required"],
     },
-    description: {
-      type: String,
-      required: [true, "Description is required."],
-    },
     certifications: {
       type: [String],
-      required: [true, "Certifications are required."],
     },
-    specializations: {
-      type: [String],
-      required: [true, "Specializations are required."],
+    bio: {
+      type: String,
+      required: [true, "Bio is required"],
     },
+    // Add other doctor-specific fields here
   },
-  {
-    timestamps: true,
-  }
+  { _id: false } // Prevents creation of an additional _id field for subdocuments
 );
-
-const Doctor = models?.Doctor || model<IDoctorProfile>("Doctor", DoctorSchema);
-export default Doctor;

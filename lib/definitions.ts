@@ -18,18 +18,18 @@ export interface IUser extends Document {
   region?: string;
   city?: string;
   dob?: Date;
-  street?: string;
-  digitalAddress?: string;
   phone?: string;
   gender?: string;
+  doctorInfo?: DoctorInfo; // Optional for patients
 }
 
 // Doctor profile interface, extending the user
-export interface IDoctorProfile extends IUser {
-  rate?: number;
-  description?: string;
+export interface DoctorInfo {
+  specialties: string[];
+  experience: string;
+  rate: number;
   certifications?: string[];
-  specializations?: string[];
+  bio: string;
 }
 
 // Patient profile interface, extending the user

@@ -9,7 +9,6 @@ import bcrypt from "bcrypt";
 import { z } from "zod";
 import User from "@/models/User";
 import connectToDatabase from "@/lib/mongoose";
-import { JWT } from "next-auth/jwt"; // Import the JWT type
 
 // Extending the default User type to include 'role'
 declare module "next-auth" {
@@ -18,8 +17,6 @@ declare module "next-auth" {
     id?: string | undefined;
     region?: string | undefined;
     city?: string | undefined;
-    street?: string | undefined;
-    digitalAddress?: string | undefined;
     phone?: string | undefined;
     languages?: string[] | undefined;
     dob?: Date | undefined;
@@ -33,8 +30,6 @@ declare module "next-auth" {
       id?: string | undefined;
       region?: string | undefined;
       city?: string | undefined;
-      street?: string | undefined;
-      digitalAddress?: string | undefined;
       phone?: string | undefined;
       languages?: string[] | undefined;
       dob?: Date | undefined;
@@ -50,8 +45,6 @@ declare module "next-auth/jwt" {
     id?: string | undefined;
     region?: string | undefined;
     city?: string | undefined;
-    street?: string | undefined;
-    digitalAddress?: string | undefined;
     phone?: string | undefined;
     languages?: string[] | undefined;
     dob?: Date;
@@ -111,8 +104,6 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         token.role = existingOauthUser.role || "";
         token.region = existingOauthUser.region || "";
         token.city = existingOauthUser.city || "";
-        token.street = existingOauthUser.street || "";
-        token.digitalAddress = existingOauthUser.digitalAddress || "";
         token.phone = existingOauthUser.phone || "";
         token.languages = existingOauthUser.languages || [];
         token.dob = existingOauthUser.dob || "";
@@ -127,8 +118,6 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
           role: session?.user?.role,
           region: updatedUser?.region,
           city: updatedUser?.city,
-          street: updatedUser?.street,
-          digitalAddress: updatedUser?.digitalAddress,
           phone: updatedUser?.phone,
           languages: updatedUser?.languages,
           gender: updatedUser?.gender,
@@ -147,8 +136,6 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         session.user.role = token?.role;
         session.user.region = token?.region;
         session.user.city = token?.city;
-        session.user.street = token?.street;
-        session.user.digitalAddress = token?.digitalAddress;
         session.user.phone = token?.phone;
         session.user.languages = token?.languages;
         session.user.dob = token?.dob;
@@ -160,8 +147,6 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         session.user.id = token?.id || "";
         session.user.region = token?.region;
         session.user.city = token?.city;
-        session.user.street = token?.street;
-        session.user.digitalAddress = token?.digitalAddress;
         session.user.phone = token?.phone;
         session.user.languages = token?.languages;
         session.user.dob = token?.dob;

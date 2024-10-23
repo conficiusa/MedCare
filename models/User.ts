@@ -1,6 +1,7 @@
 import { Model, model, models, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import { IUser } from "@/lib/definitions";
+import { DoctorInfoSchema } from "@/models/Doctor";
 
 // User Schema
 const UserSchema = new Schema<IUser, Model<IUser>>(
@@ -67,12 +68,7 @@ const UserSchema = new Schema<IUser, Model<IUser>>(
         return this.isNew ? false : true; // Required during onboarding
       },
     },
-    street: {
-      type: String,
-    },
-    digitalAddress: {
-      type: String,
-    },
+
     image: {
       type: String,
     },
@@ -87,6 +83,12 @@ const UserSchema = new Schema<IUser, Model<IUser>>(
       type: String,
       required: function (this: IUser) {
         return this.isNew ? false : true; // Required during onboarding
+      },
+    },
+    doctorInfo: {
+      type: DoctorInfoSchema,
+      required: function () {
+        return this.role === "doctor";
       },
     },
   },

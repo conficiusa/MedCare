@@ -119,6 +119,7 @@ export const googleSignIn = async () => {
       redirectTo: "/find-a-doctor",
     });
   } catch (error: any) {
+    console.log(error.type)
     if (error instanceof AuthError) {
       switch (error.type) {
         case "OAuthSignInError":
