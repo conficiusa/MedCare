@@ -24,7 +24,7 @@ const specialities: string[] = [
 const FindDoctor = () => {
   return (
     <section className="min-h-[calc(100dvh_-_8rem)] rounded-sm bg-muted dark:bg-background">
-      <div className="p-10">
+      <div className="p-10 max-sm:px-4 max-sm:py-6">
         <p className="text-sm mb-2">
           Find a healthcare professional based on the type of service, symptom
           or specialty
@@ -49,7 +49,7 @@ const FindDoctor = () => {
               In-Person Visit
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="online">
+          <TabsContent value="online" className="py-8">
             <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-6">
               <Suspense fallback={<CardOnlineSkeleton />}>
                 <DocCardOnline className="shadow-sm border-[1px]" />
