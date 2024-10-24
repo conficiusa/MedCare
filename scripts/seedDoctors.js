@@ -1,12 +1,13 @@
 const { MongoClient } = require("mongodb");
 const bcrypt = require("bcrypt");
+const { ObjectId } = require("mongodb");
 
 async function seedUsersAndProfiles() {
-  const uri =
-    "mongodb+srv://addawebadua:2006adda@medcare.jqcyr.mongodb.net";
+  const uri = "mongodb+srv://addawebadua:2006adda@medcare.jqcyr.mongodb.net";
   const client = new MongoClient(uri);
   const dbName = "Medcare"; // Replace with your database name
-  const userCollectionName = "users"; // The collection name to store the users
+  const userCollectionName = "users"; // Collection name for users
+  const availabilityCollectionName = "availabilities"; // Collection name for availabilities
   const sampleImageUrl =
     "https://xgyzgqc7wzq7cyz6.public.blob.vercel-storage.com/profiles/sampleDoc-ZNAAkbr0wqXBoAKwJ3i8Mi32QIw40T.png";
 
@@ -72,6 +73,37 @@ async function seedUsersAndProfiles() {
     "Certified Diabetes Educator",
   ];
 
+  // Function to generate random availability for 7 days
+  const generateAvailability = (doctorId) => {
+    const availability = [];
+    const today = new Date();
+    for (let i = 0; i < 7; i++) {
+      // Generate availability for the next 7 days
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+
+      const timeSlots = [];
+      for (let j = 0; j < 5; j++) {
+        // Generate 5 random time slots for each day
+        const hour = 9 + j; // Time between 9 AM to 1 PM
+        timeSlots.push(`${hour}:00-${hour + 1}:00`);
+      }
+      availability.push({ doctorId, date, timeSlots });
+    }
+    return availability;
+  };
+
+  // More detailed and unique bios
+  const generateBio = (name, specialization, experience) => {
+    return `Dr. ${name} is a renowned specialist in ${specialization}. With over ${experience} in the field, 
+    Dr. ${name} has made significant contributions to medical research and patient care. Their approach is centered 
+    on empathy, advanced diagnostics, and patient education. In addition to clinical practice, Dr. ${name} has published 
+    multiple papers on ${specialization} and often speaks at international conferences. Known for an unyielding commitment 
+    to excellence, they are considered a pioneer in modern ${specialization}. Dr. ${name} is dedicated to providing personalized 
+    treatment plans to ensure optimal outcomes for their patients. In their spare time, they mentor young physicians and contribute to community health initiatives.`;
+  };
+
+  // Create user data for seeding
   const usersData = names.map((name, index) => ({
     name: name,
     email: `${name.split(" ").join("").toLowerCase()}@example.com`,
@@ -94,13 +126,16 @@ async function seedUsersAndProfiles() {
       ],
       experience: `${5 + index} years`,
       rate: 100 + index * 20, // Example rate
+      rating: Math.round((Math.random() * (5 - 1) + 1) * 10) / 10, // Random rating
       certifications: [
         certifications[index % certifications.length],
         certifications[(index + 1) % certifications.length],
       ],
-      bio: `Dr. ${name} is a highly qualified specialist in ${
-        specializations[index % specializations.length]
-      } with extensive experience. Known for their empathy and dedication, Dr. ${name} utilizes the latest medical advancements to ensure the best treatment for their patients. They believe in the importance of a strong doctor-patient relationship and advocate for preventive care and education in health management.`,
+      bio: generateBio(
+        name,
+        specializations[index % specializations.length],
+        `${5 + index} years`
+      ),
     },
   }));
 
@@ -111,11 +146,24 @@ async function seedUsersAndProfiles() {
 
     const db = client.db(dbName);
     const userCollection = db.collection(userCollectionName);
+    const availabilityCollection = db.collection(availabilityCollectionName);
 
     // Insert users data
-    const result = await userCollection.insertMany(usersData);
+    const userResult = await userCollection.insertMany(usersData);
     console.log(
-      `${result.insertedCount} doctor users have been successfully seeded!`
+      `${userResult.insertedCount} doctor users have been successfully seeded!`
+    );
+
+    // Insert availability data
+    const availabilityDocs = Object.values(userResult.insertedIds).flatMap(
+      (userId) => generateAvailability(userId) // Generate unique availability for each doctor
+    );
+
+    const availabilityResult = await availabilityCollection.insertMany(
+      availabilityDocs
+    );
+    console.log(
+      `${availabilityResult.insertedCount} availability records have been successfully seeded!`
     );
   } catch (err) {
     console.error("Error seeding users and profiles:", err);

@@ -1,20 +1,25 @@
-import { CircleDot, Stethoscope } from "lucide-react";
+import { CircleDot, Star, Stethoscope } from "lucide-react";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn, formatCurrency } from "@/lib/utils";
 import Image from "next/image";
 import { IUser } from "@/lib/definitions";
-import { fetchDoctors } from "@/lib/queries";
+import { fetchDoctorCardData } from "@/lib/queries";
+import Ratings from "@/components/blocks/ratingStars";
 
 const DocCardOnline = async ({ className }: { className?: string }) => {
-  const doctors = await fetchDoctors({
-    limit: 10,
-  });
+  const doctors: IUser[] =
+    (await fetchDoctorCardData({
+      limit: 10,
+      sort: { "doctorInfo.rating": -1, "doctorInfo.rate": 1 },
+    }).catch((error: any) => {
+      return [];
+    })) || [];
 
   return (
     <>
-      {doctors?.map((doctor) => (
+      {doctors?.map((doctor: IUser) => (
         <div
           className={cn(
             " min-w-full md:min-w-[15rem] max-w-full p-4 rounded-md max-sm:shadow-sm dark:bg-muted/30 bg-background",
@@ -24,13 +29,13 @@ const DocCardOnline = async ({ className }: { className?: string }) => {
         >
           <div className="grid grid-cols-[auto_1fr] gap-4 w-full ">
             <div className="">
-              <div className="w-16 h-16 rounded-full  border-[1px]">
+              <div className="w-14 h-14 rounded-full  border-[1px]">
                 <Image
-                  src={doctor.image || "/default-image.png"}
+                  src={doctor.image || "/user.jpg"}
                   width={100}
                   height={100}
                   alt="A medical doctor"
-                  className="object-cover"
+                  className="object-cover w-14 h-14 rounded-full aspect-square "
                 />
               </div>
             </div>
@@ -39,22 +44,21 @@ const DocCardOnline = async ({ className }: { className?: string }) => {
                 <CircleDot className="w-2 h-2 text-green-500 animate-pulse" />
                 <span className="text-[10px]">Online now</span>
               </p>
-              <div>
-                <p className="text-sm font-medium">{doctor?.name}</p>
-                <p className="flex items-center gap-1">
+              <div className="flex flex-col gap-2">
+                <p className="text-sm font-medium">Dr. {doctor?.name}</p>
+                <p className="flex items-start gap-1">
                   <Stethoscope className="w-3.5 h-3.5" strokeWidth={1.8} />
-                  <span className="text-xs"> Primary Care</span>
+                  <span className="text-xs">
+                    {doctor?.doctorInfo?.specialties?.join(", ")}
+                  </span>
                 </p>
               </div>
-              <div>
-                <Image
-                  src="/rating.png"
-                  alt="rating stars"
-                  width={80}
-                  height={50}
-                  className="obejct-cover w-auto h-auto"
-                />
-              </div>
+              {doctor?.doctorInfo?.rating && (
+                <div className="flex items-center gap-2 text-sm">
+                  <Ratings value={doctor?.doctorInfo?.rating} />
+                  <span>{doctor?.doctorInfo?.rating}</span>
+                </div>
+              )}
               <p className="text-sm font-medium">
                 Rate: {formatCurrency(doctor?.doctorInfo?.rate ?? 0)}
               </p>

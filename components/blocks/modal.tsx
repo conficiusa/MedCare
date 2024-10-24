@@ -4,7 +4,6 @@ import { Dialog, DialogOverlay, DialogContent } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Drawer, DrawerOverlay, DrawerContent } from "@/components/ui/drawer";
 
 const Modal = ({ children }: { children: React.ReactNode }) => {
   const [open, setOpen] = React.useState(true);

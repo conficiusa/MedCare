@@ -1,4 +1,4 @@
-import { Document, ObjectId } from "mongoose";
+import { Document, ObjectId, Types } from "mongoose";
 import React from "react";
 
 //////////Mongoose definitions///////////
@@ -29,6 +29,7 @@ export interface DoctorInfo {
   experience: string;
   rate: number;
   certifications?: string[];
+  rating?: number;
   bio: string;
 }
 
@@ -50,4 +51,10 @@ export interface ServiceCard {
   icon: React.ReactNode;
   description: string;
   footer: string;
+}
+
+export interface IAvailability {
+  doctorId: Types.ObjectId;
+  date: Date;
+  timeSlots: string[];
 }

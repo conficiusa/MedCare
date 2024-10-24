@@ -1,36 +1,30 @@
-import { Stethoscope } from "lucide-react";
-import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AboutDoctor from "@/components/blocks/doctorsAbout";
 import ServiceDetails from "@/components/blocks/serviceDetails";
+import { fetchDoctorData } from "@/lib/queries";
+import { notFound } from "next/navigation";
+import DoctorProfileAside from "@/components/blocks/doctorProfileAside";
+import { Suspense } from "react";
+import { DoctorProfileAsideSkeleton } from "@/components/skeletons/doctorProfileSkeletons";
 
 interface Params {
-  name: string;
+  id: string;
 }
 interface DoctorProfileProps {
   params: Params;
 }
-const DoctorProfile = ({ params }: DoctorProfileProps) => {
+const DoctorProfile = async ({ params }: DoctorProfileProps) => {
+  let { doctor, availability } = await fetchDoctorData(params.id);
+  if (!doctor) {
+    notFound();
+  }
+  const plainAvailability = availability.map((item) => ({ ...item }));
   return (
-    <section className="min-h-[calc(100dvh_-_8rem)]">
-      <div className="grid grid-cols-[auto_1fr] h-full gap-6">
-        <aside className="bg-muted px-14 py-10 h-full min-h-[calc(100dvh_-_8rem)]">
-          <div>
-            <Image
-              src={"/profile.png"}
-              width={200}
-              height={200}
-              alt="the doctors' profile"
-            />
-          </div>
-          <div className="py-4">
-            <p className="text-semibold">Afi Sitsofe</p>
-            <p className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Stethoscope strokeWidth={1.8} className="w-4 h-4" /> Primary Care
-            </p>
-            <p className="mt-4 text-medium">GHS50.00</p>
-          </div>
-        </aside>
+    <section className="min-h-[calc(100dvh_-_4rem)]">
+      <div className="grid grid-cols-[300px_1fr] h-full gap-6">
+        <Suspense fallback={<DoctorProfileAsideSkeleton />}>
+          <DoctorProfileAside doctor={doctor} />
+        </Suspense>
         <div>
           <Tabs defaultValue="service" className="mt-4">
             <TabsList className="bg-transparent w-2/3 justify-between grid grid-cols-3">
@@ -54,10 +48,13 @@ const DoctorProfile = ({ params }: DoctorProfileProps) => {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="service">
-              <ServiceDetails />
+              <ServiceDetails
+                availability={plainAvailability}
+                name={doctor?.name}
+              />
             </TabsContent>
             <TabsContent value="about">
-              <AboutDoctor />
+              <AboutDoctor doctor={doctor} />
             </TabsContent>
           </Tabs>
         </div>

@@ -62,7 +62,7 @@ export default function SignInPage() {
         <Button
           variant="outline"
           disabled={isPending}
-          className="w-full mb-4 bg-white hover:bg-gray-50 text-gray-900 border border-gray-300"
+          className="w-full mb-4 bg-white hover:bg-gray-50 border dark:bg-background "
         >
           <svg
             className="w-5 h-5 mr-2"
@@ -92,7 +92,7 @@ export default function SignInPage() {
       </form>
       <div className="relative my-3">
         <Separator />
-        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-sm text-gray-500">
+        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background rounded-md px-2 text-sm">
           Or continue with
         </span>
       </div>

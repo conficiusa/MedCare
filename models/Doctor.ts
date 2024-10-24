@@ -18,6 +18,9 @@ export const DoctorInfoSchema = new Schema<DoctorInfo>(
     certifications: {
       type: [String],
     },
+    rating: {
+      type: Number,
+    },
     bio: {
       type: String,
       required: [true, "Bio is required"],

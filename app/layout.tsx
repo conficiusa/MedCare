@@ -23,7 +23,7 @@ export default function RootLayout({
   modal: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <AuthProvider>
         <Providers>
           <body className={cn("antialiased w-full", inter.className)}>

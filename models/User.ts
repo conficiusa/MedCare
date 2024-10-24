@@ -117,6 +117,7 @@ UserSchema.pre<IUser>("save", function (next) {
   next();
 });
 
+UserSchema.index({ role: 1 });
 const User = models.User || model<IUser>("User", UserSchema);
 
 export default User;

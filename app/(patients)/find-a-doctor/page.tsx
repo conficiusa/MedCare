@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Suspense } from "react";
 import CardOnlineSkeleton from "@/components/skeletons/onlineCardSkeleton";
+import Ratings from "@/components/blocks/ratingStars";
 
 const specialities: string[] = [
   "Cardiology",
