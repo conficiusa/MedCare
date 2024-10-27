@@ -21,6 +21,7 @@ const CheckoutContactInfo = ({
           form={form}
           labelClassName="text-muted-foreground font-light"
           icon={<UserIcon />}
+          required
         >
           <Input className="h-14 pl-10" />
         </FormBuilderWithIcons>
@@ -31,9 +32,10 @@ const CheckoutContactInfo = ({
           labelClassName="text-muted-foreground font-light"
           icon={<AtSign />}
           description={
-            "we will use this email to reach you about your appoiment"
+            "we will use this email to reach you about your appointment and send you a receipt"
           }
           descriptionClassName="font-light text-xs"
+          required
         >
           <Input className="h-14 pl-10" />
         </FormBuilderWithIcons>

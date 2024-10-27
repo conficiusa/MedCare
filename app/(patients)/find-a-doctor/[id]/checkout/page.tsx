@@ -1,5 +1,9 @@
-import CheckOutForm from "@/components/blocks/checkOutForm";
+import Paymentdoctorcard from "@/components/blocks/paymentdoctorcard";
 import { fetchDoctorData } from "@/lib/queries";
+import dynamic from "next/dynamic";
+const CheckOutForm = dynamic(() => import("@/components/blocks/checkOutForm"), {
+  ssr: false,
+});
 
 interface Params {
   id: string;
@@ -16,7 +20,9 @@ const Booking = async ({ params }: Bookingprops) => {
           <CheckOutForm rate={doctor?.doctorInfo?.rate ?? 0} />
           {/* <Button onClick={handlePaystackPayment}>pay</Button> */}
         </div>
-        <div></div>
+        <div>
+          <Paymentdoctorcard doctor={doctor}  />
+        </div>
       </div>
     </main>
   );

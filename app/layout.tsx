@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { addMaximumScaleToMetaViewport, checkIsIOS, cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { inter } from "@/lib/fonts";
 import Navbar from "@/components/blocks/navbar";
 import Footer from "@/components/blocks/footer";
@@ -38,7 +38,7 @@ export default function RootLayout({
                 {modal}
                 {children}
                 <Toaster />
-                <Analytics />
+                {/* <Analytics /> */}
               </main>
               <Footer />
             </ThemeProvider>

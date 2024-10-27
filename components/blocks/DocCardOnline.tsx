@@ -60,7 +60,7 @@ const DocCardOnline = async ({ className }: { className?: string }) => {
                 </div>
               )}
               <p className="text-sm font-medium">
-                Rate: {formatCurrency(doctor?.doctorInfo?.rate ?? 0)}
+                Rate: {formatCurrency(doctor?.doctorInfo?.rate as number)}
               </p>
             </div>
           </div>

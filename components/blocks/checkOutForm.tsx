@@ -7,10 +7,11 @@ import CheckoutContactInfo from "@/components/blocks/checkoutContactInfo";
 import { Form } from "@/components/ui/form";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
-import CheckoutpaymentInfo from "./checkoutpaymentInfo";
-import { Button } from "../ui/button";
+import CheckoutpaymentInfo from "@/components/blocks/checkoutpaymentInfo";
+import { Button } from "@/components/ui/button";
 import { handlePaystackPayment } from "@/lib/formSubmissions";
 import { formatCurrency } from "@/lib/utils";
+import { Banknote } from "lucide-react";
 
 const CheckOutForm = ({ rate }: { rate: number }) => {
   const { data: session } = useSession();
@@ -43,8 +44,6 @@ const CheckOutForm = ({ rate }: { rate: number }) => {
       console.error(error);
     }
   };
-
-  console.log(form.formState.errors);
   return (
     <div>
       <Form {...form}>
@@ -52,8 +51,11 @@ const CheckOutForm = ({ rate }: { rate: number }) => {
           <CheckoutContactInfo form={form} />
           <CheckoutpaymentInfo form={form} />
           <div>
-            <Button onClick={form.handleSubmit(handleSubmit)}>
-              Pay {formatCurrency(rate ?? 0)}
+            <Button
+              onClick={form.handleSubmit(handleSubmit)}
+              className="font-bold w-full flex justify-center gap-2 "
+            >
+              <Banknote /> Pay {formatCurrency(rate as number)}
             </Button>
           </div>
         </form>

@@ -70,6 +70,7 @@ interface FormBuilderWIthIconsProps extends FormBuilderProps {
   icon: React.ReactNode;
   iconClassName?: string;
   endIcon?: React.ReactNode;
+  required?: boolean;
 }
 export const FormBuilderWithIcons = ({
   name,
@@ -84,6 +85,7 @@ export const FormBuilderWithIcons = ({
   icon,
   iconClassName,
   endIcon,
+  required,
   ...rest
 }: FormBuilderWIthIconsProps) => {
   return (
@@ -94,6 +96,9 @@ export const FormBuilderWithIcons = ({
         <FormItem {...rest}>
           <FormLabel htmlFor={name} className={cn("", labelClassName)}>
             {label}
+            {required && (
+              <span className="text-destructive font-thin ml-1">*</span>
+            )}
           </FormLabel>
           <FormControl>
             <div className="relative">
