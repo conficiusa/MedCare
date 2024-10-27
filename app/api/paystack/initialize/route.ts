@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import https from "https";
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const { email, amount, channels, metadata } = await request.json();
     const params = JSON.stringify({
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
           if (res.statusCode === 200) {
             resolve(NextResponse.json(JSON.parse(data)));
           } else {
-            reject(
+            resolve(
               NextResponse.json({ error: "Failed to initialize transaction" })
             );
           }
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
       });
 
       req.on("error", (e) => {
-        reject(NextResponse.json({ error: e.message }));
+        resolve(NextResponse.json({ error: e.message }));
       });
 
       req.write(params);
