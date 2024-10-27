@@ -69,12 +69,11 @@ export const handlePaystackPayment = async (
     const result = await response.json();
 
     if (result.status) {
-      // Redirect to the authorization_url
-      // window.location.href = result.result.authorization_url;
       const popup = new PaystackPop();
       popup.resumeTransaction(result?.data?.access_code);
     } else {
       alert("Payment initialization failed");
+      console.error("Payment initialization failed", result);
     }
   } catch (error) {
     console.error("Payment error:", error);
