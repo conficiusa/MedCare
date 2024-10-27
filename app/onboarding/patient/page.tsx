@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -26,6 +26,7 @@ export default function Component() {
   const [currentStep, setCurrentStep] = useState<Step>("details");
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
 
   const { data: session, update } = useSession();
 
@@ -148,7 +149,12 @@ export default function Component() {
         );
     }
   };
-
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  if (!isClient) {
+    return null;
+  }
   return (
     <div className="min-h-[100dvh] bg-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg overflow-hidden">

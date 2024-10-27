@@ -13,6 +13,7 @@ interface Bookingprops {
 }
 const Booking = async ({ params }: Bookingprops) => {
   let { doctor } = await fetchDoctorData(params.id);
+  doctor = JSON.parse(JSON.stringify(doctor));
   return (
     <main className="min-h-[calc(100dvh_-_4rem)] container">
       <div className="grid grid-cols-2 gap-5 pt-4 md:p-10">
@@ -21,7 +22,7 @@ const Booking = async ({ params }: Bookingprops) => {
           {/* <Button onClick={handlePaystackPayment}>pay</Button> */}
         </div>
         <div>
-          <Paymentdoctorcard doctor={doctor}  />
+          <Paymentdoctorcard doctor={doctor} />
         </div>
       </div>
     </main>

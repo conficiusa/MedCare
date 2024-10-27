@@ -35,7 +35,7 @@ const CheckOutForm = ({ rate }: { rate: number }) => {
     if (rate) {
       form.setValue("amount", rate);
     }
-  }, [rate]);
+  }, [rate,form]);
 
   const handleSubmit = async (data: z.output<typeof CheckoutSchema>) => {
     try {
