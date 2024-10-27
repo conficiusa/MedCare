@@ -14,9 +14,9 @@ const Paymentdoctorcard = ({ doctor }: { doctor: IUser }) => {
   const date = dateParam ? dateParam : "";
   console.log(time);
   return (
-    <div className="">
-      <Card className="bg-muted/30 max-w-sm ml-auto">
-        <CardContent className="p-8">
+    <div className="py-8">
+      <Card className="bg-muted/30 md:max-w-sm ml-auto">
+        <CardContent className=" p-8">
           <div className="flex flex-col gap-2 divide-y-2">
             <div>
               <p className="font-medium"> Online Consultation</p>

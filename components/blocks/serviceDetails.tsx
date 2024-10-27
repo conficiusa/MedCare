@@ -6,7 +6,7 @@ import AnimationWrapper from "@/components/wrappers/animationWrapper";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import moment from "moment";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const ServiceDetails = ({
   availability,
@@ -22,7 +22,6 @@ const ServiceDetails = ({
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams);
   const { push } = useRouter();
-  const pathname = usePathname();
   const availableTimeSlots = useMemo(() => {
     if (date) {
       const selectedAvailability = availability.find(
@@ -52,7 +51,7 @@ const ServiceDetails = ({
   };
 
   return (
-    <div className="mt-4 grid grid-cols-[auto_1fr] gap-20">
+    <div className="mt-8 grid md:grid-cols-[auto_1fr] md:gap-12 xl:gap-20">
       <div className="">
         <p className="uppercase text-xs text-muted-foreground px-2">
           Select Date
@@ -67,7 +66,7 @@ const ServiceDetails = ({
           <span className="text-primary">green</span>
         </small>
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col max-lg:py-6 max-md:gap-8">
         <div className="flex-1">
           {date ? (
             <AnimationWrapper>
@@ -83,7 +82,7 @@ const ServiceDetails = ({
                     {availableTimeSlots.map((slot) => (
                       <Button
                         key={slot}
-                        className="w-fit"
+                        className="w-fit text-xs lg:min-w-40"
                         variant={selectedTime === slot ? "default" : "outline"}
                         size={"sm"}
                         onClick={() => {

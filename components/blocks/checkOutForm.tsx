@@ -47,10 +47,10 @@ const CheckOutForm = ({ rate }: { rate: number }) => {
   return (
     <div>
       <Form {...form}>
-        <form className="grid gap-10">
+        <form className="grid md:gap-10 gap-6">
           <CheckoutContactInfo form={form} />
           <CheckoutpaymentInfo form={form} />
-          <div>
+          <div className="mt-6">
             <Button
               onClick={form.handleSubmit(handleSubmit)}
               className="font-bold w-full flex justify-center gap-2 "

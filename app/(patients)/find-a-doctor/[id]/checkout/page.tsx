@@ -15,13 +15,12 @@ const Booking = async ({ params }: Bookingprops) => {
   let { doctor } = await fetchDoctorData(params.id);
   doctor = JSON.parse(JSON.stringify(doctor));
   return (
-    <main className="min-h-[calc(100dvh_-_4rem)] container">
-      <div className="grid grid-cols-2 gap-5 pt-4 md:p-10">
-        <div>
+    <main className="min-h-[calc(100dvh_-_4rem)] container max-md:mb-10">
+      <div className="grid md:grid-cols-2 md:gap-10 gap-6 pt-4 md:p-6 lg:p-10">
+        <div className="max-md:order-2">
           <CheckOutForm rate={doctor?.doctorInfo?.rate ?? 0} />
-          {/* <Button onClick={handlePaystackPayment}>pay</Button> */}
         </div>
-        <div>
+        <div className="max-md:order-1">
           <Paymentdoctorcard doctor={doctor} />
         </div>
       </div>

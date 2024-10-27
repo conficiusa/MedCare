@@ -20,14 +20,14 @@ const DoctorProfile = async ({ params }: DoctorProfileProps) => {
   }
   const plainAvailability = availability.map((item) => ({ ...item }));
   return (
-    <section className="min-h-[calc(100dvh_-_4rem)]">
-      <div className="grid grid-cols-[300px_1fr] h-full gap-6">
+    <section className="min-h-[calc(100dvh_-_4rem)] mb-10">
+      <div className="grid lg:grid-cols-[300px_1fr] h-full gap-6">
         <Suspense fallback={<DoctorProfileAsideSkeleton />}>
           <DoctorProfileAside doctor={doctor} />
         </Suspense>
-        <div>
+        <div className="max-lg:px-8">
           <Tabs defaultValue="service" className="mt-4">
-            <TabsList className="bg-transparent w-2/3 justify-between grid grid-cols-3">
+            <TabsList className="bg-transparent md:w-2/3 justify-between grid grid-cols-3">
               <TabsTrigger
                 value="service"
                 className="data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:border-b-2 border-primary rounded-none transition-none data-[state=active]:shadow-none"

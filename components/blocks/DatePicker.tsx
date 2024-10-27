@@ -26,8 +26,9 @@ const DatePicker = ({
           available: "text-primary font-semibold",
         }}
         classNames={{
-          head_row: "flex gap-6 mb-6",
-          row: "flex w-full mt-2 mb-4 gap-6",
+          head_row: "flex gap-6 md:gap-3 xl:gap-6 mb-6",
+          row: "flex w-full mt-2 mb-4 gap-6 md:gap-3 xl:gap-6",
+          table: "w-full",
         }}
       />
     </div>
