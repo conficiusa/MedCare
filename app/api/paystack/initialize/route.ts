@@ -1,7 +1,5 @@
-// /app/api/paystack/initialize/route.js
-import { channel } from "diagnostics_channel";
-import https from "https";
 import { NextRequest, NextResponse } from "next/server";
+import https from "https";
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,43 +23,32 @@ export async function POST(request: NextRequest) {
     };
 
     return new Promise((resolve, reject) => {
-      const paystackReq = https.request(options, (paystackRes) => {
+      const req = https.request(options, (res) => {
         let data = "";
 
-        paystackRes.on("data", (chunk) => {
+        res.on("data", (chunk) => {
           data += chunk;
         });
 
-        paystackRes.on("end", () => {
-          const responseData = JSON.parse(data);
-          if (responseData.status) {
-            resolve(NextResponse.json(responseData, { status: 200 }));
+        res.on("end", () => {
+          if (res.statusCode === 200) {
+            resolve(NextResponse.json(JSON.parse(data)));
           } else {
-            resolve(
-              NextResponse.json(
-                { error: responseData.message },
-                { status: 400 }
-              )
+            reject(
+              NextResponse.json({ error: "Failed to initialize transaction" })
             );
           }
         });
       });
 
-      paystackReq.on("error", (error) => {
-        console.error(error);
-        reject(
-          NextResponse.json({ error: "Something went wrong!" }, { status: 500 })
-        );
+      req.on("error", (e) => {
+        reject(NextResponse.json({ error: e.message }));
       });
 
-      paystackReq.write(params);
-      paystackReq.end();
+      req.write(params);
+      req.end();
     });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: "Invalid request data" },
-      { status: 400 }
-    );
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message });
   }
 }
