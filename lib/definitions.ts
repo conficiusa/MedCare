@@ -58,3 +58,22 @@ export interface IAvailability {
   date: Date;
   timeSlots: string[];
 }
+
+type PaymentMethod =
+  | "credit_card"
+  | "paypal"
+  | "bank_transfer"
+  | "mobile_money";
+type MobileMoneyType = "mtn" | "telecel" | "airteltigo";
+
+export interface ICheckout extends Document {
+  appointmentId: ObjectId;
+  patientId: ObjectId;
+  amount: number;
+  currency: string;
+  status: "pending" | "completed" | "failed";
+  paymentMethod: PaymentMethod;
+  mobileMoneyType?: MobileMoneyType;
+  createdAt: Date;
+  updatedAt: Date;
+}

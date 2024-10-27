@@ -1,12 +1,19 @@
 import { IUser } from "@/lib/definitions";
 import { formatCurrency } from "@/lib/utils";
-import { Stethoscope } from "lucide-react";
+import { ArrowLeft, Stethoscope } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const DoctorProfileAside = ({ doctor }: { doctor: IUser }) => {
   return (
     <aside className="bg-muted/40 px-14 py-10 h-full min-h-[calc(100dvh_-_4rem)]">
+      <div className="mb-6">
+        <Link className="flex items-center gap-2" href={"/find-a-doctor"}>
+          <ArrowLeft strokeWidth={1.8} className="w-4 h-4" />
+          <span className="text-xs">Go back</span>
+        </Link>
+      </div>
       <div>
         <Image
           src={doctor?.image || "/user.jpg"}
@@ -24,8 +31,8 @@ const DoctorProfileAside = ({ doctor }: { doctor: IUser }) => {
             {doctor?.doctorInfo?.specialties?.join(", ")}
           </span>
         </p>
-        <p className="mt-4 text-sm font-medium">
-           {formatCurrency(doctor?.doctorInfo?.rate ?? 0)}
+        <p className="mt-6 text-sm font-medium">
+          {formatCurrency(doctor?.doctorInfo?.rate ?? 0)}
         </p>
       </div>
     </aside>

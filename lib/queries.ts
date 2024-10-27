@@ -36,6 +36,17 @@ export const fetchDoctorData = async (id: string) => {
     let doctorQuery = User.findById(id).select("-password");
     let availabilityQuery = Availability.find({
       doctorId: new mongoose.Types.ObjectId(id),
+      $or: [
+        { date: { $gt: today } },
+        {
+          date: today, 
+          timeSlots: {
+            $elemMatch: {
+              $gte: new Date().toISOString().split("T")[1], // Filter for time slots after current time
+            },
+          },
+        },
+      ],
     });
     const [doctor, availability] = await Promise.all([
       doctorQuery.exec(),

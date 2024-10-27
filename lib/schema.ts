@@ -1,3 +1,5 @@
+import { channel } from "diagnostics_channel";
+import { m } from "framer-motion";
 import { z } from "zod";
 
 const multiSelectSchema = z.object({
@@ -77,4 +79,23 @@ export const PatientOnboardingSchema = z.object({
   medicalHistory: z
     .string()
     .max(900, "Medical history must be less than 300 characters"),
+});
+
+export const CheckoutSchema = z.object({
+  fullName: z.string().min(1, "Please enter your full name."),
+  email: z
+    .string()
+    .min(1, "please enter your email")
+    .email("Please enter a valid email address."),
+  channel: z.enum(["mobile_money", "card"]),
+  amount: z.number().int().positive("Amount must be greater than zero"),
+  mobileMoneyType: z.enum(["mtn", "airteltigo", "telecel_cash"]).optional(),
+}).refine((data) => {
+  if (data.channel === "mobile_money" && !data.mobileMoneyType) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Mobile money type is required when the channel is mobile money",
+  path: ["mobileMoneyType"],
 });

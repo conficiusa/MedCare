@@ -11,6 +11,7 @@
   "dependencies": {
     "@auth/mongodb-adapter": "^3.4.2",
     "@hookform/resolvers": "^3.9.0",
+    "@paystack/inline-js": "^2.22.1",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-context-menu": "^2.2.1",
@@ -51,6 +52,7 @@
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",
+    "react-paystack": "^6.0.0",
     "react-phone-number-input": "^3.4.5",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.2",
@@ -62,6 +64,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/canvas-confetti": "^1.6.4",
     "@types/node": "^20",
+    "@types/paystack__inline-js": "^1.0.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",

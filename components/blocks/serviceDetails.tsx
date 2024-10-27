@@ -1,12 +1,12 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useTransition } from "react";
 import DatePicker from "@/components/blocks/DatePicker";
 import { IAvailability } from "@/lib/definitions";
 import AnimationWrapper from "@/components/wrappers/animationWrapper";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import moment from "moment";
-import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const ServiceDetails = ({
   availability,
@@ -18,6 +18,11 @@ const ServiceDetails = ({
   const [date, setDate] = React.useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<string | undefined>();
   const availableDates = availability.map((item) => new Date(item.date));
+  const [isPending, startTransition] = useTransition();
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams);
+  const { push } = useRouter();
+  const pathname = usePathname();
   const availableTimeSlots = useMemo(() => {
     if (date) {
       const selectedAvailability = availability.find(
@@ -32,6 +37,19 @@ const ServiceDetails = ({
       setSelectedTime(undefined);
     }
   }, [date]);
+
+  console.log(params);
+  const handleBookNow = () => {
+    startTransition(() => {
+      if (date && selectedTime) {
+        const query = new URLSearchParams({
+          date: date?.toISOString(),
+          time: selectedTime,
+        }).toString();
+        push(`/find-a-doctor/${availability[0]?.doctorId}/checkout?${query}`);
+      }
+    });
+  };
 
   return (
     <div className="mt-4 grid grid-cols-[auto_1fr] gap-20">
@@ -116,11 +134,9 @@ const ServiceDetails = ({
                 </p>
               </div>
               <div>
-                <Link
-                  href={`/find-a-doctor/${availability[0]?.doctorId}/checkout`}
-                >
-                  <Button>Book Now</Button>
-                </Link>
+                <Button onClick={handleBookNow} disabled={isPending}>
+                  Book Now
+                </Button>
               </div>
             </div>
           </AnimationWrapper>
