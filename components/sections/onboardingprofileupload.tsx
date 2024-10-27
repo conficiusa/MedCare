@@ -11,7 +11,7 @@ import { UseFormReturn } from "react-hook-form";
 import { PatientOnboardingSchema } from "@/lib/schema";
 import { z } from "zod";
 import validateStep from "@/hooks/validateStep";
-import { Step } from "@/app/onboarding/patient/page";
+import { Step } from "@/components/sections/onbaordingPatient";
 
 export default function ProfileUpload({
   form,

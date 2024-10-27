@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Session } from "next-auth";
 import validateStep from "@/hooks/validateStep";
-import { Step } from "@/app/onboarding/patient/page";
+import { Step } from "@/components/sections/onbaordingPatient";
 
 const OnboardingUserProfile = ({
   form,

@@ -1,6 +1,6 @@
-import { Step } from "@/app/onboarding/patient/page";
 import { Camera, HeartPulse, MapPinHouse, Rocket, User } from "lucide-react";
 import { motion } from "framer-motion";
+import { Step } from "@/components/sections/onbaordingPatient";
 
 const OnboardingSideNav = ({
   steps,

@@ -11,8 +11,8 @@ import { conditions } from "@/lib/data";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import validateStep from "@/hooks/validateStep";
-import { Step } from "@/app/onboarding/patient/page";
 import { Button } from "@/components/ui/button";
+import { Step } from "@/components/sections/onbaordingPatient";
 
 const OnBoardingMedicalHistory = ({
   form,

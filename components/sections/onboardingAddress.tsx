@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import {  CardHeader, CardTitle } from "@/components/ui/card";
+import { CardHeader, CardTitle } from "@/components/ui/card";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { PatientOnboardingSchema } from "@/lib/schema";
@@ -10,7 +10,7 @@ import SelectComponent from "@/components/blocks/selectComponent";
 import { regions } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import validateStep from "@/hooks/validateStep";
-import { Step } from "@/app/onboarding/patient/page";
+import { Step } from "@/components/sections/onbaordingPatient";
 
 interface OnboardingAddressProps {
   form: UseFormReturn<z.output<typeof PatientOnboardingSchema>>;
@@ -25,10 +25,7 @@ const OnboardingAddress = ({
   setCurrentStep,
 }: OnboardingAddressProps) => {
   const handleNext = async () => {
-    const isValid = await validateStep(form, [
-      "region",
-      "city",
-    ]);
+    const isValid = await validateStep(form, ["region", "city"]);
     const currentIndex = steps.indexOf(currentStep);
     if (isValid) {
       setCurrentStep(steps[currentIndex + 1]);
@@ -52,8 +49,7 @@ const OnboardingAddress = ({
         <FormBuilder control={form.control} name="city" label="City/Town">
           <Input type="text" placeholder="city" />
         </FormBuilder>
-   
-      
+
         <Button className="w-full mt-4" onClick={handleNext} type="button">
           Continue
         </Button>
