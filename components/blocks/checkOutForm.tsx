@@ -35,7 +35,7 @@ const CheckOutForm = ({ rate }: { rate: number }) => {
     if (rate) {
       form.setValue("amount", rate);
     }
-  }, [rate,form]);
+  }, [rate, form]);
 
   const handleSubmit = async (data: z.output<typeof CheckoutSchema>) => {
     try {
@@ -54,6 +54,7 @@ const CheckOutForm = ({ rate }: { rate: number }) => {
             <Button
               onClick={form.handleSubmit(handleSubmit)}
               className="font-bold w-full flex justify-center gap-2 "
+              disabled={form.formState.isSubmitting}
             >
               <Banknote /> Pay {formatCurrency(rate as number)}
             </Button>
