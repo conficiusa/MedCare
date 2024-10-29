@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { Form } from "@/components/ui/form";
 import { FormBuilderWithIcons } from "./formBuilder";
 import { cn } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
 
 export const SubmitButton = ({
   children,
@@ -37,6 +38,7 @@ export const SubmitButton = ({
 };
 
 const SignInform = () => {
+  const callbackUrl = useSearchParams().get("redirect");
   const [isPending, startTransition] = useTransition();
   const form = useForm<z.output<typeof SignInSchema>>({
     resolver: zodResolver(SignInSchema),
@@ -46,7 +48,7 @@ const SignInform = () => {
   });
 
   const handleSignIn = async (data: z.output<typeof SignInSchema>) => {
-    const res = await emailAuth(data);
+    const res = await emailAuth(data, callbackUrl);
     startTransition(async () => {
       if (res) {
         toast.error(res.type, {

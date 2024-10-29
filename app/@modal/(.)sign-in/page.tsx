@@ -9,20 +9,21 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 import Modal from "@/components/blocks/modal";
 import Logo from "@/components/blocks/logo";
+import { useSearchParams } from "next/navigation";
 
 export default function SignInPage() {
   const [isPending, startTransition] = useTransition();
+  const redirect = useSearchParams().get("redirect");
 
   const handleGoogleSignIn = async () => {
     startTransition(async () => {
       try {
-        await googleSignIn();
+        await googleSignIn(redirect);
       } catch (error: any) {
         toast.error(error.message);
       }
     });
   };
-
   return (
     <Modal>
       <div className="px-4">

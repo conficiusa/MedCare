@@ -29,6 +29,7 @@ export const authConfig: NextAuthConfig = {
         "/profile",
         "/settings",
         "/admin",
+        "/room",
       ];
       const onboardingPaths = [
         "/onboarding",
@@ -58,7 +59,9 @@ export const authConfig: NextAuthConfig = {
           return true; // Allow navigation within the onboarding flow// Avoid loop by only redirecting if not already on /onboarding
         }
         if (request.nextUrl.pathname !== "/sign-in") {
-          return Response.redirect(new URL("/sign-in", request.nextUrl));
+          return Response.redirect(
+            new URL(`/sign-in?redirect=${request?.nextUrl}`, request.nextUrl)
+          );
         }
         return true; // Avoid loop by only redirecting if not already on /login
       } else if (isLoggedIn && request.nextUrl.pathname !== "/find-a-doctor") {

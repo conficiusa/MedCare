@@ -7,14 +7,16 @@ import SignInform from "@/components/blocks/signInform";
 import { googleSignIn } from "@/lib/actions";
 import { useTransition } from "react";
 import { toast } from "sonner";
+import { useSearchParams } from "next/navigation";
 
 export default function SignInPage() {
   const [isPending, startTransition] = useTransition();
+  const redirect = useSearchParams().get("redirect");
 
   const handleGoogleSignIn = async () => {
     startTransition(async () => {
       try {
-        await googleSignIn();
+        await googleSignIn(redirect);
       } catch (error: any) {
         toast.error(error.message);
       }

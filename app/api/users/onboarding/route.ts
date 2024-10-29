@@ -9,9 +9,7 @@ import { put, PutBlobResult } from "@vercel/blob";
 
 export const PATCH = auth(async function PATCH(req) {
   try {
-    //geting the user session
     const session = await auth();
-    // Connect to the database
     await connectToDatabase();
 
     //get data from requiest

@@ -14,7 +14,10 @@ export type State = {
   // fields?: Record<string, string>;
 };
 
-export async function emailAuth(email: z.output<typeof SignInSchema>) {
+export async function emailAuth(
+  email: z.output<typeof SignInSchema>,
+  callbackUrl: string | null
+) {
   try {
     await connectToDatabase().catch((error: any) => {
       return {
@@ -30,7 +33,10 @@ export async function emailAuth(email: z.output<typeof SignInSchema>) {
         type: "ValidationError",
       };
     }
-    await signIn("nodemailer", parsed.data);
+    await signIn("nodemailer", {
+      ...parsed.data,
+      callbackUrl,
+    });
   } catch (error: any) {
     console.log(error);
     if (error instanceof AuthError) {
@@ -112,14 +118,14 @@ export async function emailAuth(email: z.output<typeof SignInSchema>) {
 //   }
 // }
 
-export const googleSignIn = async () => {
+export const googleSignIn = async (redirect: string | null) => {
   try {
     await signIn("google", {
-      callbackUrl: "/find-a-doctor",
-      redirectTo: "/find-a-doctor",
+      callbackUrl: redirect ?? "/find-a-doctor",
+      redirectTo: redirect ?? "/find-a-doctor",
     });
   } catch (error: any) {
-    console.log(error.type)
+    console.log(error.type);
     if (error instanceof AuthError) {
       switch (error.type) {
         case "OAuthSignInError":
