@@ -9,9 +9,13 @@ import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import CheckoutpaymentInfo from "@/components/blocks/checkoutpaymentInfo";
 import { Button } from "@/components/ui/button";
-import { handlePaystackPayment } from "@/lib/formSubmissions";
+import {
+  handlePaystackPayment,
+  VerifyPaystackPayment,
+} from "@/lib/formSubmissions";
 import { formatCurrency } from "@/lib/utils";
 import { Banknote } from "lucide-react";
+import AnimationWrapper from "@/components/wrappers/animationWrapper";
 
 const CheckOutForm = ({ rate }: { rate: number }) => {
   const { data: session } = useSession();
@@ -39,13 +43,15 @@ const CheckOutForm = ({ rate }: { rate: number }) => {
 
   const handleSubmit = async (data: z.output<typeof CheckoutSchema>) => {
     try {
-      await handlePaystackPayment(data);
+      const reference = await handlePaystackPayment(data);
+      // const verify = await VerifyPaystackPayment(reference);
+      // console.log(verify);
     } catch (error: any) {
       console.error(error);
     }
   };
   return (
-    <div>
+    <AnimationWrapper>
       <Form {...form}>
         <form className="grid md:gap-10 gap-6">
           <CheckoutContactInfo form={form} />
@@ -61,7 +67,7 @@ const CheckOutForm = ({ rate }: { rate: number }) => {
           </div>
         </form>
       </Form>
-    </div>
+    </AnimationWrapper>
   );
 };
 

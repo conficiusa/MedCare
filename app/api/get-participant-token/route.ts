@@ -1,11 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { AccessToken } from "livekit-server-sdk";
 import { auth } from "@/auth";
 
-export async function GET(req: NextRequest) {
-  const session = await auth();
-
-  if (!session) {
+export const GET = auth(async function GET(req) {
+  if (!req.auth) {
     return NextResponse.json(
       { error: "You are not authenticated" },
       { status: 401 }
@@ -29,11 +27,6 @@ export async function GET(req: NextRequest) {
   const apiSecret = process.env.LIVEKIT_API_SECRET;
   const wsUrl = process.env.NEXT_PUBLIC_LIVEKIT_URL;
 
-  // TODO: DEBUG
-  console.log("apiKey", apiKey);
-  console.log("apiSecret", apiSecret);
-  console.log("wsUrl", wsUrl);
-
   if (!apiKey || !apiSecret || !wsUrl) {
     return NextResponse.json(
       { error: "Server misconfigured" },
@@ -46,4 +39,4 @@ export async function GET(req: NextRequest) {
   at.addGrant({ room, roomJoin: true, canPublish: true, canSubscribe: true });
 
   return NextResponse.json({ token: await at.toJwt() });
-}
+});

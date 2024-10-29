@@ -67,7 +67,6 @@
     "@types/bcrypt": "^5.0.2",
     "@types/canvas-confetti": "^1.6.4",
     "@types/node": "^20",
-    "@types/paystack__inline-js": "^1.0.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",

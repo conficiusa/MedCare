@@ -18,7 +18,11 @@ export default function SignInPage() {
   const handleGoogleSignIn = async () => {
     startTransition(async () => {
       try {
-        await googleSignIn(redirect);
+        toast.promise(googleSignIn(redirect), {
+          loading: "Signing in...",
+          success: "Login successful",
+          error: "An error occurred",
+        });
       } catch (error: any) {
         toast.error(error.message);
       }

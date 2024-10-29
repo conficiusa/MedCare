@@ -10,7 +10,6 @@ import { UpdateSession } from "next-auth/react";
 import { Session } from "next-auth";
 import { toast } from "sonner";
 import PaystackPop from "@paystack/inline-js";
-import { metadata } from "@/app/layout";
 
 export const useCreateAccount = () => {
   const onCreateAccount = async (data: z.output<typeof SignUpSchema>) => {
@@ -46,6 +45,25 @@ export const usePatientOnboard = (
   return { onPatientOnboard };
 };
 
+export const VerifyPaystackPayment = async (
+  reference: string,
+  amount: number
+) => {
+  try {
+    const response = await fetch(
+      `/api/paystack/verify/${reference}?rate=${amount}`,
+      {
+        method: "GET",
+      }
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Payment Veriication error:", error);
+    alert("Payment verification failed, please try again.");
+  }
+};
+
 export const handlePaystackPayment = async (
   data: z.output<typeof CheckoutSchema>
 ) => {
@@ -70,9 +88,27 @@ export const handlePaystackPayment = async (
 
     if (result.status) {
       const popup = new PaystackPop();
-      popup.resumeTransaction(result?.data?.access_code);
+      popup.resumeTransaction(result?.data?.access_code, {
+        onSuccess: async (res: any) => {
+          toast.promise(VerifyPaystackPayment(res.reference, data?.amount), {
+            loading: "Verifying payment...",
+            success: (data) => {
+              if (data?.data?.status === "success") {
+                return "Payment verified successfully";
+              } else {
+                throw new Error("Payment verification failed");
+              }
+            },
+            error: (error) => {
+              return "payment could not be verified";
+            },
+          });
+        },
+      });
     } else {
-      alert("Payment initialization failed");
+      toast.error("Payment initialization failed", {
+        description: result.message,
+      });
       console.error("Payment initialization failed", result);
     }
   } catch (error) {
