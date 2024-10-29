@@ -29,6 +29,7 @@ export async function GET(req: NextRequest) {
   const apiSecret = process.env.LIVEKIT_API_SECRET;
   const wsUrl = process.env.NEXT_PUBLIC_LIVEKIT_URL;
 
+  // TODO: DEBUG
   console.log("apiKey", apiKey);
   console.log("apiSecret", apiSecret);
   console.log("wsUrl", wsUrl);
