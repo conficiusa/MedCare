@@ -36,7 +36,6 @@ export default function Page() {
           router.push(`/sign-in?${params.toString()}`);
         }
         setToken(data.token);
-        console.log(token);
       } catch (e) {
         console.error(e);
       }
