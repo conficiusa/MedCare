@@ -19,7 +19,6 @@ const CheckoutpaymentInfo = ({
     form.setValue("mobileMoneyType", value as "mtn" | "vod" | "atl");
   };
 
-  console.log(form.formState.errors);
   return (
     <div>
       <p className=" font-semibold mb-6">Payment details</p>

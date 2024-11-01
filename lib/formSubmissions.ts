@@ -65,15 +65,6 @@ export const VerifyPaystackPayment = async (
   }
 };
 
-// const handlePostPayment = async (reference: string, amount: number) => {
-//   const result = await VerifyPaystackPayment(reference, amount);
-//   // if (result?.data?.status === "success") {
-//   //   const transactionData = {};
-//   //   const appointmentData = {};
-//   //   FinalizeAppointment(transactionData, appointmentData);
-//   // }
-// };
-
 export const handlePaystackPayment = async (
   data: z.output<typeof CheckoutSchema>,
   session: Session | null,
