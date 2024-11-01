@@ -40,7 +40,7 @@ export default function Page() {
         console.error(e);
       }
     })();
-  }, []);
+  }, [pathname, router]);
 
   if (token === "" || !token) {
     return (

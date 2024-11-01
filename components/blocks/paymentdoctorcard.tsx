@@ -12,7 +12,6 @@ const Paymentdoctorcard = ({ doctor }: { doctor: IUser }) => {
   const timeParam = useSearchParams().get("time");
   const time = timeParam ? timeParam : "";
   const date = dateParam ? dateParam : "";
-  console.log(time);
   return (
     <div className="py-8">
       <Card className="bg-muted/30 md:max-w-sm ml-auto">
@@ -21,7 +20,8 @@ const Paymentdoctorcard = ({ doctor }: { doctor: IUser }) => {
             <div>
               <p className="font-medium"> Online Consultation</p>
               <p className="text-sm text-muted-foreground">
-                {moment(date).format("MMMM D, YY")} <span className="ml-4">{time}</span>
+                {moment(date).format("MMMM D, YY")}{" "}
+                <span className="ml-4">{time}</span>
               </p>
             </div>
             <div className="flex py-4 gap-6">

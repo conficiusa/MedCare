@@ -8,7 +8,7 @@ import SendMessage from "@/components/sections/sendMessage";
 
 const Home = async () => {
   return (
-    <div className="bg-gradient-to-b from-teal-50 min-h-[100dvh] dark:bg-background container ">
+    <div className="bg-gradient-to-b from-teal-50 min-h-[100dvh] dark:bg-background dark:from-background dark:to-background container ">
       <Hero />
       <Services />
       <ConsultationPreview />

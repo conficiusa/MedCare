@@ -14,11 +14,11 @@ interface DoctorProfileProps {
   params: Params;
 }
 const DoctorProfile = async ({ params }: DoctorProfileProps) => {
-  let { doctor, availability } = await fetchDoctorData(params.id);
-  if (!doctor) {
+  const data = await fetchDoctorData(params.id);
+  if (!data || !data.doctor) {
     notFound();
   }
-  const plainAvailability = availability.map((item) => ({ ...item }));
+  const { doctor, availability } = data;
   return (
     <section className="min-h-[calc(100dvh_-_4rem)] mb-10">
       <div className="grid lg:grid-cols-[300px_1fr] h-full gap-6">
@@ -48,10 +48,7 @@ const DoctorProfile = async ({ params }: DoctorProfileProps) => {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="service">
-              <ServiceDetails
-                availability={plainAvailability}
-                name={doctor?.name}
-              />
+              <ServiceDetails availability={availability} name={doctor?.name} />
             </TabsContent>
             <TabsContent value="about">
               <AboutDoctor doctor={doctor} />

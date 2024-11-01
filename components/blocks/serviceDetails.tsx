@@ -19,8 +19,6 @@ const ServiceDetails = ({
   const [selectedTime, setSelectedTime] = useState<string | undefined>();
   const availableDates = availability.map((item) => new Date(item.date));
   const [isPending, startTransition] = useTransition();
-  const searchParams = useSearchParams();
-  const params = new URLSearchParams(searchParams);
   const { push } = useRouter();
   const availableTimeSlots = useMemo(() => {
     if (date) {
@@ -37,7 +35,6 @@ const ServiceDetails = ({
     }
   }, [date]);
 
-  console.log(params);
   const handleBookNow = () => {
     startTransition(() => {
       if (date && selectedTime) {

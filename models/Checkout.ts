@@ -1,11 +1,10 @@
-import { ICheckout } from "@/lib/definitions";
-import mongoose, { Schema } from "mongoose";
+import { ITransaction } from "@/lib/definitions";
+import mongoose, { Schema, models } from "mongoose";
 
-const CheckoutSchema = new Schema<ICheckout>(
+const CheckoutSchema = new Schema<ITransaction>(
   {
     appointmentId: {
       type: Schema.Types.ObjectId,
-      required: true,
       ref: "Appointment",
     },
     patientId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
@@ -16,37 +15,29 @@ const CheckoutSchema = new Schema<ICheckout>(
       enum: ["pending", "completed", "failed"],
       default: "pending",
     },
-    paymentMethod: {
+    channel: {
       type: String,
-      enum: ["credit_card", "paypal", "bank_transfer", "mobile_money"],
+      enum: ["card", "bank_transfer", "mobile_money"],
       required: true,
     },
     mobileMoneyType: {
       type: String,
-      enum: ["mtn", "telecel", "airteltigo"],
+      enum: ["mtn", "vod", "atl"],
       // Custom validation: Only required if paymentMethod is 'mobile_money'
       validate: {
-        validator: function (this: ICheckout) {
-          return (
-            this.paymentMethod !== "mobile_money" || !!this.mobileMoneyType
-          );
+        validator: function (this: ITransaction) {
+          return this.channel !== "mobile_money" || !!this.mobileMoneyType;
         },
         message:
-          "mobileMoneyType is required when paymentMethod is mobile_money",
+          "mobile money provider is required for mobile money transactions",
       },
     },
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );
 
-// Pre-save hook to update the `updatedAt` field
-CheckoutSchema.pre("save", function (next) {
-  this.updatedAt = new Date();
-  next();
-});
+const Transaction =
+  models.Transaction ||
+  mongoose.model<ITransaction>("Transaction", CheckoutSchema);
 
-const Checkout = mongoose.model<ICheckout>("Checkout", CheckoutSchema);
-
-export default Checkout;
+export default Transaction;

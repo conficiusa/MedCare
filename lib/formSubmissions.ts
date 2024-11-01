@@ -10,6 +10,7 @@ import { UpdateSession } from "next-auth/react";
 import { Session } from "next-auth";
 import { toast } from "sonner";
 import PaystackPop from "@paystack/inline-js";
+import { onSuccess } from "@/lib/paymentCallbacks";
 
 export const useCreateAccount = () => {
   const onCreateAccount = async (data: z.output<typeof SignUpSchema>) => {
@@ -64,8 +65,19 @@ export const VerifyPaystackPayment = async (
   }
 };
 
+// const handlePostPayment = async (reference: string, amount: number) => {
+//   const result = await VerifyPaystackPayment(reference, amount);
+//   // if (result?.data?.status === "success") {
+//   //   const transactionData = {};
+//   //   const appointmentData = {};
+//   //   FinalizeAppointment(transactionData, appointmentData);
+//   // }
+// };
+
 export const handlePaystackPayment = async (
-  data: z.output<typeof CheckoutSchema>
+  data: z.output<typeof CheckoutSchema>,
+  session: Session | null,
+  doctorId: string
 ) => {
   try {
     const response = await fetch("/api/paystack/initialize", {
@@ -78,6 +90,7 @@ export const handlePaystackPayment = async (
         amount: data.amount,
         channels: [data.channel],
         metadata: {
+          patientId: session?.user?.id,
           patient_name: data.fullName,
           patient_email: data.email,
         },
@@ -87,25 +100,14 @@ export const handlePaystackPayment = async (
     const result = await response.json();
 
     if (result.status) {
-      const popup = new PaystackPop();
+      const popup = new PaystackPop(); // Initialize Paystack inline
+
       popup.resumeTransaction(result?.data?.access_code, {
-        onSuccess: async (res: any) => {
-          toast.promise(VerifyPaystackPayment(res.reference, data?.amount), {
-            loading: "Verifying payment...",
-            success: (data) => {
-              if (data?.data?.status === "success") {
-                return "Payment verified successfully";
-              } else {
-                throw new Error("Payment verification failed");
-              }
-            },
-            error: (error) => {
-              return "payment could not be verified";
-            },
-          });
-        },
+        // Handle payment success
+        onSuccess: (res: any) => onSuccess(res, data.amount, doctorId),
       });
     } else {
+      // Handle payment initialization error
       toast.error("Payment initialization failed", {
         description: result.message,
       });

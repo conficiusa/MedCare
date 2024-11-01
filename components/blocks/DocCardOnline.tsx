@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn, formatCurrency } from "@/lib/utils";
 import Image from "next/image";
-import { IUser } from "@/lib/definitions";
+import { DoctorCard, IUser } from "@/lib/definitions";
 import { fetchDoctorCardData } from "@/lib/queries";
 import Ratings from "@/components/blocks/ratingStars";
 
 const DocCardOnline = async ({ className }: { className?: string }) => {
-  const doctors: IUser[] =
+  const doctors: DoctorCard[] =
     (await fetchDoctorCardData({
       limit: 10,
       sort: { "doctorInfo.rating": -1, "doctorInfo.rate": 1 },
@@ -17,9 +17,10 @@ const DocCardOnline = async ({ className }: { className?: string }) => {
       return [];
     })) || [];
 
+  console.log(doctors)
   return (
     <>
-      {doctors?.map((doctor: IUser) => (
+      {doctors?.map((doctor) => (
         <div
           className={cn(
             " min-w-full md:min-w-[15rem] max-w-full p-4 rounded-md max-sm:shadow-sm dark:bg-muted/30 bg-background",

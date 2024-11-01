@@ -1,9 +1,17 @@
 "use server";
-import { signIn } from "@/auth";
+import { auth, signIn } from "@/auth";
 import { AuthError } from "next-auth";
 import { SignInSchema } from "@/lib/schema";
 import connectToDatabase from "@/lib/mongoose";
 import { z } from "zod";
+import {
+  IAppointment,
+  Transaction as TransactionType,
+} from "@/lib//definitions";
+import Transaction from "@/models/Checkout";
+import { VerifyPaystackPayment } from "./utils";
+import mongoose from "mongoose";
+import Appointment from "@/models/Appointment";
 
 export type State = {
   message: string | undefined;
@@ -62,61 +70,6 @@ export async function emailAuth(
     throw error;
   }
 }
-// export async function authenticate(
-//   prevState: State,
-//   formData: FormData
-// ): Promise<State> {
-//   try {
-//     await connectToDatabase().catch((error: any) => {
-//       return { message: "Unable to Connect to server" };
-//     });
-//     const data = Object.fromEntries(formData);
-//     const parsed = SignInSchema.safeParse(data);
-
-//     if (!parsed.success) {
-//       return {
-//         errors: parsed.error.flatten().fieldErrors,
-//         message: "Missing Fields. Failed to Sign In.",
-//       };
-//     }
-//     const password = parsed.data.password;
-//     const email = parsed.data.email;
-//     const foundUser = await User.findOne({ email });
-//     const role = foundUser?.role;
-//     let callbackUrl = "/find-a-doctor";
-//     if (!role) {
-//       callbackUrl = "/onboarding";
-//     }
-//     await signIn("credentials", {
-//       callbackUrl,
-//       redirectTo: callbackUrl,
-//       email,
-//       password,
-//     });
-//     return {
-//       message: undefined,
-//     };
-//   } catch (error: any) {
-//     if (error instanceof AuthError) {
-//       switch (error.type) {
-//         case "CredentialsSignin":
-//           return {
-//             message: "Invalid Credentials",
-//           };
-//         case "CallbackRouteError":
-//           return {
-//             message:
-//               "This account was likely created with a different provider.",
-//           };
-//         default:
-//           return {
-//             message: "An unexpected error occurred.",
-//           };
-//       }
-//     }
-//     throw error;
-//   }
-// }
 
 export const googleSignIn = async (redirect: string | null) => {
   try {
@@ -145,3 +98,54 @@ export const googleSignIn = async (redirect: string | null) => {
     throw error;
   }
 };
+
+export const FinalizeAppointment = async (
+  transactionData: Omit<
+    TransactionType,
+    "id" | "createdAt" | "updatedAt" | "appointmentId"
+  >,
+  appointmentData: IAppointment
+) => {
+  try {
+    const authsession = await auth();
+    if (!authsession) {
+      throw new Error("User not authenticated");
+    }
+    await connectToDatabase();
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    const transaction = new Transaction({ ...transactionData });
+    await transaction.save({ session });
+
+    const appointment = new Appointment({
+      ...appointmentData,
+      transactionId: transaction._id,
+      paid: true,
+    });
+    await appointment.save({ session });
+
+    // If all succeeded, commit the transaction
+    await session.commitTransaction();
+    session.endSession();
+
+    return { appointment, message: "appointment created succesfully" };
+  } catch (error) {
+    throw error;
+  }
+};
+
+// export const CompleteTransaction = async (
+//   reference: string,
+//   amount: number
+// ) => {
+//   try {
+//     const data = await VerifyPaystackPayment(reference, amount);
+//     console.log(data);
+//     await createTransactions(data);
+//     return data;
+//   } catch (error) {
+//     console.error("Payment Verification error:", error);
+//     throw error;
+//   }
+// };

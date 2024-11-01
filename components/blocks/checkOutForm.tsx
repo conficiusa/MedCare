@@ -17,7 +17,13 @@ import { formatCurrency } from "@/lib/utils";
 import { Banknote } from "lucide-react";
 import AnimationWrapper from "@/components/wrappers/animationWrapper";
 
-const CheckOutForm = ({ rate }: { rate: number }) => {
+const CheckOutForm = ({
+  rate,
+  doctorId,
+}: {
+  rate: number;
+  doctorId: string;
+}) => {
   const { data: session } = useSession();
   const form = useForm<z.output<typeof CheckoutSchema>>({
     resolver: zodResolver(CheckoutSchema),
@@ -34,7 +40,7 @@ const CheckOutForm = ({ rate }: { rate: number }) => {
       form.setValue("fullName", session?.user?.name ?? "");
       form.setValue("email", session?.user?.email ?? "");
     }
-  }, [session]);
+  }, [session,form]);
   useEffect(() => {
     if (rate) {
       form.setValue("amount", rate);
@@ -43,9 +49,8 @@ const CheckOutForm = ({ rate }: { rate: number }) => {
 
   const handleSubmit = async (data: z.output<typeof CheckoutSchema>) => {
     try {
-      const reference = await handlePaystackPayment(data);
-      // const verify = await VerifyPaystackPayment(reference);
-      // console.log(verify);
+      const reference = await handlePaystackPayment(data, session, doctorId);
+      console.log(reference);
     } catch (error: any) {
       console.error(error);
     }

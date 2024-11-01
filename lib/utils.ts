@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { Query } from "mongoose";
 import { twMerge } from "tailwind-merge";
+import { ITransaction } from "./definitions";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -63,4 +64,23 @@ export const formatCurrency = (amount: number) => {
     style: "currency",
     currency: "GHS",
   });
+};
+
+export const VerifyPaystackPayment = async (
+  reference: string,
+  amount: number
+) => {
+  try {
+    const response = await fetch(
+      `/api/paystack/verify/${reference}?rate=${amount}`,
+      {
+        method: "GET",
+      }
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Payment Veriication error:", error);
+    throw new Error("Payment verification failed");
+  }
 };
