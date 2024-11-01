@@ -1,6 +1,6 @@
-import { IUser } from "@/lib/definitions";
+import { Doctor } from "@/lib/definitions";
 
-const AboutDoctor = ({ doctor }: { doctor: IUser }) => {
+const AboutDoctor = ({ doctor }: { doctor: Doctor }) => {
   return (
     <div className="grid gap-5 text-sm max-w-4xl py-4">
       <p>{doctor?.doctorInfo?.bio}</p>

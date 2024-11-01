@@ -16,11 +16,10 @@ const CheckoutpaymentInfo = ({
     form.setValue("channel", value as "mobile_money" | "card");
   };
   const handleMobileMoneyChange = (value: string) => {
-    form.setValue(
-      "mobileMoneyType",
-      value as "mtn" | "telecel_cash" | "airteltigo"
-    );
+    form.setValue("mobileMoneyType", value as "mtn" | "vod" | "atl");
   };
+
+  console.log(form.formState.errors);
   return (
     <div>
       <p className=" font-semibold mb-6">Payment details</p>
@@ -46,7 +45,7 @@ const CheckoutpaymentInfo = ({
                     alt="mtn logo"
                     width={80}
                     height={80}
-                    className="aspect-video object-cover"
+                    className="aspect-video object-cover w-auto h-auto"
                   />
                 </Label>
               </div>
@@ -58,19 +57,19 @@ const CheckoutpaymentInfo = ({
                     alt="telecel logo"
                     width={80}
                     height={80}
-                    className="aspect-video object-cover"
+                    className="aspect-video object-cover w-[150px] h-[75px] "
                   />
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="airtel" id="airtel" />
+                <RadioGroupItem value="atl" id="airtel" />
                 <Label htmlFor="airtel">
                   <Image
                     src="/airtel.png"
                     alt="airtel logo"
                     width={80}
                     height={80}
-                    className="aspect-video object-cover"
+                    className="aspect-video object-cover w-[150px] h-[75px] "
                   />
                 </Label>
               </div>

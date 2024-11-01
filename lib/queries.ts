@@ -3,7 +3,7 @@ import User from "@/models/User";
 import { applyQueryOptions, applyCaseInsensitiveRegex } from "@/lib/utils";
 import Availability from "@/models/Availability";
 import mongoose from "mongoose";
-import { DoctorCard, IAvailability, IUser } from "@/lib/definitions";
+import { AvailabilityType, Doctor } from "@/lib/definitions";
 
 interface QueryOptions {
   filter?: Record<string, any>;
@@ -38,8 +38,10 @@ export const fetchDoctorData = async (id: string) => {
       console.warn(`Invalid Doctor ID: ${id}`);
       return { doctor: null, availability: [] };
     }
-    
-    let doctorQuery = User.findById(id).select("-password").lean<IUser>();
+
+    console.log("Fetching doctor data for", id);
+
+    let doctorQuery = User.findById(id).select("-password");
     let availabilityQuery = Availability.find({
       doctorId: new mongoose.Types.ObjectId(id),
       $or: [
@@ -53,17 +55,25 @@ export const fetchDoctorData = async (id: string) => {
           },
         },
       ],
-    }).lean<IAvailability[]>();
+    });
 
     const [doctor, availability] = await Promise.all([
       doctorQuery.exec(),
       availabilityQuery.exec(),
     ]);
-
+    console.log(doctor);
     if (!doctor) {
       return null;
     }
-    return { doctor, availability };
+    const plainDoctor = doctor.toObject();
+    const plainAvailability = availability.map((doc) => ({
+      id: doc.id.toString(),
+      ...doc.toObject(),
+    }));
+    return {
+      doctor: plainDoctor as Doctor,
+      availability: plainAvailability as AvailabilityType[],
+    };
   } catch (error: any) {
     console.error("Could not load Doctor", error.stack || error);
     throw new Error("Error fetching doctor");

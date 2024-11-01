@@ -1,17 +1,15 @@
 "use client";
 import { Card, CardContent } from "@/components/ui/card";
-import { IUser } from "@/lib/definitions";
+import { Doctor } from "@/lib/definitions";
 import moment from "moment";
 import { AvatarImage, Avatar } from "@/components/ui/avatar";
 import { Stethoscope } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
 
-const Paymentdoctorcard = ({ doctor }: { doctor: IUser }) => {
-  const dateParam = useSearchParams().get("date");
-  const timeParam = useSearchParams().get("time");
-  const time = timeParam ? timeParam : "";
-  const date = dateParam ? dateParam : "";
+const Paymentdoctorcard = ({ doctor }: { doctor: Doctor }) => {
+  const date = useSearchParams().get("date") ?? "";
+  const time= useSearchParams().get("time") ?? "";
   return (
     <div className="py-8">
       <Card className="bg-muted/30 md:max-w-sm ml-auto">

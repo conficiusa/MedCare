@@ -5,7 +5,7 @@ import { SignInSchema } from "@/lib/schema";
 import connectToDatabase from "@/lib/mongoose";
 import { z } from "zod";
 import {
-  IAppointment,
+  Appointment as AppointmentType,
   Transaction as TransactionType,
 } from "@/lib//definitions";
 import Transaction from "@/models/Checkout";
@@ -104,7 +104,7 @@ export const FinalizeAppointment = async (
     TransactionType,
     "id" | "createdAt" | "updatedAt" | "appointmentId"
   >,
-  appointmentData: IAppointment
+  appointmentData: Partial<AppointmentType>
 ) => {
   try {
     const authsession = await auth();
@@ -129,23 +129,11 @@ export const FinalizeAppointment = async (
     await session.commitTransaction();
     session.endSession();
 
-    return { appointment, message: "appointment created succesfully" };
+    return {
+      appointment: appointment.toObject(),
+      message: "appointment created succesfully",
+    };
   } catch (error) {
-    throw error;
+    return { error, message: "Oops!! We could not create your appointment" };
   }
 };
-
-// export const CompleteTransaction = async (
-//   reference: string,
-//   amount: number
-// ) => {
-//   try {
-//     const data = await VerifyPaystackPayment(reference, amount);
-//     console.log(data);
-//     await createTransactions(data);
-//     return data;
-//   } catch (error) {
-//     console.error("Payment Verification error:", error);
-//     throw error;
-//   }
-// };

@@ -1,18 +1,18 @@
 "use client";
 import React, { useEffect, useMemo, useState, useTransition } from "react";
 import DatePicker from "@/components/blocks/DatePicker";
-import { IAvailability } from "@/lib/definitions";
 import AnimationWrapper from "@/components/wrappers/animationWrapper";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import moment from "moment";
 import { useRouter, useSearchParams } from "next/navigation";
+import { AvailabilityType } from "@/lib/definitions";
 
 const ServiceDetails = ({
   availability,
   name,
 }: {
-  availability: IAvailability[];
+  availability: AvailabilityType[];
   name: string;
 }) => {
   const [date, setDate] = React.useState<Date | undefined>();

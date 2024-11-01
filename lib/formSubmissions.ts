@@ -77,7 +77,9 @@ export const VerifyPaystackPayment = async (
 export const handlePaystackPayment = async (
   data: z.output<typeof CheckoutSchema>,
   session: Session | null,
-  doctorId: string
+  doctorId: string,
+  time: string,
+  date: string
 ) => {
   try {
     const response = await fetch("/api/paystack/initialize", {
@@ -104,7 +106,8 @@ export const handlePaystackPayment = async (
 
       popup.resumeTransaction(result?.data?.access_code, {
         // Handle payment success
-        onSuccess: (res: any) => onSuccess(res, data.amount, doctorId),
+        onSuccess: (res: any) =>
+          onSuccess(res, data.amount, doctorId, time, date),
       });
     } else {
       // Handle payment initialization error

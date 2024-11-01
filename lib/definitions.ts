@@ -41,9 +41,9 @@ export interface IAppointment extends Document {
   date: Date;
   time: string;
   status: "pending" | "completed" | "cancelled";
-  createdAt: Date;
-  updatedAt: Date;
   paid: boolean;
+  mode: "online" | "in-person";
+  online_medium?: "video" | "audio" | "chat";
 }
 
 // Patient profile interface, extending the user
@@ -92,6 +92,20 @@ export interface Doctor {
   doctorInfo: DoctorInfo;
 }
 
+export interface Appointment {
+  id: string;
+  patientId: string;
+  doctorId: string;
+  transactionId: string;
+  date: string;
+  time: string;
+  status: "pending" | "completed" | "cancelled";
+  createdAt: Date;
+  updatedAt: Date;
+  mode: "online" | "in-person";
+  online_medium?: "video" | "audio" | "chat";
+  paid: boolean;
+}
 export interface ServiceCard {
   title: string;
   icon: React.ReactNode;
@@ -99,14 +113,14 @@ export interface ServiceCard {
   footer: string;
 }
 
-export interface IAvailability {
-  doctorId: string;
+export interface IAvailability extends Document {
+  doctorId: ObjectId
   date: Date;
   timeSlots: string[];
 }
 
 type PaymentMethod = "card" | "bank_transfer" | "mobile_money";
-export type MobileMoneyType = "mtn" | "vod" | "atl";
+export type MobileMoneyType = "MTN" | "Vodafone" | "";
 
 export interface Transaction {
   id: string;
@@ -151,6 +165,13 @@ export interface DoctorInfo {
   certifications?: string[];
   rating?: number;
   bio: string;
+}
+
+export interface AvailabilityType {
+  id: string;
+  doctorId: string;
+  date: Date;
+  timeSlots: string[];
 }
 
 export interface DoctorCard {

@@ -14,15 +14,16 @@ interface Bookingprops {
 }
 const Booking = async ({ params }: Bookingprops) => {
   const data = await fetchDoctorData(params.id);
+
   if (!data || !data.doctor) {
     NotFound();
   }
+
   if (!data || !data.doctor) {
     return <NotFound />;
   }
 
   const { doctor } = data;
-  
   return (
     <main className="min-h-[calc(100dvh_-_4rem)] container max-md:mb-10">
       <div className="grid md:grid-cols-2 md:gap-10 gap-6 pt-4 md:p-6 lg:p-10">

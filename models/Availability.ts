@@ -11,6 +11,22 @@ const availabilitySchema = new Schema<IAvailability>(
   },
   {
     timestamps: true,
+    toJSON: {
+      virtuals: true,
+      transform: (doc, ret) => {
+        ret.id = ret._id.toString();
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
+    toObject: {
+      virtuals: true,
+      transform: (doc, ret) => {
+        ret.id = ret._id.toString();
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
   }
 );
 
@@ -18,9 +34,6 @@ const availabilitySchema = new Schema<IAvailability>(
 // availabilitySchema.index({ date: 1 });
 const Availability =
   mongoose.models.Availability ||
-  mongoose.model<IAvailability>(
-    "Availability",
-    availabilitySchema,
-  );
+  mongoose.model<IAvailability>("Availability", availabilitySchema);
 
 export default Availability;

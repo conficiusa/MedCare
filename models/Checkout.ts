@@ -22,7 +22,7 @@ const CheckoutSchema = new Schema<ITransaction>(
     },
     mobileMoneyType: {
       type: String,
-      enum: ["mtn", "vod", "atl"],
+      enum: ["MTN", "Vodafone", "AirtelTigo"],
       // Custom validation: Only required if paymentMethod is 'mobile_money'
       validate: {
         validator: function (this: ITransaction) {

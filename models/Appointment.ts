@@ -11,20 +11,49 @@ const AppointmentSchema = new Schema<IAppointment>(
     patientId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
     doctorId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
     time: { type: String, required: true },
+    status: {
+      type: String,
+      enum: ["pending", "completed", "cancelled"],
+      default: "pending",
+    },
+    mode: {
+      type: String,
+      enum: ["online", "in-person"],
+      required: true,
+    },
+    online_medium: {
+      type: String,
+      enum: ["video", "audio", "chat"],
+      required() {
+        return this.mode === "online";
+      },
+    },
     date: {
       type: Date,
       required: true,
     },
     paid: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      virtuals: true,
+      transform: (doc, ret) => {
+        ret.id = ret._id.toString();
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
+    toObject: {
+      virtuals: true,
+      transform: (doc, ret) => {
+        ret.id = ret._id.toString();
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
+  }
 );
-
-// Pre-save hook to update the `updatedAt` field
-AppointmentSchema.pre("save", function (next) {
-  this.updatedAt = new Date();
-  next();
-});
 
 const Appointment =
   models.Appointment || model<IAppointment>("Appointment", AppointmentSchema);

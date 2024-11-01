@@ -1,11 +1,11 @@
-import { IUser } from "@/lib/definitions";
+import { Doctor } from "@/lib/definitions";
 import { formatCurrency } from "@/lib/utils";
 import { ArrowLeft, Stethoscope } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const DoctorProfileAside = ({ doctor }: { doctor: IUser }) => {
+const DoctorProfileAside = ({ doctor }: { doctor: Doctor }) => {
   return (
     <aside className="lg:bg-muted/40 lg:px-14 px-8 lg:py-10 pt-4 lg:h-full lg:min-h-[calc(100dvh_-_4rem)]">
       <div className="mb-6">

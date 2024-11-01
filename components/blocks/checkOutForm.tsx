@@ -9,13 +9,12 @@ import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import CheckoutpaymentInfo from "@/components/blocks/checkoutpaymentInfo";
 import { Button } from "@/components/ui/button";
-import {
-  handlePaystackPayment,
-  VerifyPaystackPayment,
-} from "@/lib/formSubmissions";
+import { handlePaystackPayment } from "@/lib/formSubmissions";
 import { formatCurrency } from "@/lib/utils";
 import { Banknote } from "lucide-react";
 import AnimationWrapper from "@/components/wrappers/animationWrapper";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 
 const CheckOutForm = ({
   rate,
@@ -24,7 +23,12 @@ const CheckOutForm = ({
   rate: number;
   doctorId: string;
 }) => {
+  const router = useRouter();
   const { data: session } = useSession();
+  const searchParams = useSearchParams();
+  const time = searchParams.get("time");
+  const date = searchParams.get("date");
+
   const form = useForm<z.output<typeof CheckoutSchema>>({
     resolver: zodResolver(CheckoutSchema),
     defaultValues: {
@@ -35,12 +39,13 @@ const CheckOutForm = ({
       amount: rate,
     },
   });
+
   useEffect(() => {
     if (session) {
       form.setValue("fullName", session?.user?.name ?? "");
       form.setValue("email", session?.user?.email ?? "");
     }
-  }, [session,form]);
+  }, [session, form]);
   useEffect(() => {
     if (rate) {
       form.setValue("amount", rate);
@@ -49,12 +54,19 @@ const CheckOutForm = ({
 
   const handleSubmit = async (data: z.output<typeof CheckoutSchema>) => {
     try {
-      const reference = await handlePaystackPayment(data, session, doctorId);
+      const reference = await handlePaystackPayment(
+        data,
+        session,
+        doctorId,
+        time ?? "",
+        date ?? ""
+      );
       console.log(reference);
     } catch (error: any) {
       console.error(error);
     }
   };
+
   return (
     <AnimationWrapper>
       <Form {...form}>
