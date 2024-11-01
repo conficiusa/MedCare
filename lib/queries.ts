@@ -25,7 +25,7 @@ export const fetchDoctorCardData = async (options: QueryOptions) => {
 
     return doctors.map((doc) => doc.toObject());
   } catch (error: any) {
-    console.error("Error fetching doctors:", error.stack || error);
+    console.error("Error fetching doctors:", error);
     throw new Error("Error fetching doctors");
   }
 };
@@ -38,8 +38,6 @@ export const fetchDoctorData = async (id: string) => {
       console.warn(`Invalid Doctor ID: ${id}`);
       return { doctor: null, availability: [] };
     }
-
-    console.log("Fetching doctor data for", id);
 
     let doctorQuery = User.findById(id).select("-password");
     let availabilityQuery = Availability.find({

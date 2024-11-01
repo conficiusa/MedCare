@@ -54,14 +54,13 @@ const CheckOutForm = ({
 
   const handleSubmit = async (data: z.output<typeof CheckoutSchema>) => {
     try {
-      const reference = await handlePaystackPayment(
+      await handlePaystackPayment(
         data,
         session,
         doctorId,
         time ?? "",
         date ?? ""
       );
-      console.log(reference);
     } catch (error: any) {
       console.error(error);
     }
