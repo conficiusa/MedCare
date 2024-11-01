@@ -25,7 +25,7 @@ export const fetchDoctorCardData = async (options: QueryOptions) => {
 
     return doctors.map((doc) => doc.toObject());
   } catch (error: any) {
-    console.error("Error fetching doctors:", error);
+    console.error("Error fetching doctors", error);
     throw new Error("Error fetching doctors");
   }
 };
