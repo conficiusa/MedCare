@@ -4,7 +4,8 @@ name: Delete Outdated Availabilities
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Runs daily at midnight UTC
+    - cron: "0 0 * * *" # Runs daily at midnight UTC
+  workflow_dispatch: # Allows manual triggering
 
 jobs:
   cleanup:
@@ -14,4 +15,4 @@ jobs:
         env:
           API_URL: ${{ secrets.VERCEL_API_URL }}
         run: |
-          curl -X POST "$API_URL/api/doctors/delete-outdated-availabilities"
+          curl -X POST "$API_URL/api/doctors/availabilities"

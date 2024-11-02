@@ -59,7 +59,6 @@ export const fetchDoctorData = async (id: string) => {
       doctorQuery.exec(),
       availabilityQuery.exec(),
     ]);
-    console.log(doctor);
     if (!doctor) {
       return null;
     }

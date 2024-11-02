@@ -13,7 +13,7 @@ const deleteOutdatedAvailabilities = async () => {
 };
 
 // Route handler
-export async function POST() {
+export async function GET() {
   try {
     await connectToDatabase();
     await deleteOutdatedAvailabilities();
