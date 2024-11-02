@@ -44,6 +44,11 @@ export interface IAppointment extends Document {
   paid: boolean;
   mode: "online" | "in-person";
   online_medium?: "video" | "audio" | "chat";
+  room: {
+    name: string;
+    sid: string;
+    maxParticipants: number;
+  };
 }
 
 // Patient profile interface, extending the user
@@ -105,6 +110,11 @@ export interface Appointment {
   mode: "online" | "in-person";
   online_medium?: "video" | "audio" | "chat";
   paid: boolean;
+  room: {
+    name: string;
+    sid: string;
+    maxParticipants: number;
+  };
 }
 export interface ServiceCard {
   title: string;
@@ -114,7 +124,7 @@ export interface ServiceCard {
 }
 
 export interface IAvailability extends Document {
-  doctorId: ObjectId
+  doctorId: ObjectId;
   date: Date;
   timeSlots: string[];
 }

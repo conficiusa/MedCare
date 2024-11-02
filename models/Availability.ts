@@ -23,6 +23,7 @@ const availabilitySchema = new Schema<IAvailability>(
       virtuals: true,
       transform: (doc, ret) => {
         ret.id = ret._id.toString();
+        ret.doctorId = ret.doctorId.toString();
         delete ret._id;
         delete ret.__v;
       },

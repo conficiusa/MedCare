@@ -33,6 +33,11 @@ const AppointmentSchema = new Schema<IAppointment>(
       required: true,
     },
     paid: { type: Boolean, default: false },
+    room: {
+      name: { type: String, required: true },
+      sid: { type: String, required: true },
+      maxParticipants: { type: Number, required: true },
+    },
   },
   {
     timestamps: true,
@@ -48,6 +53,9 @@ const AppointmentSchema = new Schema<IAppointment>(
       virtuals: true,
       transform: (doc, ret) => {
         ret.id = ret._id.toString();
+        ret.doctorId = ret.doctorId.toString();
+        ret.patientId = ret.patientId.toString();
+        ret.transactionId = ret.transactionId.toString();
         delete ret._id;
         delete ret.__v;
       },

@@ -36,7 +36,7 @@ export const onSuccess = async (
       return "payment could not be verified";
     },
   });
-  const data= await verificationPromise;
+  const data = await verificationPromise;
 
   if (data?.data?.status === "success") {
     //getting transaction and appointment data
@@ -75,6 +75,12 @@ export const onSuccess = async (
       loading: "Finalizing appointment...",
       success: "Appointment finalized successfully",
       error: "Appointment could not be finalized",
-    })
+      description(data) {
+        if (data.appointmentStatus === "success") {
+          return data.message;
+        }
+      },
+      duration: 8000,
+    });
   }
 };

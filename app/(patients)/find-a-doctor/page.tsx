@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Suspense } from "react";
 import CardOnlineSkeleton from "@/components/skeletons/onlineCardSkeleton";
+import { DoctorCard } from "@/lib/definitions";
+import { fetchDoctorCardData } from "@/lib/queries";
+import { notFound } from "next/navigation";
 
 const specialities: string[] = [
   "Cardiology",
@@ -21,7 +24,18 @@ const specialities: string[] = [
   "Urology",
   "Infectious Diseases",
 ];
-const FindDoctor = () => {
+const FindDoctor = async () => {
+  const doctors: DoctorCard[] =
+    (await fetchDoctorCardData({
+      limit: 10,
+      sort: { "doctorInfo.rating": -1, "doctorInfo.rate": 1 },
+    }).catch((error: any) => {
+      return [];
+    })) || [];
+
+  if (doctors.length === 0) {
+    notFound();
+  }
   return (
     <section className="min-h-[calc(100dvh_-_8rem)] rounded-sm bg-muted dark:bg-background">
       <div className="p-10 max-sm:px-4 max-sm:py-6">
@@ -52,7 +66,10 @@ const FindDoctor = () => {
           <TabsContent value="online" className="py-8">
             <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-6">
               <Suspense fallback={<CardOnlineSkeleton />}>
-                <DocCardOnline className="shadow-sm border-[1px]" />
+                <DocCardOnline
+                  doctors={doctors}
+                  className="shadow-sm border-[1px]"
+                />
               </Suspense>
             </div>
           </TabsContent>

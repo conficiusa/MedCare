@@ -8,15 +8,13 @@ import { DoctorCard, IUser } from "@/lib/definitions";
 import { fetchDoctorCardData } from "@/lib/queries";
 import Ratings from "@/components/blocks/ratingStars";
 
-const DocCardOnline = async ({ className }: { className?: string }) => {
-  const doctors: DoctorCard[] =
-    (await fetchDoctorCardData({
-      limit: 10,
-      sort: { "doctorInfo.rating": -1, "doctorInfo.rate": 1 },
-    }).catch((error: any) => {
-      return [];
-    })) || [];
-
+const DocCardOnline = async ({
+  className,
+  doctors,
+}: {
+  className?: string;
+  doctors: DoctorCard[];
+}) => {
   return (
     <>
       {doctors?.map((doctor) => (

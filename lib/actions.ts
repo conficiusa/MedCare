@@ -9,9 +9,11 @@ import {
   Transaction as TransactionType,
 } from "@/lib//definitions";
 import Transaction from "@/models/Checkout";
-import { VerifyPaystackPayment } from "./utils";
 import mongoose from "mongoose";
 import Appointment from "@/models/Appointment";
+import { RoomServiceClient } from "livekit-server-sdk";
+import User from "@/models/User";
+import moment from "moment";
 
 export type State = {
   message: string | undefined;
@@ -99,6 +101,14 @@ export const googleSignIn = async (redirect: string | null) => {
   }
 };
 
+const apiKey = process.env.LIVEKIT_API_KEY;
+const apiSecret = process.env.LIVEKIT_API_SECRET;
+const wsUrl = process.env.NEXT_PUBLIC_LIVEKIT_URL;
+const roomService = new RoomServiceClient(
+  wsUrl as string,
+  apiKey as string,
+  apiSecret as string
+);
 export const FinalizeAppointment = async (
   transactionData: Omit<
     TransactionType,
@@ -118,20 +128,53 @@ export const FinalizeAppointment = async (
     const transaction = new Transaction({ ...transactionData });
     await transaction.save({ session });
 
+    if (!apiKey || !apiSecret || !wsUrl) {
+      return {
+        message: "Server misconfigured",
+        type: "Server Error",
+        status: 500,
+      };
+    }
+    const opts = {
+      name: Date.now().toString(),
+      emptyTimeout: 10 * 60, // 10 minutes
+      maxParticipants: 2,
+    };
+    const room = await roomService.createRoom(opts);
+    if (!room) {
+      throw new Error("Could not create room");
+    }
     const appointment = new Appointment({
       ...appointmentData,
       transactionId: transaction._id,
+      room: {
+        name: room.name,
+        sid: room.sid,
+        maxParticipants: room.maxParticipants,
+      },
       paid: true,
     });
     await appointment.save({ session });
+    const doctor = await User.findById(appointment.doctorId).select("name");
 
     // If all succeeded, commit the transaction
     await session.commitTransaction();
     session.endSession();
 
     return {
-      appointment: appointment.toObject(),
-      message: "appointment created succesfully",
+      appointmentStatus: "success",
+      appointment: {
+        doctorId: appointment.doctorId.toString(),
+        patientId: appointment.patientId.toString(),
+        transactionId: appointment.transactionId.toString(),
+        ...appointment.toObject(),
+      },
+      message: `Your appointment with Dr. ${doctor?.name} at ${moment(
+        appointment?.date
+      ).format("dddd, Do MMMM ")} ${
+        appointment?.time?.split("-")[0]
+      } has been created successfully. Room: ${room.name}`,
+      roomName: room.name,
     };
   } catch (error) {
     return { error, message: "Oops!! We could not create your appointment" };

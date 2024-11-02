@@ -1,9 +1,10 @@
 import connectToDatabase from "./mongoose";
 import User from "@/models/User";
-import { applyQueryOptions, applyCaseInsensitiveRegex } from "@/lib/utils";
+import { applyCaseInsensitiveRegex } from "@/lib/utils";
 import Availability from "@/models/Availability";
 import mongoose from "mongoose";
 import { AvailabilityType, Doctor } from "@/lib/definitions";
+import { buildDoctorAggregationPipeline } from "@/lib/aggregations";
 
 interface QueryOptions {
   filter?: Record<string, any>;
@@ -11,24 +12,39 @@ interface QueryOptions {
   limit?: number;
   page?: number;
 }
+
+// Fetch doctor card data
 export const fetchDoctorCardData = async (options: QueryOptions) => {
   try {
     await connectToDatabase();
+
     const defaultFilter = { role: "doctor" };
     let filter = { ...defaultFilter, ...options.filter };
     filter = { ...filter, ...applyCaseInsensitiveRegex(filter) };
 
-    let query = User.find().select(["name", "image", "doctorInfo"]);
+    // Build the aggregation pipeline using the utility function
+    const pipeline = buildDoctorAggregationPipeline(filter, options);
 
-    query = applyQueryOptions(query, { ...options, filter });
-    const doctors = await query.exec();
+    // Execute the aggregation
+    const doctors = await mongoose.model("User").aggregate(pipeline);
 
-    return doctors.map((doc) => doc.toObject());
+    // Manually apply the transformation
+    const transformedDoctors = doctors.map((doc) => {
+      const ret = { ...doc }; // Spread the document into a new object
+      ret.id = ret._id.toString();
+      delete ret._id;
+      delete ret.__v;
+      return ret;
+  });
+
+    return transformedDoctors;
   } catch (error: any) {
     console.error("Error fetching doctors", error);
     throw new Error("Error fetching doctors");
   }
 };
+
+//fetch doctor dynamic data
 export const fetchDoctorData = async (id: string) => {
   try {
     const today = new Date();
@@ -65,6 +81,7 @@ export const fetchDoctorData = async (id: string) => {
     const plainDoctor = doctor.toObject();
     const plainAvailability = availability.map((doc) => ({
       id: doc.id.toString(),
+      doctorId: doc.doctorId.toString(),
       ...doc.toObject(),
     }));
     return {

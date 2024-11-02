@@ -11,6 +11,8 @@ async function seedUsersAndProfiles() {
   const sampleImageUrl =
     "https://xgyzgqc7wzq7cyz6.public.blob.vercel-storage.com/profiles/sampleDoc-ZNAAkbr0wqXBoAKwJ3i8Mi32QIw40T.png";
 
+  const sampleImageTwoUrl =
+    "https://xgyzgqc7wzq7cyz6.public.blob.vercel-storage.com/mock%20use%20(1)-TmsZBhLFrPxkF3V93pNPiux4UhESPh.jpg";
   const names = [
     "John Smith",
     "Alice Johnson",
@@ -127,7 +129,7 @@ async function seedUsersAndProfiles() {
     region: index % 2 === 0 ? "Northern Region" : "Southern Region",
     dob: new Date(1985, 1, index + 1),
     city: index % 3 === 0 ? "Tamale" : index % 3 === 1 ? "Accra" : "Kumasi",
-    image: sampleImageUrl,
+    image: index % 2 === 0 ? sampleImageUrl : sampleImageTwoUrl,
     gender: index % 2 === 0 ? "Male" : "Female",
     phone: `+23355500000${index + 1}`,
     createdAt: new Date(),
