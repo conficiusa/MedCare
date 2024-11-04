@@ -35,8 +35,16 @@ export interface ITransaction extends Document {
   mobileMoneyType?: MobileMoneyType;
 }
 export interface IAppointment extends Document {
-  patientId: ObjectId;
-  doctorId: ObjectId;
+  doctor: {
+    doctorId: ObjectId;
+    name: string;
+    image: string;
+  };
+  patient: {
+    patientId: ObjectId;
+    name?: string;
+    image?: string;
+  };
   transactionId: ObjectId;
   date: Date;
   time: string;
@@ -56,6 +64,12 @@ export interface IPatientProfile extends IUser, Document {
   conditions?: string[];
   medicalHistory?: string;
   userId?: ObjectId | string;
+}
+
+export interface IAvailability extends Document {
+  doctorId: ObjectId;
+  date: Date;
+  timeSlots: string[];
 }
 
 ////////////Application definitions///////////
@@ -99,14 +113,23 @@ export interface Doctor {
 
 export interface Appointment {
   id: string;
-  patientId: string;
-  doctorId: string;
+  doctor: {
+    doctorId: string;
+    name?: string;
+    image?: string;
+  };
+  patient: {
+    patientId: string;
+    name: string;
+    image: string;
+  };
   transactionId: string;
   date: string;
   time: string;
   status: "pending" | "completed" | "cancelled";
   createdAt: Date;
   updatedAt: Date;
+
   mode: "online" | "in-person";
   online_medium?: "video" | "audio" | "chat";
   paid: boolean;
@@ -121,12 +144,6 @@ export interface ServiceCard {
   icon: React.ReactNode;
   description: string;
   footer: string;
-}
-
-export interface IAvailability extends Document {
-  doctorId: ObjectId;
-  date: Date;
-  timeSlots: string[];
 }
 
 type PaymentMethod = "card" | "bank_transfer" | "mobile_money";

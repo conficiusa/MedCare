@@ -4,10 +4,27 @@ import DocCardOnline from "@/components/blocks/DocCardOnline";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import DocCardInPerson from "@/components/blocks/DocCardInPerson";
+import { DoctorCard } from "@/lib/definitions";
+import { fetchDoctorCardData } from "@/lib/queries";
+import NotFound from "@/app/(patients)/find-a-doctor/not-found";
+import { Suspense } from "react";
+import CardOnlineSkeleton from "@/components/skeletons/onlineCardSkeleton";
 
-const ConsultationPreview = () => {
+const ConsultationPreview = async () => {
+  const doctors: DoctorCard[] =
+    (await fetchDoctorCardData({
+      limit: 4,
+      sort: { "doctorInfo.rating": -1, "doctorInfo.rate": 1 },
+    }).catch((error: any) => {
+      console.error(error);
+      return [];
+    })) || [];
+
+  if (doctors.length === 0) {
+    return <NotFound />;
+  }
   return (
-    <section className="sm:bg-muted min-h-[500px] my-16 rounded-sm ">
+    <section className="sm:bg-muted/30 min-h-[500px] my-16 rounded-sm ">
       <div className="sm:p-10">
         <h4 className="font-semibold mb-6">
           Speak to a Healthcare Professional Today
@@ -46,12 +63,13 @@ const ConsultationPreview = () => {
           </div>
 
           <TabsContent value="online" className="">
-            <div className="grid overflow-x-hidden sm:grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-10 mt-6 py-2">
-              <DocCardOnline />
-              <DocCardOnline />
-              <DocCardOnline />
-              <DocCardOnline />
-              <DocCardOnline />
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-6">
+              <Suspense fallback={<CardOnlineSkeleton />}>
+                <DocCardOnline
+                  doctors={doctors}
+                  className="shadow-sm border-[1px]"
+                />
+              </Suspense>
             </div>
           </TabsContent>
           <TabsContent value="in-person" className="max-w-6xl">

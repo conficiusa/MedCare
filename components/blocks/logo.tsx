@@ -1,8 +1,9 @@
+import { cn } from "@/lib/utils";
 
-const Logo = () => {
+const Logo = ({ className }: { className?: string }) => {
   return (
     <svg
-      className="w-8 h-8 mr-2"
+      className={cn("w-8 h-8", className)}
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -23,6 +24,6 @@ const Logo = () => {
       />
     </svg>
   );
-}
+};
 
-export default Logo
+export default Logo;

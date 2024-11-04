@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
 
 export default async function UserDp() {
   const session = await auth();
@@ -36,7 +37,9 @@ export default async function UserDp() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>My Appointments</DropdownMenuItem>
+          <Link href="/dashboard/appointments">
+            <DropdownMenuItem>My Appointments</DropdownMenuItem>
+          </Link>
           <DropdownMenuItem>My Prescriptions</DropdownMenuItem>
           <DropdownMenuItem>Make a complain</DropdownMenuItem>
           <DropdownMenuItem>Settings</DropdownMenuItem>

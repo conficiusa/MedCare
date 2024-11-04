@@ -4,11 +4,10 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn, formatCurrency } from "@/lib/utils";
 import Image from "next/image";
-import { DoctorCard, IUser } from "@/lib/definitions";
-import { fetchDoctorCardData } from "@/lib/queries";
+import { DoctorCard } from "@/lib/definitions";
 import Ratings from "@/components/blocks/ratingStars";
 
-const DocCardOnline = async ({
+const DocCardOnline = ({
   className,
   doctors,
 }: {

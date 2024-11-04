@@ -1,7 +1,7 @@
 "use server";
 import { auth, signIn } from "@/auth";
 import { AuthError } from "next-auth";
-import { SignInSchema } from "@/lib/schema";
+import { IAppointmentSchema, SignInSchema } from "@/lib/schema";
 import connectToDatabase from "@/lib/mongoose";
 import { z } from "zod";
 import {
@@ -9,11 +9,12 @@ import {
   Transaction as TransactionType,
 } from "@/lib//definitions";
 import Transaction from "@/models/Checkout";
-import mongoose from "mongoose";
+import mongoose, { MongooseError } from "mongoose";
 import Appointment from "@/models/Appointment";
 import { RoomServiceClient } from "livekit-server-sdk";
 import User from "@/models/User";
 import moment from "moment";
+import { isRedirectError } from "next/dist/client/components/redirect";
 
 export type State = {
   message: string | undefined;
@@ -81,6 +82,10 @@ export const googleSignIn = async (redirect: string | null) => {
     });
   } catch (error: any) {
     console.error(error);
+
+    if (isRedirectError(error)) {
+      throw error;
+    }
     if (error instanceof AuthError) {
       switch (error.type) {
         case "OAuthSignInError":
@@ -122,11 +127,16 @@ export const FinalizeAppointment = async (
       throw new Error("User not authenticated");
     }
     await connectToDatabase();
+
+    const doctor = await User.findById(
+      appointmentData?.doctor?.doctorId
+    ).select(["name", "image"]);
     const session = await mongoose.startSession();
     session.startTransaction();
 
     const transaction = new Transaction({ ...transactionData });
     await transaction.save({ session });
+    const plainTransaction = transaction.toObject();
 
     if (!apiKey || !apiSecret || !wsUrl) {
       return {
@@ -144,28 +154,59 @@ export const FinalizeAppointment = async (
     if (!room) {
       throw new Error("Could not create room");
     }
-    const appointment = new Appointment({
+
+    const CompleteData = {
       ...appointmentData,
-      transactionId: transaction._id,
+      transactionId: plainTransaction.id,
+      doctor: {
+        name: doctor?.name,
+        image: doctor?.image,
+        doctorId: appointmentData?.doctor?.doctorId,
+      },
+      patient: {
+        image: authsession?.user?.image,
+        name: authsession?.user?.name,
+        patientId: authsession?.user?.id,
+      },
       room: {
         name: room.name,
         sid: room.sid,
         maxParticipants: room.maxParticipants,
       },
       paid: true,
-    });
+    };
+
+    const parsedData = IAppointmentSchema.safeParse(CompleteData);
+
+    console.log(parsedData.data);
+    if (!parsedData.success) {
+      console.error(parsedData.error.flatten().fieldErrors);
+      throw new Error("Invalid Data");
+    }
+    const appointment = new Appointment(parsedData.data);
     await appointment.save({ session });
-    const doctor = await User.findById(appointment.doctorId).select("name");
 
     // If all succeeded, commit the transaction
     await session.commitTransaction();
     session.endSession();
 
+    if (!appointment) {
+      throw new Error("Could not create appointment");
+    }
+
     return {
       appointmentStatus: "success",
       appointment: {
-        doctorId: appointment.doctorId.toString(),
-        patientId: appointment.patientId.toString(),
+        doctor: {
+          doctorId: appointment.doctor.doctorId.toString(),
+          name: appointment.doctor.name,
+          image: appointment.doctor.image,
+        },
+        patient: {
+          patientId: appointment.patient.patientId.toString(),
+          name: appointment.patient.name,
+          image: appointment.patient.image,
+        },
         transactionId: appointment.transactionId.toString(),
         ...appointment.toObject(),
       },
@@ -176,7 +217,11 @@ export const FinalizeAppointment = async (
       } has been created successfully. Room: ${room.name}`,
       roomName: room.name,
     };
-  } catch (error) {
-    return { error, message: "Oops!! We could not create your appointment" };
+  } catch (error: MongooseError | any) {
+    console.log(error);
+    return {
+      error: error._message,
+      message: "Oops!! We could not create your appointment",
+    };
   }
 };

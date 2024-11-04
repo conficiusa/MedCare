@@ -1,7 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { Query } from "mongoose";
 import { twMerge } from "tailwind-merge";
-import { ITransaction } from "./definitions";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

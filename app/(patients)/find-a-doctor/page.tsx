@@ -9,6 +9,7 @@ import CardOnlineSkeleton from "@/components/skeletons/onlineCardSkeleton";
 import { DoctorCard } from "@/lib/definitions";
 import { fetchDoctorCardData } from "@/lib/queries";
 import { notFound } from "next/navigation";
+import NotFound from "./not-found";
 
 const specialities: string[] = [
   "Cardiology",
@@ -33,9 +34,6 @@ const FindDoctor = async () => {
       return [];
     })) || [];
 
-  if (doctors.length === 0) {
-    notFound();
-  }
   return (
     <section className="min-h-[calc(100dvh_-_8rem)] rounded-sm bg-muted dark:bg-background">
       <div className="p-10 max-sm:px-4 max-sm:py-6">

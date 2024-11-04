@@ -1,10 +1,19 @@
+"use server";
 import connectToDatabase from "./mongoose";
 import User from "@/models/User";
 import { applyCaseInsensitiveRegex } from "@/lib/utils";
 import Availability from "@/models/Availability";
 import mongoose from "mongoose";
-import { AvailabilityType, Doctor } from "@/lib/definitions";
+import {
+  Appointment as AppointmentType,
+  AvailabilityType,
+  Doctor,
+} from "@/lib/definitions";
 import { buildDoctorAggregationPipeline } from "@/lib/aggregations";
+import { auth } from "@/auth";
+import Appointment from "@/models/Appointment";
+import { cache as reactcache } from "react";
+import { unstable_cache as cache } from "next/cache";
 
 interface QueryOptions {
   filter?: Record<string, any>;
@@ -14,39 +23,49 @@ interface QueryOptions {
 }
 
 // Fetch doctor card data
-export const fetchDoctorCardData = async (options: QueryOptions) => {
-  try {
-    await connectToDatabase();
+export const fetchDoctorCardData = reactcache(
+  cache(
+    async (options: QueryOptions) => {
+      try {
+        await connectToDatabase();
 
-    const defaultFilter = { role: "doctor" };
-    let filter = { ...defaultFilter, ...options.filter };
-    filter = { ...filter, ...applyCaseInsensitiveRegex(filter) };
+        const defaultFilter = { role: "doctor" };
+        let filter = { ...defaultFilter, ...options.filter };
+        filter = { ...filter, ...applyCaseInsensitiveRegex(filter) };
 
-    // Build the aggregation pipeline using the utility function
-    const pipeline = buildDoctorAggregationPipeline(filter, options);
+        // Build the aggregation pipeline using the utility function
+        const pipeline = buildDoctorAggregationPipeline(filter, options);
 
-    // Execute the aggregation
-    const doctors = await mongoose.model("User").aggregate(pipeline);
+        // Execute the aggregation
+        const doctors = await User.aggregate(pipeline);
 
-    // Manually apply the transformation
-    const transformedDoctors = doctors.map((doc) => {
-      const ret = { ...doc }; // Spread the document into a new object
-      ret.id = ret._id.toString();
-      delete ret._id;
-      delete ret.__v;
-      return ret;
-  });
+        // Manually apply the transformation
+        const transformedDoctors = doctors.map((doc) => {
+          const ret = { ...doc }; // Spread the document into a new object
+          ret.id = ret._id.toString();
+          delete ret._id;
+          delete ret.__v;
+          return ret;
+        });
 
-    return transformedDoctors;
-  } catch (error: any) {
-    console.error("Error fetching doctors", error);
-    throw new Error("Error fetching doctors");
-  }
-};
+        return transformedDoctors;
+      } catch (error: any) {
+        console.error("Error fetching doctors", error);
+        throw new Error("Error fetching doctors");
+      }
+    },
+    ["doctorcards"],
+    { revalidate: 3600, tags: ["doctorcards"] }
+  )
+);
 
 //fetch doctor dynamic data
 export const fetchDoctorData = async (id: string) => {
   try {
+    const authsession = await auth();
+    if (!authsession) {
+      throw new Error("User not authenticated");
+    }
     const today = new Date();
     await connectToDatabase();
 
@@ -91,5 +110,40 @@ export const fetchDoctorData = async (id: string) => {
   } catch (error: any) {
     console.error("Could not load Doctor", error.stack || error);
     throw new Error("Error fetching doctor");
+  }
+};
+
+export const fetchUserAppointments = async (id: string) => {
+  try {
+    const authsession = await auth();
+    if (!authsession) {
+      throw new Error("User not authenticated");
+    }
+    const appointments = await Appointment.find({
+      $or: [{ "doctor.doctorId": id }, { "patient.patientId": id }],
+    }).sort({ date: 1 });
+
+    const plainAppointments = appointments?.map((doc) => ({
+      id: doc.id.toString(),
+      doctor: {
+        doctorId: doc.doctor.doctorId.toString(),
+        name: doc.doctor.name,
+        image: doc.doctor.image,
+      },
+      patient: {
+        patientId: doc.patient.patientId.toString(),
+        name: doc.patient.name,
+        image: doc.patient.image,
+      },
+      transactionId: doc.transactionId.toString(),
+      ...doc.toObject(),
+    })) as AppointmentType[];
+
+    console.log("plainAppointments", plainAppointments);
+
+    return plainAppointments;
+  } catch (error) {
+    console.error("Error fetching appointments", error);
+    throw new Error("Error fetching appointments");
   }
 };

@@ -61,8 +61,9 @@ export const onSuccess = async (
         ?.bank as MobileMoneyType;
     }
     const appointmentData: Partial<Appointment> = {
-      doctorId,
-      patientId: data?.data?.metadata?.patientId,
+      doctor: {
+        doctorId: doctorId,
+      },
       date,
       mode: "online",
       paid: true,

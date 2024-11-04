@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <main className="flex h-full min-h-[calc(100dvh_-_4rem)] flex-col items-center justify-center gap-2">
-      <Frown className="w-10 text-gray-400" />
+      <Frown className="w-10 text-muted-foreground" />
       <h2 className="text-xl font-semibold">No Doctors Available </h2>
       <p>
         adjust your filters if there any. Or check back later for Open Slots{" "}

@@ -8,8 +8,16 @@ const AppointmentSchema = new Schema<IAppointment>(
       required: true,
       ref: "Transaction",
     },
-    patientId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
-    doctorId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
+    doctor: {
+      doctorId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
+      name: { type: String, required: true },
+      image: { type: String },
+    },
+    patient: {
+      patientId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
+      name: { type: String, required: true },
+      image: { type: String },
+    },
     time: { type: String, required: true },
     status: {
       type: String,
@@ -53,8 +61,8 @@ const AppointmentSchema = new Schema<IAppointment>(
       virtuals: true,
       transform: (doc, ret) => {
         ret.id = ret._id.toString();
-        ret.doctorId = ret.doctorId.toString();
-        ret.patientId = ret.patientId.toString();
+        ret.doctor.doctorId = ret.doctor.doctorId.toString();
+        ret.patient.patientId = ret.patient.patientId.toString();
         ret.transactionId = ret.transactionId.toString();
         delete ret._id;
         delete ret.__v;
@@ -63,6 +71,7 @@ const AppointmentSchema = new Schema<IAppointment>(
   }
 );
 
+AppointmentSchema?.index({ doctorId: 1, date: 1, time: 1 });
 const Appointment =
   models.Appointment || model<IAppointment>("Appointment", AppointmentSchema);
 

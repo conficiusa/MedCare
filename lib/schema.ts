@@ -1,6 +1,7 @@
 import { channel } from "diagnostics_channel";
 import { m } from "framer-motion";
-import { z } from "zod";
+import { min } from "moment";
+import { string, z } from "zod";
 
 const multiSelectSchema = z.object({
   label: z.string(),
@@ -104,3 +105,34 @@ export const CheckoutSchema = z
       path: ["mobileMoneyType"],
     }
   );
+
+export const IAppointmentSchema = z
+  .object({
+    doctor: z.object({
+      doctorId: string().min(1, "Doctor's User id is required."),
+      name: z.string().min(1, "Doctor's full name is required."),
+      image: z.string().optional(),
+    }),
+    patient: z.object({
+      patientId: string().min(1, "Doctor's User id is required."),
+      name: z.string().min(1, "Doctor's full name is required."),
+      image: z.string().optional(),
+    }),
+    transactionId: string().min(1, "Transaction id is required."),
+    date: z.string().min(1, "Date is required."),
+    time: z.string().min(1, "Time is required."),
+    mode: z.enum(["online", "in-person"]),
+    paid: z.boolean(),
+    online_medium: z.enum(["video", "audio", "chat"]),
+    room: z.object({
+      name: z.string(),
+      sid: z.string(),
+      maxParticipants: z.number(),
+    }),
+  })
+  .refine((data) => {
+    if (data.mode === "online") {
+      return data.online_medium !== undefined;
+    }
+    return true;
+  });
