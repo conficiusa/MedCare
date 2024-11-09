@@ -1,15 +1,11 @@
 import SearchInput from "@/components/ui/search";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import DocCardOnline from "@/components/blocks/DocCardOnline";
 import DocCardInPerson from "@/components/blocks/DocCardInPerson";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Suspense } from "react";
 import CardOnlineSkeleton from "@/components/skeletons/onlineCardSkeleton";
-import { DoctorCard } from "@/lib/definitions";
-import { fetchDoctorCardData } from "@/lib/queries";
-import { notFound } from "next/navigation";
-import NotFound from "./not-found";
+import Datacards from "./components/datacards";
 
 const specialities: string[] = [
   "Cardiology",
@@ -25,15 +21,7 @@ const specialities: string[] = [
   "Urology",
   "Infectious Diseases",
 ];
-const FindDoctor = async () => {
-  const doctors: DoctorCard[] =
-    (await fetchDoctorCardData({
-      limit: 10,
-      sort: { "doctorInfo.rating": -1, "doctorInfo.rate": 1 },
-    }).catch((error: any) => {
-      return [];
-    })) || [];
-
+const FindDoctor = () => {
   return (
     <section className="min-h-[calc(100dvh_-_8rem)] rounded-sm bg-muted dark:bg-background">
       <div className="p-10 max-sm:px-4 max-sm:py-6">
@@ -61,16 +49,9 @@ const FindDoctor = async () => {
               In-Person Visit
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="online" className="py-8">
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-6">
-              <Suspense fallback={<CardOnlineSkeleton />}>
-                <DocCardOnline
-                  doctors={doctors}
-                  className="shadow-sm border-[1px]"
-                />
-              </Suspense>
-            </div>
-          </TabsContent>
+          <Suspense fallback={<CardOnlineSkeleton />}>
+            <Datacards />
+          </Suspense>
           <TabsContent value="in-person">
             <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-6">
               <Suspense fallback={<div>Loading...</div>}>

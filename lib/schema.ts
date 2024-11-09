@@ -1,7 +1,4 @@
-import { channel } from "diagnostics_channel";
-import { m } from "framer-motion";
-import { min } from "moment";
-import { string, z } from "zod";
+import { z } from "zod";
 
 const multiSelectSchema = z.object({
   label: z.string(),
@@ -109,30 +106,41 @@ export const CheckoutSchema = z
 export const IAppointmentSchema = z
   .object({
     doctor: z.object({
-      doctorId: string().min(1, "Doctor's User id is required."),
+      doctorId: z.string().min(1, "Doctor's User id is required."),
       name: z.string().min(1, "Doctor's full name is required."),
       image: z.string().optional(),
     }),
     patient: z.object({
-      patientId: string().min(1, "Doctor's User id is required."),
-      name: z.string().min(1, "Doctor's full name is required."),
+      patientId: z.string().min(1, "Patient's User id is required."),
+      name: z.string().min(1, "Patient's full name is required."),
       image: z.string().optional(),
     }),
-    transactionId: string().min(1, "Transaction id is required."),
+    transactionId: z.string().min(1, "Transaction id is required."),
     date: z.string().min(1, "Date is required."),
-    time: z.string().min(1, "Time is required."),
+    timeSlot: z.object({
+      startTime: z.string().min(1, "Start time is required."),
+      endTime: z.string().min(1, "End time is required."),
+      slotId: z.string().min(1, "Slot id is required."),
+    }),
     mode: z.enum(["online", "in-person"]),
     paid: z.boolean(),
-    online_medium: z.enum(["video", "audio", "chat"]),
+    status: z.enum(["pending", "completed", "cancelled"]),
+    online_medium: z.enum(["video", "audio", "chat"]).optional(),
     room: z.object({
       name: z.string(),
       sid: z.string(),
       maxParticipants: z.number(),
     }),
   })
-  .refine((data) => {
-    if (data.mode === "online") {
-      return data.online_medium !== undefined;
+  .refine(
+    (data) => {
+      if (data.mode === "online") {
+        return data.online_medium !== undefined;
+      }
+      return true;
+    },
+    {
+      message: "Online medium is required when mode is online",
+      path: ["online_medium"],
     }
-    return true;
-  });
+  );

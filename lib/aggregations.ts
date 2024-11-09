@@ -1,4 +1,3 @@
-
 export const buildDoctorAggregationPipeline = (
   filter: Record<string, any>,
   options: { sort?: Record<string, 1 | -1>; limit?: number; page?: number }
@@ -28,7 +27,6 @@ export const buildDoctorAggregationPipeline = (
         name: 1,
         image: 1,
         doctorInfo: 1,
-        availability: 1, // Include availability details if needed
       },
     },
   ];

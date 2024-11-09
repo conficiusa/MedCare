@@ -16,10 +16,23 @@ const ServiceDetails = ({
   name: string;
 }) => {
   const [date, setDate] = React.useState<Date | undefined>();
-  const [selectedTime, setSelectedTime] = useState<string | undefined>();
+  const [selectedTime, setSelectedTime] = useState<
+    | {
+        id: string;
+        startTime: string;
+        endTime: string;
+      }
+    | undefined
+  >({
+    id: "",
+    startTime: "",
+    endTime: "",
+  });
   const availableDates = availability.map((item) => new Date(item.date));
+
   const [isPending, startTransition] = useTransition();
   const { push } = useRouter();
+
   const availableTimeSlots = useMemo(() => {
     if (date) {
       const selectedAvailability = availability.find(
@@ -39,8 +52,7 @@ const ServiceDetails = ({
     startTransition(() => {
       if (date && selectedTime) {
         const query = new URLSearchParams({
-          date: date?.toISOString(),
-          time: selectedTime,
+          slotId: selectedTime?.id,
         }).toString();
         push(`/find-a-doctor/${availability[0]?.doctorId}/checkout?${query}`);
       }
@@ -77,21 +89,34 @@ const ServiceDetails = ({
                   </p>
                   <div className="flex flex-wrap gap-5">
                     {availableTimeSlots.map((slot) => (
-                      <Button
-                        key={slot}
+                        <Button
+                        key={slot?.slotId}
                         className="w-fit text-xs lg:min-w-40"
-                        variant={selectedTime === slot ? "default" : "outline"}
+                        disabled={
+                          slot?.isBooked ||
+                          moment().isAfter(moment(slot?.startTime).add(30, 'minutes'))
+                        }
+                        variant={
+                          selectedTime?.id === slot?.slotId
+                          ? "default"
+                          : "outline"
+                        }
                         size={"sm"}
                         onClick={() => {
-                          if (selectedTime === slot) {
-                            setSelectedTime(undefined);
+                          if (selectedTime?.id === slot?.slotId) {
+                          setSelectedTime(undefined);
                           } else {
-                            setSelectedTime(slot);
+                          setSelectedTime({
+                            id: slot?.slotId,
+                            startTime: slot?.startTime,
+                            endTime: slot?.endTime,
+                          });
                           }
                         }}
-                      >
-                        {slot}
-                      </Button>
+                        >
+                        {moment(slot?.startTime).format("hh:mm A")} -{" "}
+                        {moment(slot?.endTime).format("hh:mm A")}
+                        </Button>
                     ))}
                   </div>
                 </AnimationWrapper>
@@ -115,7 +140,7 @@ const ServiceDetails = ({
             </p>
           )}
         </div>
-        {selectedTime && (
+        {selectedTime?.id && (
           <AnimationWrapper className="space-y-4">
             <p className="text-sm text-muted-foreground">
               Selected time and date{" "}
@@ -126,7 +151,8 @@ const ServiceDetails = ({
                   {moment(date).format("MMMM D, YYYY")}
                 </p>
                 <p className="font-medium text-muted-foreground text-sm">
-                  {selectedTime}
+                  {moment(selectedTime?.startTime).format("hh:mm A")} -{" "}
+                  {moment(selectedTime?.endTime).format("hh:mm A")}
                 </p>
               </div>
               <div>

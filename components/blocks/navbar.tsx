@@ -8,6 +8,7 @@ import { ThemeToggler } from "@/components/blocks/themeToggler";
 
 const Navbar = async () => {
   const session = await auth();
+
   return (
     <header className="container sticky top-0 left-0 py-4 bg-background/95 duration-500 flex items-center w-full z-50 backdrop-blur-[5.9px] backdrop-saturate-[180%] border-b-[1px]">
       <nav className="flex w-full justify-between">

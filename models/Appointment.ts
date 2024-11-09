@@ -18,7 +18,11 @@ const AppointmentSchema = new Schema<IAppointment>(
       name: { type: String, required: true },
       image: { type: String },
     },
-    time: { type: String, required: true },
+    timeSlot: {
+      endTime: { type: String, required: true },
+      startTime: { type: String, required: true },
+      slotId: { type: String, required: true },
+    },
     status: {
       type: String,
       enum: ["pending", "completed", "cancelled"],

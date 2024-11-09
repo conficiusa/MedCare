@@ -11,6 +11,7 @@ import { Session } from "next-auth";
 import { toast } from "sonner";
 import PaystackPop from "@paystack/inline-js";
 import { onSuccess } from "@/lib/paymentCallbacks";
+import { findTimeSlotBySlotId } from "./queries";
 
 export const useCreateAccount = () => {
   const onCreateAccount = async (data: z.output<typeof SignUpSchema>) => {
@@ -69,10 +70,23 @@ export const handlePaystackPayment = async (
   data: z.output<typeof CheckoutSchema>,
   session: Session | null,
   doctorId: string,
-  time: string,
-  date: string
+  start: string,
+  end: string,
+  date: string,
+  slotId: string,
+  router: any
 ) => {
   try {
+    const timeslot = await findTimeSlotBySlotId(slotId);
+    if (!timeslot) {
+      throw new Error("Time Slot not available, please select another slot");
+    }
+    if (timeslot.isBooked) {
+      toast.error(
+        "Time slot has been booked already. Please select another slot"
+      );
+      return;
+    }
     const response = await fetch("/api/paystack/initialize", {
       method: "POST",
       headers: {
@@ -98,7 +112,7 @@ export const handlePaystackPayment = async (
       popup.resumeTransaction(result?.data?.access_code, {
         // Handle payment success
         onSuccess: (res: any) =>
-          onSuccess(res, data.amount, doctorId, time, date),
+          onSuccess(res, data.amount, doctorId, start, end, date, slotId,router),
       });
     } else {
       // Handle payment initialization error
@@ -107,8 +121,8 @@ export const handlePaystackPayment = async (
       });
       console.error("Payment initialization failed", result);
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("Payment error:", error);
-    alert("Payment failed, please try again.");
+    toast.error(error.message);
   }
 };

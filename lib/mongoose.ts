@@ -28,13 +28,18 @@ async function connectToDatabase(): Promise<Mongoose> {
   if (!cached.promise) {
     const opts: mongoose.ConnectOptions = {
       bufferCommands: false,
-      dbName:"Medcare"
+      dbName: "Medcare",
     };
 
     cached.promise = mongoose
       .connect(MONGODB_URI, opts)
       .then((mongooseInstance) => {
+        console.log("Connected to MongoDB");
         return mongooseInstance;
+      })
+      .catch((error) => {
+        console.error("MongoDB Connection error:", error);
+        throw new Error("MongoDB Connection failed");
       });
   }
 

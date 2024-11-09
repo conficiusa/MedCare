@@ -13,8 +13,11 @@ export const onSuccess = async (
   res: any,
   amount: number,
   doctorId: string,
-  time: string,
-  date: string
+  start: string,
+  end: string,
+  date: string,
+  slotId: string,
+  router: any
 ) => {
   // Verify payment
   const verificationPromise = VerifyPaystackPayment(res.reference, amount);
@@ -32,8 +35,8 @@ export const onSuccess = async (
         throw new Error("Payment verification failed");
       }
     },
-    error: (error) => {
-      return "payment could not be verified";
+    error: (error: any) => {
+      return error.message;
     },
   });
   const data = await verificationPromise;
@@ -68,14 +71,28 @@ export const onSuccess = async (
       mode: "online",
       paid: true,
       status: "pending",
-      time,
+      timeSlot: {
+        startTime: start,
+        endTime: end,
+        slotId,
+      },
       online_medium: "video",
     };
 
-    toast.promise(FinalizeAppointment(transactionData, appointmentData), {
+    const finalizePromise = FinalizeAppointment(
+      transactionData,
+      appointmentData
+    );
+    toast.promise(finalizePromise, {
       loading: "Finalizing appointment...",
-      success: "Appointment finalized successfully",
-      error: "Appointment could not be finalized",
+      success: (data) => {
+        if (data.appointmentStatus === "success") {
+          return data.title;
+        }
+      },
+      error: (error: any) => {
+        return error.message;
+      },
       description(data) {
         if (data.appointmentStatus === "success") {
           return data.message;
@@ -83,5 +100,10 @@ export const onSuccess = async (
       },
       duration: 8000,
     });
+
+    const finalData = await finalizePromise;
+    if (finalData.appointmentStatus === "success") {
+      router.push("/dashboard/appointments");
+    }
   }
 };

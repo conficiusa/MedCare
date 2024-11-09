@@ -1,7 +1,9 @@
 import Paymentdoctorcard from "@/components/blocks/paymentdoctorcard";
-import { fetchDoctorData } from "@/lib/queries";
+import { fetchDoctorData, findTimeSlotBySlotId } from "@/lib/queries";
 import dynamic from "next/dynamic";
 import NotFound from "../not-found";
+import { redirect } from "next/navigation";
+import { auth } from "@/auth";
 const CheckOutForm = dynamic(() => import("@/components/blocks/checkOutForm"), {
   ssr: false,
 });
@@ -9,14 +11,30 @@ const CheckOutForm = dynamic(() => import("@/components/blocks/checkOutForm"), {
 interface Params {
   id: string;
 }
+interface SearchParams {
+  slotId: string;
+  date: string;
+}
 interface Bookingprops {
   params: Params;
+  searchParams: SearchParams;
 }
-const Booking = async ({ params }: Bookingprops) => {
-  const data = await fetchDoctorData(params.id);
+const Booking = async ({ params, searchParams }: Bookingprops) => {
+  const session = auth();
 
-  if (!data || !data.doctor) {
-    NotFound();
+  if (!session) {
+    redirect("/sign-in");
+  }
+  
+  let data, slot;
+  try {
+    [data, slot] = await Promise.all([
+      fetchDoctorData(params.id),
+      findTimeSlotBySlotId(searchParams?.slotId),
+    ]);
+  } catch (error) {
+    console.error("Error fetching doctor data", error);
+    return redirect("/404");
   }
 
   if (!data || !data.doctor) {
@@ -31,6 +49,7 @@ const Booking = async ({ params }: Bookingprops) => {
           <CheckOutForm
             rate={doctor?.doctorInfo?.rate ?? 0}
             doctorId={params.id}
+            slot={slot}
           />
         </div>
         <div className="max-md:order-1">

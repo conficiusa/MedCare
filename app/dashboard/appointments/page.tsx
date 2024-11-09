@@ -1,4 +1,3 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Card,
   CardContent,
@@ -6,49 +5,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import UpcomingAppointment from "./upcoming";
-import { fetchUserAppointments } from "@/lib/queries";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import AppointmentTabs from "./appointmentTabs";
 
-const tabs: {
-  value: string;
-  label: string;
-}[] = [
-  {
-    value: "upcoming",
-    label: "Upcoming Today",
-  },
-  {
-    value: "pending",
-    label: "Pending",
-  },
-  {
-    value: "completed",
-    label: "Completed",
-  },
-  {
-    value: "cancelled",
-    label: "Cancelled",
-  },
-];
+export type AppointmentStatus = "upcoming" | "pending" | "past" | "cancelled";
 export default async function Component() {
   const session = await auth();
-
   if (!session) {
     redirect("/sign-in");
-  }
-  const appointments = await fetchUserAppointments(session?.user?.id ?? "");
-  if (!appointments) {
-    return [];
-  }
-
-  if (appointments.length === 0) {
-    return (
-      <div>
-        <h1>No appointments found</h1>
-      </div>
-    );
   }
   return (
     <div className="min-h-[calc(100dvh_-_4rem)] w-full">
@@ -63,22 +28,7 @@ export default async function Component() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
-            <Tabs defaultValue="upcoming" className="w-full">
-              <TabsList className="bg-transparent space-x-5">
-                {tabs.map((tab) => (
-                  <TabsTrigger
-                    key={tab.value}
-                    value={tab.value}
-                    className="data-[state=active]:bg-transparent focus-visible:ring-0 data-[state=active]:text-primary data-[state=active]:border-b-2 border-primary rounded-none transition-none data-[state=active]:shadow-none"
-                  >
-                    {tab.label}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-              <TabsContent value="upcoming">
-                <UpcomingAppointment appointments={appointments} />
-              </TabsContent>
-            </Tabs>
+            <AppointmentTabs session={session} />
           </CardContent>
         </div>
       </Card>

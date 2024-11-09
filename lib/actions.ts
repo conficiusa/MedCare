@@ -8,13 +8,15 @@ import {
   Appointment as AppointmentType,
   Transaction as TransactionType,
 } from "@/lib//definitions";
-import Transaction from "@/models/Checkout";
-import mongoose, { MongooseError } from "mongoose";
+import Transaction from "@/models/Transactions";
+import mongoose, { ClientSession, MongooseError } from "mongoose";
 import Appointment from "@/models/Appointment";
 import { RoomServiceClient } from "livekit-server-sdk";
 import User from "@/models/User";
 import moment from "moment";
 import { isRedirectError } from "next/dist/client/components/redirect";
+import Availability from "@/models/Availability";
+import { revalidateTag } from "next/cache";
 
 export type State = {
   message: string | undefined;
@@ -121,18 +123,18 @@ export const FinalizeAppointment = async (
   >,
   appointmentData: Partial<AppointmentType>
 ) => {
+  const authsession = await auth();
+  if (!authsession) {
+    throw new Error("User not authenticated");
+  }
+  const session = await mongoose.startSession();
+  session.startTransaction();
   try {
-    const authsession = await auth();
-    if (!authsession) {
-      throw new Error("User not authenticated");
-    }
     await connectToDatabase();
 
     const doctor = await User.findById(
       appointmentData?.doctor?.doctorId
     ).select(["name", "image"]);
-    const session = await mongoose.startSession();
-    session.startTransaction();
 
     const transaction = new Transaction({ ...transactionData });
     await transaction.save({ session });
@@ -175,10 +177,8 @@ export const FinalizeAppointment = async (
       },
       paid: true,
     };
-
     const parsedData = IAppointmentSchema.safeParse(CompleteData);
 
-    console.log(parsedData.data);
     if (!parsedData.success) {
       console.error(parsedData.error.flatten().fieldErrors);
       throw new Error("Invalid Data");
@@ -186,6 +186,12 @@ export const FinalizeAppointment = async (
     const appointment = new Appointment(parsedData.data);
     await appointment.save({ session });
 
+    // Mark the timeslot as booked
+    await markTimeSlotAsBooked(
+      appointmentData?.timeSlot?.slotId ?? "",
+      authsession.user.id ?? "",
+      session
+    );
     // If all succeeded, commit the transaction
     await session.commitTransaction();
     session.endSession();
@@ -194,6 +200,7 @@ export const FinalizeAppointment = async (
       throw new Error("Could not create appointment");
     }
 
+    revalidateTag("appointments");
     return {
       appointmentStatus: "success",
       appointment: {
@@ -213,15 +220,47 @@ export const FinalizeAppointment = async (
       message: `Your appointment with Dr. ${doctor?.name} at ${moment(
         appointment?.date
       ).format("dddd, Do MMMM ")} ${
-        appointment?.time?.split("-")[0]
+       moment(appointment?.timeSlot?.startTime).format("hh:mm A")
       } has been created successfully. Room: ${room.name}`,
       roomName: room.name,
+      title: `Appointment with Dr. ${doctor?.name} created successfully`,
     };
   } catch (error: MongooseError | any) {
+    await session.abortTransaction();
+    session.endSession();
     console.log(error);
     return {
       error: error._message,
       message: "Oops!! We could not create your appointment",
     };
+  }
+};
+
+const markTimeSlotAsBooked = async (
+  slotId: string,
+  patientId: string,
+  session: ClientSession
+) => {
+  try {
+    const result = await Availability.findOneAndUpdate(
+      { "timeSlots.slotId": slotId }, // Find the availability document containing this slotId
+      {
+        $set: {
+          "timeSlots.$.isBooked": true,
+          "timeSlots.$.patientId": patientId, // Set the patientId for the matched slot
+        },
+      }, // Set isBooked to true for the matched slot
+      { new: true, session }
+    );
+
+    if (!result) {
+      console.log("No timeslot found with the given slot ID.");
+      throw new Error("No timeslot found with the given slot ID.");
+    }
+
+    return result.timeSlots[0];
+  } catch (error) {
+    console.error("Error marking timeslot as booked:", error);
+    throw new Error("Error marking timeslot as booked");
   }
 };

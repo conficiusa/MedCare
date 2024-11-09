@@ -47,7 +47,11 @@ export interface IAppointment extends Document {
   };
   transactionId: ObjectId;
   date: Date;
-  time: string;
+  timeSlot: {
+    startTime: string;
+    endTime: string;
+    slotId: string;
+  };
   status: "pending" | "completed" | "cancelled";
   paid: boolean;
   mode: "online" | "in-person";
@@ -66,10 +70,29 @@ export interface IPatientProfile extends IUser, Document {
   userId?: ObjectId | string;
 }
 
+// Define the structure of each time slot in the `timeSlots` array
+export interface ITimeSlot {
+  slotId: string; // Unique ID for each time slot
+  startTime: string; // Start time in "HH:mm" format
+  endTime: string; // End time in "HH:mm" format
+  isBooked: boolean; // Booking status
+  patientId?: Types.ObjectId | null; // Patient who booked the slot, if any
+  cancellationReason?: string; // Reason if the slot was canceled
+  rescheduledTo?: {
+    date: Date;
+    startTime: string;
+    endTime: string;
+  } | null; // New slot if this one was rescheduled
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Define the main availability schema interface
 export interface IAvailability extends Document {
-  doctorId: ObjectId;
+  doctorId: Types.ObjectId;
   date: Date;
-  timeSlots: string[];
+  timeSlots: ITimeSlot[];
+  expiresAt: Date; // TTL field to automatically delete past slots
 }
 
 ////////////Application definitions///////////
@@ -125,7 +148,11 @@ export interface Appointment {
   };
   transactionId: string;
   date: string;
-  time: string;
+  timeSlot: {
+    startTime: string;
+    endTime: string;
+    slotId: string;
+  };
   status: "pending" | "completed" | "cancelled";
   createdAt: Date;
   updatedAt: Date;
@@ -138,6 +165,7 @@ export interface Appointment {
     sid: string;
     maxParticipants: number;
   };
+  slotId: string;
 }
 export interface ServiceCard {
   title: string;
@@ -198,7 +226,7 @@ export interface AvailabilityType {
   id: string;
   doctorId: string;
   date: Date;
-  timeSlots: string[];
+  timeSlots: ITimeSlot[];
 }
 
 export interface DoctorCard {

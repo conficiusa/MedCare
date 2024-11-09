@@ -1,13 +1,16 @@
 import { CircleDot, Star, Stethoscope } from "lucide-react";
-import React from "react";
+import React, { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn, formatCurrency } from "@/lib/utils";
 import Image from "next/image";
 import { DoctorCard } from "@/lib/definitions";
 import Ratings from "@/components/blocks/ratingStars";
+import { fetchDoctorCardData } from "@/lib/queries";
+import NotFound from "@/app/(patients)/find-a-doctor/not-found";
+import CardOnlineSkeleton from "@/components/skeletons/onlineCardSkeleton";
 
-const DocCardOnline = ({
+const DocCardOnline = async ({
   className,
   doctors,
 }: {

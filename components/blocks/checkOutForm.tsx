@@ -13,21 +13,20 @@ import { handlePaystackPayment } from "@/lib/formSubmissions";
 import { formatCurrency } from "@/lib/utils";
 import { Banknote } from "lucide-react";
 import AnimationWrapper from "@/components/wrappers/animationWrapper";
-import { useRouter, useSearchParams } from "next/navigation";
-import { toast } from "sonner";
+import { ITimeSlot } from "@/lib/definitions";
+import { useRouter } from "next/navigation";
 
 const CheckOutForm = ({
   rate,
   doctorId,
+  slot,
 }: {
   rate: number;
   doctorId: string;
+  slot: ITimeSlot;
 }) => {
-  const router = useRouter();
   const { data: session } = useSession();
-  const searchParams = useSearchParams();
-  const time = searchParams.get("time");
-  const date = searchParams.get("date");
+  const router = useRouter();
 
   const form = useForm<z.output<typeof CheckoutSchema>>({
     resolver: zodResolver(CheckoutSchema),
@@ -58,8 +57,11 @@ const CheckOutForm = ({
         data,
         session,
         doctorId,
-        time ?? "",
-        date ?? ""
+        slot?.startTime,
+        slot?.endTime,
+        slot?.startTime,
+        slot?.slotId,
+        router,
       );
     } catch (error: any) {
       console.error(error);
