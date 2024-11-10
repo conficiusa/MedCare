@@ -69,7 +69,7 @@ export const onSuccess = async (
       },
       date,
       mode: "online",
-      paid: true,
+      paid: false,
       status: "pending",
       timeSlot: {
         startTime: start,

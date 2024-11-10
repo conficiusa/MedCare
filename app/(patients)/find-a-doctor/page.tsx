@@ -6,6 +6,8 @@ import { ArrowRight } from "lucide-react";
 import { Suspense } from "react";
 import CardOnlineSkeleton from "@/components/skeletons/onlineCardSkeleton";
 import Datacards from "./components/datacards";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 const specialities: string[] = [
   "Cardiology",
@@ -21,7 +23,12 @@ const specialities: string[] = [
   "Urology",
   "Infectious Diseases",
 ];
-const FindDoctor = () => {
+const FindDoctor = async () => {
+  const session = await auth();
+
+  if (!session) {
+    redirect("/sign-in");
+  }
   return (
     <section className="min-h-[calc(100dvh_-_8rem)] rounded-sm bg-muted dark:bg-background">
       <div className="p-10 max-sm:px-4 max-sm:py-6">

@@ -89,6 +89,7 @@ export const googleSignIn = async (redirect: string | null) => {
       throw error;
     }
     if (error instanceof AuthError) {
+      console.log("yes");
       switch (error.type) {
         case "OAuthSignInError":
           return {
@@ -104,7 +105,8 @@ export const googleSignIn = async (redirect: string | null) => {
           };
       }
     }
-    throw error;
+    console.log("no");
+    return;
   }
 };
 
@@ -219,9 +221,9 @@ export const FinalizeAppointment = async (
       },
       message: `Your appointment with Dr. ${doctor?.name} at ${moment(
         appointment?.date
-      ).format("dddd, Do MMMM ")} ${
-       moment(appointment?.timeSlot?.startTime).format("hh:mm A")
-      } has been created successfully. Room: ${room.name}`,
+      ).format("dddd, Do MMMM ")} ${moment(
+        appointment?.timeSlot?.startTime
+      ).format("hh:mm A")} has been created successfully. Room: ${room.name}`,
       roomName: room.name,
       title: `Appointment with Dr. ${doctor?.name} created successfully`,
     };

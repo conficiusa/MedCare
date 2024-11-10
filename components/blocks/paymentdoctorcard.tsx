@@ -1,15 +1,18 @@
 "use client";
 import { Card, CardContent } from "@/components/ui/card";
-import { Doctor } from "@/lib/definitions";
+import { Doctor, ITimeSlot } from "@/lib/definitions";
 import moment from "moment";
 import { AvatarImage, Avatar } from "@/components/ui/avatar";
 import { Stethoscope } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
-import { useSearchParams } from "next/navigation";
 
-const Paymentdoctorcard = ({ doctor }: { doctor: Doctor }) => {
-  const date = useSearchParams().get("date") ?? "";
-  const time= useSearchParams().get("time") ?? "";
+const Paymentdoctorcard = ({
+  doctor,
+  slot,
+}: {
+  doctor: Doctor;
+  slot: ITimeSlot;
+}) => {
   return (
     <div className="py-8">
       <Card className="bg-muted/30 md:max-w-sm ml-auto">
@@ -18,8 +21,12 @@ const Paymentdoctorcard = ({ doctor }: { doctor: Doctor }) => {
             <div>
               <p className="font-medium"> Online Consultation</p>
               <p className="text-sm text-muted-foreground">
-                {moment(date).format("MMMM D, YY")}{" "}
-                <span className="ml-4">{time}</span>
+                {moment(slot?.startTime).format("MMMM D, YYYY")}{" "}
+                <span className="ml-4">
+                  {" "}
+                  {moment(slot?.startTime).format("hh:mm A")} -{" "}
+                  {moment(slot?.endTime).format("hh:mm A")}
+                </span>
               </p>
             </div>
             <div className="flex py-4 gap-6">

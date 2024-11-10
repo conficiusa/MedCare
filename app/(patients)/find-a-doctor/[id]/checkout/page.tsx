@@ -25,7 +25,7 @@ const Booking = async ({ params, searchParams }: Bookingprops) => {
   if (!session) {
     redirect("/sign-in");
   }
-  
+
   let data, slot;
   try {
     [data, slot] = await Promise.all([
@@ -53,7 +53,7 @@ const Booking = async ({ params, searchParams }: Bookingprops) => {
           />
         </div>
         <div className="max-md:order-1">
-          <Paymentdoctorcard doctor={doctor} />
+          <Paymentdoctorcard doctor={doctor} slot={slot} />
         </div>
       </div>
     </main>
