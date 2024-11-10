@@ -108,5 +108,9 @@ export async function POST(req: Request) {
   // Acknowledge receipt of the webhook event early
   NextResponse.json({ status: "Webhook received" }, { status: 200 });
 
-  sendEmail("addawebadua@gmail.com", "Appointment Confirmation", emailBody);
+  sendEmail(
+    "addawebadua@gmail.com",
+    "Appointment Confirmation (Test)",
+    emailBody
+  );
 }
