@@ -16,13 +16,11 @@ export default async function Component() {
     redirect("/sign-in");
   }
   return (
-    <div className="min-h-[calc(100dvh_-_4rem)] w-full">
-      <Card className="bg-background max-w-[90%] mx-auto">
+    <div className="min-h-[calc(100dvh_-_4rem)] w-full px-4 md:px-8">
+      <Card className="bg-background max-w-5xl mx-auto">
         <div className="space-y-4">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-semibold">
-              My appointments
-            </CardTitle>
+            <CardTitle className="md:font-semibold">My appointments</CardTitle>
             <CardDescription className="text-sm text-muted-foreground">
               See and manage your scheduled appointments
             </CardDescription>

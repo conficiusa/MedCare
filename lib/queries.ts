@@ -25,7 +25,6 @@ interface QueryOptions {
 
 // Fetch doctor card data
 export const fetchDoctorCardData = async (options: QueryOptions) => {
-  console.log("card data")
   try {
     await connectToDatabase();
     const defaultFilter = { role: "doctor" };
@@ -100,10 +99,11 @@ export const fetchDoctorData = reactcache(async (id: string) => {
 
 export const fetchUserAppointments = reactcache(
   async (id: string, queryOptions: QueryOptions) => {
+    
     try {
       const authsession = await auth();
       if (!authsession) {
-        throw new Error("User not authenticated");
+        redirect("/sign-in");
       }
       await connectToDatabase();
       const defaultFilter = {

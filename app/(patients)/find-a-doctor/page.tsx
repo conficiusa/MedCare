@@ -56,9 +56,13 @@ const FindDoctor = async () => {
               In-Person Visit
             </TabsTrigger>
           </TabsList>
-          <Suspense fallback={<CardOnlineSkeleton />}>
-            <Datacards />
-          </Suspense>
+          <TabsContent value="online" className="py-8">
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-6">
+              <Suspense fallback={<CardOnlineSkeleton />}>
+                <Datacards />
+              </Suspense>
+            </div>
+          </TabsContent>
           <TabsContent value="in-person">
             <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-6">
               <Suspense fallback={<div>Loading...</div>}>

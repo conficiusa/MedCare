@@ -23,13 +23,7 @@ const Datacards = async () => {
   if (doctors?.length === 0) {
     return <NotFound className="min-h-[300px]" />;
   }
-  return (
-    <TabsContent value="online" className="py-8">
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-6">
-        <DocCardOnline className="shadow-sm border-[1px]" doctors={doctors} />
-      </div>
-    </TabsContent>
-  );
+  return <DocCardOnline className="shadow-sm border-[1px]" doctors={doctors} />;
 };
 
 export default Datacards;
