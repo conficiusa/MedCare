@@ -37,7 +37,7 @@ export const usePatientOnboard = (
         languages: data?.languages?.map((lang) => lang.value),
         conditions: data?.conditions?.map((condition) => condition.value),
       };
-      const response = await axios.patch("/api/users/onboarding", preparedData);
+       await axios.patch("/api/users/onboarding", preparedData);
 
       await update({ ...session, user: { ...session?.user, role: "patient" } });
     } catch (error) {

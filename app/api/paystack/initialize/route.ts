@@ -1,14 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import https from "https";
+import { v4 as uuidv4 } from "uuid";
+import { auth } from "@/auth";
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
+    const session = await auth();
+
+    if (!session) {
+      return NextResponse.json(
+        { message: "Not authenticated" },
+        { status: 401 }
+      );
+    }
+    
     const { email, amount, channels, metadata } = await request.json();
     const params = JSON.stringify({
       email,
       amount: amount * 100,
       channels,
       metadata,
+      reference: uuidv4(),
+      firstName: session?.user?.name?.split(" ")[0],
+      lastName: session?.user?.name?.split(" ")[1],
+      phone: session?.user?.phone,
+      key: process.env.NEXT_PUBLIC_PAYSTACK_TEST_PUBLIC_KEY as string,
     });
 
     const options = {
