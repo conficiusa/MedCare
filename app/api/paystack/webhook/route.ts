@@ -27,7 +27,9 @@ export async function POST(req: Request) {
   NextResponse?.json({ message: "Webhook received" }, { status: 200 });
   const event = JSON.parse(body);
   if (event.event === "charge.success") {
-    const updateappointment = await handleSuccessfulPayment(event);
+    const updateappointment = await handleSuccessfulPayment(
+      event?.data?.reference
+    );
     if (updateappointment?.status === 200) {
       return NextResponse.json(
         { message: "Appointment confirmed" },
