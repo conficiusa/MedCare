@@ -26,9 +26,6 @@ export async function POST(req: Request) {
 
   NextResponse?.json({ message: "Webhook received" }, { status: 200 });
   const event = JSON.parse(body);
-  console.log("Webhook received, delaying processing for 30 seconds...");
-  await delay(30000); // 30 seconds delay
-
   if (event.event === "charge.success") {
     const updateappointment = await handleSuccessfulPayment(event);
     if (updateappointment?.status === 200) {
