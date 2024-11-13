@@ -3,6 +3,7 @@ import { createHmac } from "crypto";
 import { NextResponse } from "next/server";
 import { handleSuccessfulPayment } from "@/app/api/utils/handlepaymentsucess";
 import { sendEmail } from "../../utils/email";
+import moment from "moment";
 
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY as string;
 function verifySignature(body: string, signature: string): boolean {
@@ -31,6 +32,26 @@ export async function POST(req: Request) {
       event?.data?.reference
     );
     if (updateappointment?.status === 200) {
+      const appointment = updateappointment?.appointment;
+      const emailToPatient = `
+        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; background-color: #f4f7f6;">
+          <h2 style="color: #4CAF50;">Appointment Confirmation</h2>
+          <p style="font-size: 16px;">Dear ${appointment?.patient?.name},</p>
+          <p style="font-size: 16px;">Your appointment with Dr. ${
+            appointment?.doctor?.name
+          } on ${moment(appointment?.date).format(
+        "dddd, MMMM Do YYYY"
+      )} has been successfully confirmed. Thank you for using MedCare .</p>
+          <p style="font-size: 16px;">If you have any questions, feel free to contact us.</p>
+          <p style="font-size: 16px;">Best regards,</p>
+          <p style="font-size: 16px;">The Telemedicine Platform Team</p>
+        </div>
+      `;
+      await sendEmail(
+        "addawebadua@gmail.com",
+        "Appointment Confirmation",
+        emailToPatient
+      );
       return NextResponse.json(
         { message: "Appointment confirmed" },
         { status: 200 }
@@ -55,7 +76,7 @@ export async function POST(req: Request) {
 
     await sendEmail(
       "addawebadua@gmail.com",
-      "Appointment not Confirmed",
+      "Could not confirm appointment",
       emailToPatient
     );
 
