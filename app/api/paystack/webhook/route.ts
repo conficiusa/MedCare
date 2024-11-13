@@ -30,6 +30,7 @@ export async function POST(req: Request) {
   const event = JSON.parse(body);
   if (event.event === "charge.success") {
     const data = event.data;
+    console.log("event", event);
     // const transactionData: Transaction = {
     //   amount: data.amount,
 
