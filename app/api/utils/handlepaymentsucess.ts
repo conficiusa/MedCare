@@ -39,7 +39,7 @@ export async function handleSuccessfulPayment(reference: string) {
         </div>
       `;
 
-    sendEmail(
+    await sendEmail(
       "addawebadua@gmail.com",
       "Appointment Confirmation (Test)",
       emailToPatient

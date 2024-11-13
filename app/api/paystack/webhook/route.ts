@@ -53,7 +53,7 @@ export async function POST(req: Request) {
         </div>
       `;
 
-    sendEmail(
+    await sendEmail(
       "addawebadua@gmail.com",
       "Appointment not Confirmed",
       emailToPatient
