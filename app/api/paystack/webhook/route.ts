@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { handleSuccessfulPayment } from "@/app/api/utils/handlepaymentsucess";
 import { sendEmail } from "../../utils/email";
 import moment from "moment";
+import { Transaction } from "@/lib/definitions";
 
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY as string;
 function verifySignature(body: string, signature: string): boolean {
@@ -28,6 +29,11 @@ export async function POST(req: Request) {
   NextResponse?.json({ message: "Webhook received" }, { status: 200 });
   const event = JSON.parse(body);
   if (event.event === "charge.success") {
+    const data = event.data;
+    // const transactionData: Transaction = {
+    //   amount: data.amount,
+
+    // }
     const updateappointment = await handleSuccessfulPayment(
       event?.data?.reference
     );

@@ -1,14 +1,13 @@
 "use server";
-import { sendEmail } from "@/app/api/utils/email";
 import connectToDatabase from "@/lib/mongoose";
 import Appointment from "@/models/Appointment";
-import moment from "moment";
 
 // Handle the successful payment event
 export async function handleSuccessfulPayment(reference: string) {
   try {
     await connectToDatabase();
     // Find the corresponding appointment
+
     const appointment = await Appointment.findOneAndUpdate(
       { reference },
       {

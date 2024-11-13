@@ -125,7 +125,6 @@ export const fetchUserAppointments = reactcache(
           name: doc.patient.name,
           image: doc.patient.image,
         },
-        transactionId: doc.transactionId.toString(),
         ...doc.toObject(),
       })) as AppointmentType[];
 
