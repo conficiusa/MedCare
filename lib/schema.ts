@@ -82,6 +82,7 @@ export const PatientOnboardingSchema = z.object({
 export const CheckoutSchema = z
   .object({
     fullName: z.string().min(1, "Please enter your full name."),
+    appointment: z.string().min(1, "Invalid appointment id."),
     email: z
       .string()
       .min(1, "please enter your email")
@@ -115,7 +116,6 @@ export const IAppointmentSchema = z
       name: z.string().min(1, "Patient's full name is required."),
       image: z.string().optional(),
     }),
-    reference: z.string().min(1, "reference is required."),
     date: z.string().min(1, "Date is required."),
     timeSlot: z.object({
       startTime: z.string().min(1, "Start time is required."),
@@ -126,11 +126,6 @@ export const IAppointmentSchema = z
     paid: z.boolean(),
     status: z.enum(["pending", "completed", "cancelled"]),
     online_medium: z.enum(["video", "audio", "chat"]).optional(),
-    room: z.object({
-      name: z.string(),
-      sid: z.string(),
-      maxParticipants: z.number(),
-    }),
   })
   .refine(
     (data) => {

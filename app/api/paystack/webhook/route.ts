@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 import { handleSuccessfulPayment } from "@/app/api/utils/handlepaymentsucess";
 import { sendEmail } from "../../utils/email";
 import moment from "moment";
-import { Transaction } from "@/lib/definitions";
 
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY as string;
 function verifySignature(body: string, signature: string): boolean {
@@ -12,10 +11,6 @@ function verifySignature(body: string, signature: string): boolean {
     .update(body)
     .digest("hex");
   return hash === signature;
-}
-
-function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export async function POST(req: Request) {
@@ -31,12 +26,10 @@ export async function POST(req: Request) {
   if (event.event === "charge.success") {
     const data = event.data;
     console.log("event", event);
-    // const transactionData: Transaction = {
-    //   amount: data.amount,
 
-    // }
     const updateappointment = await handleSuccessfulPayment(
-      event?.data?.reference
+      event?.data?.metadata?.appointment,
+      data
     );
     if (updateappointment?.status === 200) {
       const appointment = updateappointment?.appointment;

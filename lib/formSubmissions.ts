@@ -37,7 +37,7 @@ export const usePatientOnboard = (
         languages: data?.languages?.map((lang) => lang.value),
         conditions: data?.conditions?.map((condition) => condition.value),
       };
-       await axios.patch("/api/users/onboarding", preparedData);
+      await axios.patch("/api/users/onboarding", preparedData);
 
       await update({ ...session, user: { ...session?.user, role: "patient" } });
     } catch (error) {
@@ -68,25 +68,9 @@ export const VerifyPaystackPayment = async (
 
 export const handlePaystackPayment = async (
   data: z.output<typeof CheckoutSchema>,
-  session: Session | null,
-  doctorId: string,
-  start: string,
-  end: string,
-  date: string,
-  slotId: string,
-  router: any
+  session: Session | null
 ) => {
   try {
-    const timeslot = await findTimeSlotBySlotId(slotId);
-    if (!timeslot) {
-      throw new Error("Time Slot not available, please select another slot");
-    }
-    if (timeslot.isBooked) {
-      toast.error(
-        "Time slot has been booked already. Please select another slot"
-      );
-      return;
-    }
     const response = await fetch("/api/paystack/initialize", {
       method: "POST",
       headers: {
@@ -100,6 +84,7 @@ export const handlePaystackPayment = async (
           patientId: session?.user?.id,
           patient_name: data.fullName,
           patient_email: data.email,
+          appointment: data.appointment,
         },
       }),
     });
@@ -111,8 +96,7 @@ export const handlePaystackPayment = async (
 
       popup.resumeTransaction(result?.data?.access_code, {
         // Handle payment success
-        onSuccess: (res: any) =>
-          onSuccess(res, data.amount, doctorId, start, end, date, slotId,router),
+        onSuccess: (res: any) => onSuccess(res, data.amount),
       });
     } else {
       // Handle payment initialization error

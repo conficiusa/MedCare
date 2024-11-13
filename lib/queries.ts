@@ -99,7 +99,6 @@ export const fetchDoctorData = reactcache(async (id: string) => {
 
 export const fetchUserAppointments = reactcache(
   async (id: string, queryOptions: QueryOptions) => {
-    
     try {
       const authsession = await auth();
       if (!authsession) {
@@ -160,5 +159,26 @@ export const findTimeSlotBySlotId = async (slotId: string) => {
   } catch (error: any) {
     console.error("Error finding timeslot:", error);
     throw new Error("Error finding timeslot");
+  }
+};
+
+export const FetchAppointment = async (id: string) => {
+  try {
+    const authsession = await auth();
+    if (!authsession) {
+      redirect("/sign-in");
+    }
+    await connectToDatabase();
+    const appointment = await Appointment.findById(id);
+
+    if (!appointment) {
+      return { message: "Appointment not found" };
+    }
+
+    const plainAppointment = appointment?.toObject();
+
+    return { data: plainAppointment as Partial<AppointmentType> };
+  } catch (error: any) {
+    return { error };
   }
 };

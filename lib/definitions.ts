@@ -22,6 +22,7 @@ export interface IUser extends Document {
 
 export interface ITransaction extends Document {
   appointmentId?: ObjectId;
+  reference: string;
   purpose: string;
   patientId: ObjectId;
   doctorId: ObjectId;
@@ -45,7 +46,7 @@ export interface IAppointment extends Document {
     name?: string;
     image?: string;
   };
-  // transactionId: ObjectId;
+  transactionId: ObjectId;
   reference: string;
   date: Date;
   timeSlot: {
@@ -119,7 +120,7 @@ export interface DoctorCard {
 }
 
 export interface Doctor {
-  _id: string;
+  id: string;
   name: string;
   email: string;
   password: string;
@@ -193,6 +194,7 @@ export interface Transaction {
   createdAt?: Date;
   updatedAt?: Date;
   IpAddress: string;
+  reference: string;
   paidAt: string;
   receiptNumber: string;
 }

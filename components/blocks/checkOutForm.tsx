@@ -13,20 +13,9 @@ import { handlePaystackPayment } from "@/lib/formSubmissions";
 import { formatCurrency } from "@/lib/utils";
 import { Banknote } from "lucide-react";
 import AnimationWrapper from "@/components/wrappers/animationWrapper";
-import { ITimeSlot } from "@/lib/definitions";
-import { useRouter } from "next/navigation";
 
-const CheckOutForm = ({
-  rate,
-  doctorId,
-  slot,
-}: {
-  rate: number;
-  doctorId: string;
-  slot: ITimeSlot;
-}) => {
+const CheckOutForm = ({ rate, id }: { rate: number; id: string }) => {
   const { data: session } = useSession();
-  const router = useRouter();
 
   const form = useForm<z.output<typeof CheckoutSchema>>({
     resolver: zodResolver(CheckoutSchema),
@@ -36,6 +25,7 @@ const CheckOutForm = ({
       channel: "mobile_money",
       mobileMoneyType: "mtn",
       amount: rate,
+      appointment: id,
     },
   });
 
@@ -53,16 +43,7 @@ const CheckOutForm = ({
 
   const handleSubmit = async (data: z.output<typeof CheckoutSchema>) => {
     try {
-      await handlePaystackPayment(
-        data,
-        session,
-        doctorId,
-        slot?.startTime,
-        slot?.endTime,
-        slot?.startTime,
-        slot?.slotId,
-        router,
-      );
+      await handlePaystackPayment(data, session);
     } catch (error: any) {
       console.error(error);
     }

@@ -10,6 +10,7 @@ const CheckoutSchema = new Schema<ITransaction>(
     patientId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
     amount: { type: Number, required: true },
     currency: { type: String, required: true },
+    reference: { type: String, required: true },
     status: {
       type: String,
       enum: ["pending", "completed", "failed"],

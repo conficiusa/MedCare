@@ -1,6 +1,6 @@
 "use client";
 import { Card, CardContent } from "@/components/ui/card";
-import { Doctor, ITimeSlot } from "@/lib/definitions";
+import { Appointment, Doctor } from "@/lib/definitions";
 import moment from "moment";
 import { AvatarImage, Avatar } from "@/components/ui/avatar";
 import { Stethoscope } from "lucide-react";
@@ -8,10 +8,10 @@ import { formatCurrency } from "@/lib/utils";
 
 const Paymentdoctorcard = ({
   doctor,
-  slot,
+  appointment,
 }: {
   doctor: Doctor;
-  slot: ITimeSlot;
+  appointment: Partial<Appointment>;
 }) => {
   return (
     <div className="py-8">
@@ -21,11 +21,15 @@ const Paymentdoctorcard = ({
             <div>
               <p className="font-medium"> Online Consultation</p>
               <p className="text-sm text-muted-foreground">
-                {moment(slot?.startTime).format("MMMM D, YYYY")}{" "}
+                {moment(appointment?.timeSlot?.startTime).format(
+                  "MMMM D, YYYY"
+                )}{" "}
                 <span className="ml-4">
                   {" "}
-                  {moment(slot?.startTime).format("hh:mm A")} -{" "}
-                  {moment(slot?.endTime).format("hh:mm A")}
+                  {moment(appointment?.timeSlot?.startTime).format(
+                    "hh:mm A"
+                  )} -{" "}
+                  {moment(appointment?.timeSlot?.endTime).format("hh:mm A")}
                 </span>
               </p>
             </div>

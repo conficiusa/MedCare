@@ -1,5 +1,4 @@
 // app/api/verify/[reference]/route.js
-import { handleSuccessfulPayment } from "@/app/api/utils/handlepaymentsucess";
 import { auth } from "@/auth";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -40,22 +39,7 @@ export async function GET(
   }
 
   if (data?.data?.status === "success") {
-    const res = await handleSuccessfulPayment(reference);
-    if (res?.status === 200) {
-      return NextResponse.json(
-        { message: "Appointment confirmed", statusMessage: "confirmed", data },
-        { status: 200 }
-      );
-    } else {
-      return NextResponse.json(
-        { error: "Error updating appointment status" },
-        { status: 500 }
-      );
-    }
-  } else {
-    return NextResponse.json({
-      status: 402,
-      message: "appointment not confirmed",
-    });
+    return NextResponse.json({ status: "success", data, statusCode: 200 });
   }
+  return NextResponse.json({ status: "failed", data, statusCode: 402 });
 }

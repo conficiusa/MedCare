@@ -2,18 +2,21 @@
 import React, { useEffect, useMemo, useState, useTransition } from "react";
 import DatePicker from "@/components/blocks/DatePicker";
 import AnimationWrapper from "@/components/wrappers/animationWrapper";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Router } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import moment from "moment";
-import { useRouter, useSearchParams } from "next/navigation";
-import { AvailabilityType } from "@/lib/definitions";
+import { useRouter } from "next/navigation";
+import { Appointment, AvailabilityType, Doctor } from "@/lib/definitions";
+import { CreateAppointment } from "@/lib/actions";
+import { toast } from "sonner";
+import { findTimeSlotBySlotId } from "@/lib/queries";
 
 const ServiceDetails = ({
   availability,
-  name,
+  doctor,
 }: {
   availability: AvailabilityType[];
-  name: string;
+  doctor: Doctor;
 }) => {
   const [date, setDate] = React.useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<
@@ -29,8 +32,7 @@ const ServiceDetails = ({
     endTime: "",
   });
   const availableDates = availability.map((item) => new Date(item.date));
-
-  const [isPending, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState<boolean>(false);
   const { push } = useRouter();
 
   const availableTimeSlots = useMemo(() => {
@@ -48,15 +50,69 @@ const ServiceDetails = ({
     }
   }, [date]);
 
-  const handleBookNow = () => {
-    startTransition(() => {
-      if (date && selectedTime) {
+  // const handleBookNow = () => {
+  //   startTransition(() => {
+  //     if (date && selectedTime) {
+  //       const query = new URLSearchParams({
+  //         slotId: selectedTime?.id,
+  //       }).toString();
+  //       push(`/find-a-doctor/${availability[0]?.doctorId}/checkout?${query}`);
+  //     }
+  //   });
+  // };
+
+  const handleCreateAppointment = async () => {
+    try {
+      if (!date) {
+        toast.error("Please select a date");
+        return;
+      }
+      if (!selectedTime) {
+        toast.error("Please select a time slot");
+        return;
+      }
+      setIsPending(true);
+      const timeslot = await findTimeSlotBySlotId(selectedTime?.id as string);
+      if (!timeslot) {
+        throw new Error("Time Slot not available, please select another slot");
+      }
+      if (timeslot.isBooked) {
+        toast.error(
+          "Time slot has been booked already. Please select another slot"
+        );
+        return;
+      }
+      const appointmentData: Partial<Appointment> = {
+        doctor: {
+          doctorId: doctor?.id,
+        },
+        date: date?.toISOString(),
+        mode: "online",
+        paid: false,
+        status: "pending",
+        timeSlot: {
+          startTime: selectedTime?.startTime as string,
+          endTime: selectedTime?.endTime as string,
+          slotId: selectedTime?.id as string,
+        },
+        online_medium: "video",
+      };
+      const data = await CreateAppointment(appointmentData);
+      if (data?.appointmentStatus === "success") {
         const query = new URLSearchParams({
-          slotId: selectedTime?.id,
+          appointment: data?.appointment?.id || "",
         }).toString();
         push(`/find-a-doctor/${availability[0]?.doctorId}/checkout?${query}`);
+      } else {
+        throw new Error("Could not create appointment");
       }
-    });
+    } catch (error: any) {
+      toast.error("Could not create appointment", {
+        description: error.message,
+      });
+    } finally {
+      setIsPending(false);
+    }
   };
 
   return (
@@ -89,42 +145,44 @@ const ServiceDetails = ({
                   </p>
                   <div className="flex flex-wrap gap-5">
                     {availableTimeSlots.map((slot) => (
-                        <Button
+                      <Button
                         key={slot?.slotId}
                         className="w-fit text-xs lg:min-w-40"
                         disabled={
                           slot?.isBooked ||
-                          moment().isAfter(moment(slot?.startTime).add(30, 'minutes'))
+                          moment().isAfter(
+                            moment(slot?.startTime).add(30, "minutes")
+                          )
                         }
                         variant={
                           selectedTime?.id === slot?.slotId
-                          ? "default"
-                          : "outline"
+                            ? "default"
+                            : "outline"
                         }
                         size={"sm"}
                         onClick={() => {
                           if (selectedTime?.id === slot?.slotId) {
-                          setSelectedTime(undefined);
+                            setSelectedTime(undefined);
                           } else {
-                          setSelectedTime({
-                            id: slot?.slotId,
-                            startTime: slot?.startTime,
-                            endTime: slot?.endTime,
-                          });
+                            setSelectedTime({
+                              id: slot?.slotId,
+                              startTime: slot?.startTime,
+                              endTime: slot?.endTime,
+                            });
                           }
                         }}
-                        >
+                      >
                         {moment(slot?.startTime).format("hh:mm A")} -{" "}
                         {moment(slot?.endTime).format("hh:mm A")}
-                        </Button>
+                      </Button>
                     ))}
                   </div>
                 </AnimationWrapper>
               ) : (
                 <AnimationWrapper className="font-medium text-sm space-y-4 mt-4">
                   <p>
-                    Dr. {name} has no open slots for this date. Please select
-                    another date.
+                    Dr. {doctor?.name} has no open slots for this date. Please
+                    select another date.
                   </p>
                   <p className="flex items-center gap-1 text-muted-foreground">
                     <AlertCircle className="w-4 h-4 text-muted-foreground" />
@@ -156,7 +214,7 @@ const ServiceDetails = ({
                 </p>
               </div>
               <div>
-                <Button onClick={handleBookNow} disabled={isPending}>
+                <Button onClick={handleCreateAppointment} disabled={isPending}>
                   Book Now
                 </Button>
               </div>

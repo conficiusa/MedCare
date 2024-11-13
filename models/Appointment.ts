@@ -3,11 +3,13 @@ import { models, Schema, model } from "mongoose";
 
 const AppointmentSchema = new Schema<IAppointment>(
   {
-    // transactionId: {
-    //   type: Schema.Types.ObjectId,
-    //   required: true,
-    //   ref: "Transaction",
-    // },
+    transactionId: {
+      type: Schema.Types.ObjectId,
+      required: function (this: IAppointment) {
+        return this.paid === true ? true : false;
+      },
+      ref: "Transaction",
+    },
     doctor: {
       doctorId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
       name: { type: String, required: true },
@@ -47,12 +49,29 @@ const AppointmentSchema = new Schema<IAppointment>(
     paid: { type: Boolean, default: false },
     reference: {
       type: String,
-      required: true,
+      required: function (this: IAppointment) {
+        return this?.paid === true ? true : false;
+      },
     },
     room: {
-      name: { type: String, required: true },
-      sid: { type: String, required: true },
-      maxParticipants: { type: Number, required: true },
+      name: {
+        type: String,
+        required: function (this: IAppointment) {
+          return this?.paid === true ? true : false;
+        },
+      },
+      sid: {
+        type: String,
+        required: function (this: IAppointment) {
+          return this?.paid === true ? true : false;
+        },
+      },
+      maxParticipants: {
+        type: Number,
+        required: function (this: IAppointment) {
+          return this?.paid === true ? true : false;
+        },
+      },
     },
   },
   {
@@ -71,6 +90,7 @@ const AppointmentSchema = new Schema<IAppointment>(
         ret.id = ret._id.toString();
         ret.doctor.doctorId = ret.doctor.doctorId.toString();
         ret.patient.patientId = ret.patient.patientId.toString();
+        ret.transactionId = ret?.transactionId?.toString();
         delete ret._id;
         delete ret.__v;
       },

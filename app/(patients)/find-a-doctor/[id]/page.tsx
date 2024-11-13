@@ -48,7 +48,7 @@ const DoctorProfile = async ({ params }: DoctorProfileProps) => {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="service">
-              <ServiceDetails availability={availability} name={doctor?.name} />
+              <ServiceDetails availability={availability} doctor={doctor} />
             </TabsContent>
             <TabsContent value="about">
               <AboutDoctor doctor={doctor} />

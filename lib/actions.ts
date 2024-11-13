@@ -138,15 +138,15 @@ export const CreateAppointment = async (
         status: 500,
       };
     }
-    const opts = {
-      name: Date.now().toString(),
-      emptyTimeout: 10 * 60, // 10 minutes
-      maxParticipants: 2,
-    };
-    const room = await roomService.createRoom(opts);
-    if (!room) {
-      throw new Error("Could not create room");
-    }
+    // const opts = {
+    //   name: Date.now().toString(),
+    //   emptyTimeout: 10 * 60, // 10 minutes
+    //   maxParticipants: 2,
+    // };
+    // const room = await roomService.createRoom(opts);
+    // if (!room) {
+    //   throw new Error("Could not create room");
+    // }
 
     const CompleteData = {
       ...appointmentData,
@@ -160,16 +160,11 @@ export const CreateAppointment = async (
         name: authsession?.user?.name,
         patientId: authsession?.user?.id,
       },
-      room: {
-        name: room.name,
-        sid: room.sid,
-        maxParticipants: room.maxParticipants,
-      },
-      paid: true,
+      paid: false,
     };
     const parsedData = IAppointmentSchema.safeParse(CompleteData);
 
-    console.log(CompleteData)
+    console.log(CompleteData);
     if (!parsedData.success) {
       console.error(parsedData.error.flatten().fieldErrors);
       throw new Error("Invalid Data");
@@ -200,19 +195,12 @@ export const CreateAppointment = async (
           image: appointment.patient.image,
         },
         ...appointment.toObject(),
-      },
-      message: `Your appointment with Dr. ${doctor?.name} at ${moment(
-        appointment?.date
-      ).format("dddd, Do MMMM ")} ${moment(
-        appointment?.timeSlot?.startTime
-      ).format("hh:mm A")} has been created successfully. Room: ${room.name}`,
-      roomName: room.name,
-      title: `Appointment with Dr. ${doctor?.name} created successfully`,
-      details: "Appointment created successfully",
+      } as Partial<AppointmentType>,
     };
   } catch (error: MongooseError | any) {
     console.log(error);
     return {
+      appointmentStatus: "fail",
       error: error._message,
       message: "Oops!! We could not create your appointment",
     };
