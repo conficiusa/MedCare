@@ -24,6 +24,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
+  NextResponse?.json({ message: "Webhook received" }, { status: 200 });
   const event = JSON.parse(body);
   console.log("Webhook received, delaying processing for 30 seconds...");
   await delay(30000); // 30 seconds delay
