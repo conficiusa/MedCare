@@ -40,7 +40,7 @@ export async function POST(req: Request) {
           <p style="font-size: 16px;">Your appointment with Dr. ${
             appointment?.doctor?.name
           } on ${moment(appointment?.date).format(
-        "dddd, MMMM Do YYYY"
+        "dddd, MMMM Do YYYY hh:mm A"
       )} has been successfully confirmed. Thank you for using MedCare .</p>
           <p style="font-size: 16px;">If you have any questions, feel free to contact us.</p>
           <p style="font-size: 16px;">Best regards,</p>

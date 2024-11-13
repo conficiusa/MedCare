@@ -11,7 +11,7 @@ export async function handleSuccessfulPayment(
 ) {
   const transactionData: Omit<TransactionType, "id"> = {
     appointmentId,
-    amount: data.amount,
+    amount: data.amount *0.01,
     reference: data.reference,
     currency: data.currency,
     channel: data.channel,
