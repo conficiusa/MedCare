@@ -1,13 +1,8 @@
 "use client";
 import { toast } from "sonner";
 import { VerifyPaystackPayment } from "@/lib/formSubmissions";
-import {
-  Appointment,
-  MobileMoneyType,
-  Transaction,
-  VerificationResponse,
-} from "@/lib/definitions";
-import { FinalizeAppointment } from "@/lib/actions";
+import { Appointment, VerificationResponse } from "@/lib/definitions";
+import { CreateAppointment } from "@/lib/actions";
 
 export const onSuccess = async (
   res: any,
@@ -19,91 +14,61 @@ export const onSuccess = async (
   slotId: string,
   router: any
 ) => {
-  // Verify payment
-  const verificationPromise = VerifyPaystackPayment(res.reference, amount);
-  toast.promise(verificationPromise, {
-    loading: "Verifying payment...",
+  // create appointment
+  const appointmentData: Partial<Appointment> = {
+    doctor: {
+      doctorId: doctorId,
+    },
+    date,
+    reference: res?.reference,
+    mode: "online",
+    paid: false,
+    status: "pending",
+    timeSlot: {
+      startTime: start,
+      endTime: end,
+      slotId,
+    },
+    online_medium: "video",
+  };
 
-    // Handle payment verification sucess
-    success: async (data: VerificationResponse) => {
-      //verifying payment was a success
-      if (data?.data?.status === "success") {
-        //updating db wth transaction and appointment data as a transaction
-
-        return "Payment verified successfully";
-      } else {
-        throw new Error("Payment verification failed");
+  const finalizePromise = CreateAppointment(appointmentData);
+  toast.promise(finalizePromise, {
+    loading: "Creating appointment...",
+    success: (data) => {
+      if (data.appointmentStatus === "success") {
+        return data.details;
       }
     },
     error: (error: any) => {
       return error.message;
     },
+    duration: 8000,
   });
-  const data = await verificationPromise;
 
-  if (data?.data?.status === "success") {
-    //getting transaction and appointment data
-    const transactionData: Omit<
-      Transaction,
-      "id" | "createdAt" | "updatedAt" | "appointmentId"
-    > = {
-      patientId: data?.data?.metadata?.patientId,
-      amount,
-      channel: data?.data?.channel,
-      currency: data?.data?.currency,
-      purpose: "Online Consultation",
-      status: "completed",
-      doctorId,
-      IpAddress: data?.data?.ip_address,
-      paidAt: data?.data?.paid_at,
-      receiptNumber: data?.data?.receipt_number,
-    };
+  const finalizeData = await finalizePromise;
 
-    if (transactionData?.channel === "mobile_money") {
-      transactionData.mobileMoneyType = data?.data?.authorization
-        ?.bank as MobileMoneyType;
-    }
-    const appointmentData: Partial<Appointment> = {
-      doctor: {
-        doctorId: doctorId,
-      },
-      date,
-      mode: "online",
-      paid: false,
-      status: "pending",
-      timeSlot: {
-        startTime: start,
-        endTime: end,
-        slotId,
-      },
-      online_medium: "video",
-    };
+  // verify payment
+  if (finalizeData?.appointmentStatus === "success") {
+    const verificationPromise = VerifyPaystackPayment(res.reference, amount);
+    toast.promise(verificationPromise, {
+      loading: "Confirming your appointment...",
 
-    const finalizePromise = FinalizeAppointment(
-      transactionData,
-      appointmentData
-    );
-    toast.promise(finalizePromise, {
-      loading: "Finalizing appointment...",
-      success: (data) => {
-        if (data.appointmentStatus === "success") {
-          return data.title;
+      // Handle payment verification sucess
+      success: async (data: any) => {
+        //verifying payment was a success
+        if (data?.data?.data?.status === "success") {
+          return "Your appointment will be confirmed via email";
         }
       },
       error: (error: any) => {
-        return error.message;
+        return "Your appointment confirmation status will be sent via secure email";
       },
-      description(data) {
-        if (data.appointmentStatus === "success") {
-          return data.message;
+      description: (data) => {
+        if (data) {
+          return "Contact support if you do not receive an email in 30 minutes";
         }
       },
-      duration: 8000,
     });
-
-    const finalData = await finalizePromise;
-    if (finalData.appointmentStatus === "success") {
-      router.push("/dashboard/appointments");
-    }
   }
 };

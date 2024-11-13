@@ -118,29 +118,18 @@ const roomService = new RoomServiceClient(
   apiKey as string,
   apiSecret as string
 );
-export const FinalizeAppointment = async (
-  transactionData: Omit<
-    TransactionType,
-    "id" | "createdAt" | "updatedAt" | "appointmentId"
-  >,
+export const CreateAppointment = async (
   appointmentData: Partial<AppointmentType>
 ) => {
   const authsession = await auth();
   if (!authsession) {
     throw new Error("User not authenticated");
   }
-  const session = await mongoose.startSession();
-  session.startTransaction();
   try {
     await connectToDatabase();
-
     const doctor = await User.findById(
       appointmentData?.doctor?.doctorId
     ).select(["name", "image"]);
-
-    const transaction = new Transaction({ ...transactionData });
-    await transaction.save({ session });
-    const plainTransaction = transaction.toObject();
 
     if (!apiKey || !apiSecret || !wsUrl) {
       return {
@@ -161,7 +150,6 @@ export const FinalizeAppointment = async (
 
     const CompleteData = {
       ...appointmentData,
-      transactionId: plainTransaction.id,
       doctor: {
         name: doctor?.name,
         image: doctor?.image,
@@ -181,28 +169,23 @@ export const FinalizeAppointment = async (
     };
     const parsedData = IAppointmentSchema.safeParse(CompleteData);
 
+    console.log(CompleteData)
     if (!parsedData.success) {
       console.error(parsedData.error.flatten().fieldErrors);
       throw new Error("Invalid Data");
     }
     const appointment = new Appointment(parsedData.data);
-    await appointment.save({ session });
+    await appointment.save();
 
     // Mark the timeslot as booked
     await markTimeSlotAsBooked(
       appointmentData?.timeSlot?.slotId ?? "",
-      authsession.user.id ?? "",
-      session
+      authsession.user.id ?? ""
     );
     // If all succeeded, commit the transaction
-    await session.commitTransaction();
-    session.endSession();
-
     if (!appointment) {
       throw new Error("Could not create appointment");
     }
-
-    revalidateTag("appointments");
     return {
       appointmentStatus: "success",
       appointment: {
@@ -216,7 +199,6 @@ export const FinalizeAppointment = async (
           name: appointment.patient.name,
           image: appointment.patient.image,
         },
-        transactionId: appointment.transactionId.toString(),
         ...appointment.toObject(),
       },
       message: `Your appointment with Dr. ${doctor?.name} at ${moment(
@@ -226,10 +208,9 @@ export const FinalizeAppointment = async (
       ).format("hh:mm A")} has been created successfully. Room: ${room.name}`,
       roomName: room.name,
       title: `Appointment with Dr. ${doctor?.name} created successfully`,
+      details: "Appointment created successfully",
     };
   } catch (error: MongooseError | any) {
-    await session.abortTransaction();
-    session.endSession();
     console.log(error);
     return {
       error: error._message,
@@ -238,11 +219,7 @@ export const FinalizeAppointment = async (
   }
 };
 
-const markTimeSlotAsBooked = async (
-  slotId: string,
-  patientId: string,
-  session: ClientSession
-) => {
+const markTimeSlotAsBooked = async (slotId: string, patientId: string) => {
   try {
     const result = await Availability.findOneAndUpdate(
       { "timeSlots.slotId": slotId }, // Find the availability document containing this slotId
@@ -252,7 +229,7 @@ const markTimeSlotAsBooked = async (
           "timeSlots.$.patientId": patientId, // Set the patientId for the matched slot
         },
       }, // Set isBooked to true for the matched slot
-      { new: true, session }
+      { new: true }
     );
 
     if (!result) {

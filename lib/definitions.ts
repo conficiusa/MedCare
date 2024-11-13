@@ -45,7 +45,8 @@ export interface IAppointment extends Document {
     name?: string;
     image?: string;
   };
-  transactionId: ObjectId;
+  // transactionId: ObjectId;
+  reference: string;
   date: Date;
   timeSlot: {
     startTime: string;
@@ -141,12 +142,13 @@ export interface Appointment {
     name?: string;
     image?: string;
   };
+  reference: string;
   patient: {
     patientId: string;
     name: string;
     image: string;
   };
-  transactionId: string;
+  // transactionId: string;
   date: string;
   timeSlot: {
     startTime: string;

@@ -115,7 +115,7 @@ export const IAppointmentSchema = z
       name: z.string().min(1, "Patient's full name is required."),
       image: z.string().optional(),
     }),
-    transactionId: z.string().min(1, "Transaction id is required."),
+    reference: z.string().min(1, "reference is required."),
     date: z.string().min(1, "Date is required."),
     timeSlot: z.object({
       startTime: z.string().min(1, "Start time is required."),
