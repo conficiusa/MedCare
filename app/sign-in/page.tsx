@@ -18,8 +18,23 @@ export default function SignInPage() {
       try {
         toast.promise(googleSignIn(redirect), {
           loading: "Signing in...",
-          success: "Login successful",
-          error: "An error occurred",
+          success: (data) => {
+            if (data?.status === "success") {
+              return "Sign in successful";
+            } else {
+              if ("type" in data) {
+                throw new Error(data?.error);
+              }
+            }
+          },
+          error: (error) => {
+            return "Failed to sign in";
+          },
+          description(data) {
+            if (data?.status === "fail") {
+              return data?.message;
+            }
+          },
         });
       } catch (error: any) {
         toast.error(error.message);

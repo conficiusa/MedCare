@@ -6,50 +6,48 @@ import connectToDatabase from "@/lib/mongoose";
 import { z } from "zod";
 import {
   Appointment as AppointmentType,
-  Transaction as TransactionType,
+  ErrorReturn,
+  ReturnType,
+  SuccessReturn,
 } from "@/lib//definitions";
-import Transaction from "@/models/Transactions";
-import mongoose, { ClientSession, MongooseError } from "mongoose";
-import Appointment from "@/models/Appointment";
-import { RoomServiceClient } from "livekit-server-sdk";
+import { MongooseError } from "mongoose";
 import User from "@/models/User";
-import moment from "moment";
 import { isRedirectError } from "next/dist/client/components/redirect";
 import Availability from "@/models/Availability";
-import { revalidateTag } from "next/cache";
-
-export type State = {
-  message: string | undefined;
-  errors?: {
-    email?: string[];
-    password?: string[];
-  };
-  // fields?: Record<string, string>;
-};
+import Appointment from "@/models/Appointment";
 
 export async function emailAuth(
   email: z.output<typeof SignInSchema>,
   callbackUrl: string | null
-) {
+): Promise<ReturnType> {
   try {
-    await connectToDatabase().catch((error: any) => {
-      return {
-        message: "Unable to Connect to server",
-        type: "Server Error",
-      };
-    });
+    //connect to database
+    await connectToDatabase();
+
+    //validate the email
     const parsed = SignInSchema.safeParse(email);
     if (!parsed.success) {
       return {
-        errors: parsed.error.flatten().fieldErrors,
+        error: parsed.error.flatten().fieldErrors,
         message: "Missing Fields. Failed to Sign In.",
         type: "ValidationError",
-      };
+        status: "fail",
+        statusCode: 400,
+      } as ErrorReturn;
     }
+
+    //sign in the user
     await signIn("nodemailer", {
       ...parsed.data,
       callbackUrl,
     });
+
+    return {
+      message: "Email sent",
+      status: "success",
+      statusCode: 200,
+      data: {},
+    } as SuccessReturn;
   } catch (error: any) {
     console.log(error);
     if (error instanceof AuthError) {
@@ -58,30 +56,54 @@ export async function emailAuth(
           return {
             message: "Invalid Credentials",
             type: "Credentials Error",
+            status: "fail",
+            statusCode: 401,
+            error: error,
           };
         case "CallbackRouteError":
           return {
             message:
               "This account was likely created with a different provider.",
             type: "Callback Error",
+            status: "fail",
+            statusCode: 400,
+            error: error,
           };
         default:
           return {
             message: "An unexpected error occurred.",
             type: "Unexpected Error",
+            status: "fail",
+            statusCode: 500,
+            error: error,
           };
       }
     }
-    throw error;
+    return {
+      message: "An unexpected error occurred.",
+      type: "Unexpected Error",
+      status: "fail",
+      statusCode: 500,
+      error: error,
+    };
   }
 }
 
-export const googleSignIn = async (redirect: string | null) => {
+export const googleSignIn = async (
+  redirect: string | null
+): Promise<ReturnType> => {
   try {
     await signIn("google", {
       callbackUrl: redirect ?? "/find-a-doctor",
       redirectTo: redirect ?? "/find-a-doctor",
     });
+
+    return {
+      message: "Redirecting to Google",
+      status: "success",
+      statusCode: 200,
+      data: {},
+    } as SuccessReturn;
   } catch (error: any) {
     console.error(error);
 
@@ -89,65 +111,79 @@ export const googleSignIn = async (redirect: string | null) => {
       throw error;
     }
     if (error instanceof AuthError) {
-      console.log("yes");
       switch (error.type) {
-        case "OAuthSignInError":
+        case "CredentialsSignin":
           return {
-            message: "Could not sign in with Google",
+            message: "Invalid Credentials",
+            type: "Credentials Error",
+            status: "fail",
+            statusCode: 401,
+            error: error,
           };
         case "CallbackRouteError":
           return {
-            message: "This email is linked to a another account",
+            message:
+              "This account was likely created with a different provider.",
+            type: "Callback Error",
+            status: "fail",
+            statusCode: 400,
+            error: error,
           };
         default:
           return {
             message: "An unexpected error occurred.",
+            type: "Unexpected Error",
+            status: "fail",
+            statusCode: 500,
+            error: error,
           };
       }
     }
-    console.log("no");
-    return;
+    return {
+      message: "An unexpected error occurred.",
+      type: "Unexpected Error",
+      status: "fail",
+      statusCode: 500,
+      error: error,
+    };
   }
 };
 
-const apiKey = process.env.LIVEKIT_API_KEY;
-const apiSecret = process.env.LIVEKIT_API_SECRET;
-const wsUrl = process.env.NEXT_PUBLIC_LIVEKIT_URL;
-const roomService = new RoomServiceClient(
-  wsUrl as string,
-  apiKey as string,
-  apiSecret as string
-);
 export const CreateAppointment = async (
   appointmentData: Partial<AppointmentType>
-) => {
+): Promise<ReturnType> => {
+  // Check if the user is authenticated
   const authsession = await auth();
   if (!authsession) {
-    throw new Error("User not authenticated");
+    return {
+      error: "Not Authenticated",
+      message: "You must be logged in to create an appointment",
+      status: "fail",
+      statusCode: 401,
+      type: "Authentication Error",
+    } as ErrorReturn;
   }
   try {
+    //connect to the  database
     await connectToDatabase();
+
+    // Find the doctor
     const doctor = await User.findById(
       appointmentData?.doctor?.doctorId
     ).select(["name", "image"]);
 
-    if (!apiKey || !apiSecret || !wsUrl) {
+    // Check if the doctor exists and handle the error
+    if (!doctor) {
       return {
-        message: "Server misconfigured",
-        type: "Server Error",
-        status: 500,
-      };
+        error: "Doctor not found",
+        message: "Your selected doctor could not be found",
+        status: "fail",
+        statusCode: 404,
+        type: "Not Found",
+      } as ErrorReturn;
     }
-    // const opts = {
-    //   name: Date.now().toString(),
-    //   emptyTimeout: 10 * 60, // 10 minutes
-    //   maxParticipants: 2,
-    // };
-    // const room = await roomService.createRoom(opts);
-    // if (!room) {
-    //   throw new Error("Could not create room");
-    // }
 
+    //compiling the complete data
     const CompleteData = {
       ...appointmentData,
       doctor: {
@@ -160,55 +196,79 @@ export const CreateAppointment = async (
         name: authsession?.user?.name,
         patientId: authsession?.user?.id,
       },
+
+      // Set the appointment as unpaid
       paid: false,
     };
+
+    //validate the data
     const parsedData = IAppointmentSchema.safeParse(CompleteData);
 
-    console.log(CompleteData);
+    // Check if the data is valid and handle the error
     if (!parsedData.success) {
       console.error(parsedData.error.flatten().fieldErrors);
-      throw new Error("Invalid Data");
+      return {
+        error: parsedData.error.flatten().fieldErrors,
+        message: "Invalid appointment data",
+        status: "fail",
+        statusCode: 400,
+        type: "ValidationError",
+      } as ErrorReturn;
     }
+
+    //save the appointment
     const appointment = new Appointment(parsedData.data);
     await appointment.save();
 
-    // Mark the timeslot as booked
-    await markTimeSlotAsBooked(
-      appointmentData?.timeSlot?.slotId ?? "",
-      authsession.user.id ?? ""
-    );
-    // If all succeeded, commit the transaction
+    // Check if the appointment was saved and handle the error
     if (!appointment) {
-      throw new Error("Could not create appointment");
+      return {
+        error: "Appointment not saved",
+        message: "We could not create your appointment",
+        status: "fail",
+        statusCode: 500,
+        type: "Server Error",
+      } as ErrorReturn;
     }
+
+    // Mark the timeslot as booked
+    const timeSlotBooking = await markTimeSlotAsBooked(
+      appointmentData?.timeSlot?.slotId as string,
+      authsession.user.id as string
+    );
+
+    // This will be handled by the system admin when the get this log on the server since user cant do anything about that
+    if (timeSlotBooking?.status === "fail") {
+      console.error("Appoinment created but slot still available");
+    }
+
+    // Return the appointment
     return {
-      appointmentStatus: "success",
-      appointment: {
-        doctor: {
-          doctorId: appointment.doctor.doctorId.toString(),
-          name: appointment.doctor.name,
-          image: appointment.doctor.image,
-        },
-        patient: {
-          patientId: appointment.patient.patientId.toString(),
-          name: appointment.patient.name,
-          image: appointment.patient.image,
-        },
-        ...appointment.toObject(),
-      } as Partial<AppointmentType>,
-    };
+      data: appointment.toObject() as Partial<AppointmentType>,
+      message: "Appointment created successfully",
+      status: "success",
+      statusCode: 200,
+    } as SuccessReturn;
+
+    // Handle any errors
   } catch (error: MongooseError | any) {
-    console.log(error);
+    console.error(error);
     return {
-      appointmentStatus: "fail",
-      error: error._message,
-      message: "Oops!! We could not create your appointment",
-    };
+      error: error,
+      message: "An unexpected error occurred",
+      status: "fail",
+      statusCode: 500,
+      type: "Server Error",
+    } as ErrorReturn;
   }
 };
 
-const markTimeSlotAsBooked = async (slotId: string, patientId: string) => {
+const markTimeSlotAsBooked = async (
+  slotId: string,
+  patientId: string
+): Promise<ReturnType> => {
   try {
+    // Find the availability document containing this slotId
     const result = await Availability.findOneAndUpdate(
       { "timeSlots.slotId": slotId }, // Find the availability document containing this slotId
       {
@@ -220,14 +280,33 @@ const markTimeSlotAsBooked = async (slotId: string, patientId: string) => {
       { new: true }
     );
 
+    //check if time slot was found and handle errors appropriately
     if (!result) {
-      console.log("No timeslot found with the given slot ID.");
-      throw new Error("No timeslot found with the given slot ID.");
+      return {
+        error: "Time slot not found",
+        message:
+          " Your selected timeslot is no longer available please select another",
+        status: "fail",
+        statusCode: 404,
+        type: "Not Found",
+      } as ErrorReturn;
     }
 
-    return result.timeSlots[0];
+    //return sucess result
+    return {
+      data: result?.timeSlot[0],
+      message: "Time slot marked as booked",
+      status: "success",
+      statusCode: 200,
+    } as SuccessReturn;
   } catch (error) {
     console.error("Error marking timeslot as booked:", error);
-    throw new Error("Error marking timeslot as booked");
+    return {
+      error: error,
+      message: "error marking timeslot as booked",
+      status: "fail",
+      statusCode: 500,
+      type: "Server Error",
+    } as ErrorReturn;
   }
 };

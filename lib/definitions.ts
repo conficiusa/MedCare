@@ -199,6 +199,23 @@ export interface Transaction {
   receiptNumber: string;
 }
 
+export interface dataReturn {
+  status: "success" | "fail";
+  message: string;
+  statusCode: number;
+}
+
+export interface ErrorReturn extends dataReturn {
+  error: any;
+  type: any;
+}
+
+export interface SuccessReturn extends dataReturn {
+  data: any;
+}
+export type ReturnType = ErrorReturn | SuccessReturn;
+
+
 export interface User {
   _id: string;
   name: string;

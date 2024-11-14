@@ -18,6 +18,7 @@ const ServiceDetails = ({
   availability: AvailabilityType[];
   doctor: Doctor;
 }) => {
+  // State to store the selected date and timeslot
   const [date, setDate] = React.useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<
     | {
@@ -35,6 +36,7 @@ const ServiceDetails = ({
   const [isPending, setIsPending] = useState<boolean>(false);
   const { push } = useRouter();
 
+  // Get the available time slots for the selected date
   const availableTimeSlots = useMemo(() => {
     if (date) {
       const selectedAvailability = availability.find(
@@ -44,25 +46,17 @@ const ServiceDetails = ({
     }
   }, [date, availability]);
 
+  // Clear the selected time slot when the date changes
   useEffect(() => {
     if (date) {
       setSelectedTime(undefined);
     }
   }, [date]);
 
-  // const handleBookNow = () => {
-  //   startTransition(() => {
-  //     if (date && selectedTime) {
-  //       const query = new URLSearchParams({
-  //         slotId: selectedTime?.id,
-  //       }).toString();
-  //       push(`/find-a-doctor/${availability[0]?.doctorId}/checkout?${query}`);
-  //     }
-  //   });
-  // };
-
+  // Function to create an appointment
   const handleCreateAppointment = async () => {
     try {
+      // Check if a date and timeslot is selected
       if (!date) {
         toast.error("Please select a date");
         return;
@@ -71,17 +65,26 @@ const ServiceDetails = ({
         toast.error("Please select a time slot");
         return;
       }
+
+      // Check if the selected timeslot is available
       setIsPending(true);
       const timeslot = await findTimeSlotBySlotId(selectedTime?.id as string);
+
+      // Check if the timeslot is available
       if (!timeslot) {
-        throw new Error("Time Slot not available, please select another slot");
+        toast.error("Time Slot not available, please select another slot");
+        return;
       }
+
+      // Check if the timeslot is booked
       if (timeslot.isBooked) {
         toast.error(
           "Time slot has been booked already. Please select another slot"
         );
         return;
       }
+
+      //compiling appointment data
       const appointmentData: Partial<Appointment> = {
         doctor: {
           doctorId: doctor?.id,
@@ -97,14 +100,23 @@ const ServiceDetails = ({
         },
         online_medium: "video",
       };
+
+      // Create the appointment
       const data = await CreateAppointment(appointmentData);
-      if (data?.appointmentStatus === "success") {
+
+      // Check if the appointment was created successfully
+      if (data?.status === "success" && "data" in data) {
+        //create query string
         const query = new URLSearchParams({
-          appointment: data?.appointment?.id || "",
+          appointment: data?.data?.id,
         }).toString();
+
+        // Redirect to the checkout page
         push(`/find-a-doctor/${availability[0]?.doctorId}/checkout?${query}`);
       } else {
-        throw new Error("Could not create appointment");
+        toast.error("Could not create appointment", {
+          description: data?.message,
+        });
       }
     } catch (error: any) {
       toast.error("Could not create appointment", {

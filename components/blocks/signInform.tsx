@@ -50,13 +50,15 @@ const SignInform = () => {
   const handleSignIn = async (data: z.output<typeof SignInSchema>) => {
     const res = await emailAuth(data, callbackUrl);
     startTransition(async () => {
-      if (res) {
+      if ("type" in res) {
         toast.error(res.type, {
           description: res.message,
         });
       }
     });
   };
+
+  
   return (
     <div>
       <Form {...form}>

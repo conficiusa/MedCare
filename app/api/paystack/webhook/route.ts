@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { handleSuccessfulPayment } from "@/app/api/utils/handlepaymentsucess";
 import { sendEmail } from "../../utils/email";
 import moment from "moment";
+import { ErrorReturn, ReturnType, SuccessReturn } from "@/lib/definitions";
 
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY as string;
 function verifySignature(body: string, signature: string): boolean {
@@ -13,15 +14,32 @@ function verifySignature(body: string, signature: string): boolean {
   return hash === signature;
 }
 
-export async function POST(req: Request) {
+export async function POST(req: Request): Promise<NextResponse> {
   const signature = req.headers.get("x-paystack-signature");
   const body = await req.text();
 
   if (!signature || !verifySignature(body, signature)) {
-    return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
+    console.error("Invalid signature");
+    return NextResponse.json(
+      {
+        error: "Invalid signature",
+        message: "This signature is not from paystack",
+        status: "fail",
+        statusCode: 403,
+        type: "UnAuthorized",
+      } as ErrorReturn,
+      {
+        status: 403,
+      }
+    );
   }
 
-  NextResponse?.json({ message: "Webhook received" }, { status: 200 });
+  NextResponse?.json(
+    { message: "Webhook received" },
+    {
+      status: 200,
+    }
+  );
   const event = JSON.parse(body);
   if (event.event === "charge.success") {
     const data = event.data;
@@ -31,8 +49,8 @@ export async function POST(req: Request) {
       event?.data?.metadata?.appointment,
       data
     );
-    if (updateappointment?.status === 200) {
-      const appointment = updateappointment?.appointment;
+    if ("data" in updateappointment) {
+      const appointment = updateappointment?.data;
       const emailToPatient = `
         <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; background-color: #f4f7f6;">
           <h2 style="color: #4CAF50;">Appointment Confirmation</h2>
@@ -53,17 +71,44 @@ export async function POST(req: Request) {
         emailToPatient
       );
       return NextResponse.json(
-        { message: "Appointment confirmed" },
+        {
+          message: "Appointment confirmed",
+          data: updateappointment?.data,
+          status: "success",
+          statusCode: 200,
+        } as SuccessReturn,
         { status: 200 }
       );
     } else {
+      const email = `
+        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; background-color: #f4f7f6;">
+          <h2 style="color: #4CAF50;">Appointment  not confirmed</h2>
+          <p style="font-size: 16px;">Dear ${event?.data?.metadata?.patient_name},</p>
+          <p style="font-size: 16px;">Your appointment could not be confirmed.</p>
+          <p style="font-size: 16px;">If you have have made a sucessful payment for this appointment kindly reply this email with you receipt number.</p>
+          <p style="font-size: 16px;">Best regards,</p>
+          <p style="font-size: 16px;">Medcare Hub</p>
+        </div>
+      `;
+
+      await sendEmail(
+        "addawebadua@gmail.com",
+        "Could not confirm appointment",
+        email
+      );
       return NextResponse.json(
-        { error: "Error updating appointment status" },
+        {
+          error: updateappointment?.error,
+          message: updateappointment?.error,
+          status: updateappointment?.status,
+          statusCode: updateappointment?.statusCode,
+          type: updateappointment?.type,
+        } as ErrorReturn,
         { status: 500 }
       );
     }
   } else {
-    const emailToPatient = `
+    const email = `
         <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; background-color: #f4f7f6;">
           <h2 style="color: #4CAF50;">Appointment Confirmation</h2>
           <p style="font-size: 16px;">Dear ${event?.data?.metadata?.patient_name},</p>
@@ -77,7 +122,7 @@ export async function POST(req: Request) {
     await sendEmail(
       "addawebadua@gmail.com",
       "Could not confirm appointment",
-      emailToPatient
+      email
     );
 
     return NextResponse.json("appointment not confirmed");
