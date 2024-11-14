@@ -33,7 +33,6 @@ export async function handleSuccessfulPayment(
 
   try {
     await connectToDatabase();
-
     // Construct the transaction data
     const transactionData: Omit<TransactionType, "id"> = {
       appointmentId,

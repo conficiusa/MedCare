@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { handleSuccessfulPayment } from "@/app/api/utils/handlepaymentsucess";
 import { sendEmail } from "../../utils/email";
 import moment from "moment";
-import { ErrorReturn, ReturnType, SuccessReturn } from "@/lib/definitions";
+import { ErrorReturn, SuccessReturn } from "@/lib/definitions";
 
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY as string;
 function verifySignature(body: string, signature: string): boolean {

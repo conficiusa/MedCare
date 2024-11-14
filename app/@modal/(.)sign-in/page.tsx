@@ -24,17 +24,25 @@ export default function SignInPage() {
 
           // Handle the successful sign in event
           success: (data) => {
-            if (data?.status === "success") {
-              return "Sign in successful";
-            } else {
-              if ("type" in data) {
-                throw new Error(data?.error);
+            console.log(data);
+            if (data) {
+              if (data?.status === "success") {
+                return "Sign in successful";
+              } else {
+                if ("type" in data) {
+                  throw new Error(data?.error);
+                }
               }
+            } else {
+              return "Sign in successful";
             }
           },
 
           // Handle the failed sign in event
-          error: "Failed to sign in",
+          error: (error) => {
+            console.log(error);
+            return error?.message;
+          },
           description(data) {
             if (data?.status === "fail") {
               return data?.message;
