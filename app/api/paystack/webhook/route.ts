@@ -80,22 +80,22 @@ export async function POST(req: Request): Promise<NextResponse> {
         { status: 200 }
       );
     } else {
-      const email = `
-        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; background-color: #f4f7f6;">
-          <h2 style="color: #4CAF50;">Appointment  not confirmed</h2>
-          <p style="font-size: 16px;">Dear ${event?.data?.metadata?.patient_name},</p>
-          <p style="font-size: 16px;">Your appointment could not be confirmed.</p>
-          <p style="font-size: 16px;">If you have have made a sucessful payment for this appointment kindly reply this email with you receipt number.</p>
-          <p style="font-size: 16px;">Best regards,</p>
-          <p style="font-size: 16px;">Medcare Hub</p>
-        </div>
-      `;
+      // const email = `
+      //   <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; background-color: #f4f7f6;">
+      //     <h2 style="color: #4CAF50;">Appointment  not confirmed</h2>
+      //     <p style="font-size: 16px;">Dear ${event?.data?.metadata?.patient_name},</p>
+      //     <p style="font-size: 16px;">Your appointment could not be confirmed.</p>
+      //     <p style="font-size: 16px;">If you have have made a sucessful payment for this appointment kindly reply this email with you receipt number.</p>
+      //     <p style="font-size: 16px;">Best regards,</p>
+      //     <p style="font-size: 16px;">Medcare Hub</p>
+      //   </div>
+      // `;
 
-      await sendEmail(
-        "addawebadua@gmail.com",
-        "Could not confirm appointment",
-        email
-      );
+      // await sendEmail(
+      //   "addawebadua@gmail.com",
+      //   "Could not confirm appointment",
+      //   email
+      // );
       return NextResponse.json(
         {
           error: updateappointment?.error,
