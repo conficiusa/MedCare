@@ -8,8 +8,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Separator } from "@/components/ui/separator";
 import { fetchUserAppointments } from "@/lib/queries";
+import { differenceInMinutes } from "date-fns";
 import {
   ChevronDown,
   Clock,
@@ -26,9 +26,27 @@ import { Session } from "next-auth";
 import Link from "next/link";
 
 const UpcomingAppointment = async ({ session }: { session: Session }) => {
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+  const currentTime = new Date();
+
+  const startOfTomorrow = new Date(startOfToday);
+  startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
+
   const queryOptions = {
-    filter: {},
-    sort: { date: 1 as 1 | -1 },
+    filter: {
+      date: {
+        $gte: startOfToday,
+        $lt: startOfTomorrow,
+      },
+      $expr: {
+        $gte: [
+          { $dateFromString: { dateString: "$timeSlot.endTime" } },
+          currentTime,
+        ],
+      },
+    },
+    sort: { date: -1 as 1 | -1 },
   };
 
   const appointments = await fetchUserAppointments(
@@ -41,11 +59,12 @@ const UpcomingAppointment = async ({ session }: { session: Session }) => {
 
   if (appointments.length === 0) {
     return (
-      <div>
-        <h1>No appointments found</h1>
+      <div className="h-44 mt-6 w-full border border-dashed rounded-lg flex justify-center items-center">
+        <h1 className="text-sm">You have no upcoming appointments</h1>
       </div>
     );
   }
+
   return (
     <div className="space-y-8 mt-8">
       {appointments.map((appointment, index) => (
@@ -82,7 +101,7 @@ const UpcomingAppointment = async ({ session }: { session: Session }) => {
                 {appointment?.mode} Consultation with Dr.{" "}
                 <Link href={`/find-a-doctor/${appointment?.doctor?.doctorId}`}>
                   {appointment?.doctor?.name} at{" "}
-                  {moment(appointment.date).format("h:mm A")}
+                  {moment(appointment.timeSlot?.startTime).format("h:mm A")}
                 </Link>
               </div>
               <div className="flex -space-x-1">
@@ -116,15 +135,15 @@ const UpcomingAppointment = async ({ session }: { session: Session }) => {
             )} */}
           </div>
 
-          <div className="p-4 sm:p-6">
+          <div className="p-4 sm:p-6 flex justify-between items-center gap-4 md:flex-col">
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger asChild className="md:order-2">
                 <Button
                   variant="outline"
                   size="sm"
                   aria-label="Appointment options"
                 >
-                  Manage Appointment
+                  Manage
                   <ChevronDown className="ml-1 h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -158,6 +177,32 @@ const UpcomingAppointment = async ({ session }: { session: Session }) => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            {(() => {
+              const startTime = new Date(appointment?.timeSlot?.startTime);
+              const endTime = new Date(appointment?.timeSlot?.endTime);
+
+              // Calculate the time differences in minutes
+              const timeToStart = differenceInMinutes(startTime, currentTime);
+              const timeToEnd = differenceInMinutes(endTime, currentTime);
+
+              // Display button between 10 minutes before start and end time
+              if (timeToStart <= 10 && timeToEnd >= 0) {
+                return (
+                  <Button size="sm" className="mt-2 w-full md:order-1" asChild>
+                    <Link href={`/consultation/${appointment?.room?.name}`}>
+                      Join
+                    </Link>
+                  </Button>
+                );
+              } else if (timeToStart > 10) {
+                return (
+                  <p className="text-xs font-light text-muted-foreground">
+                    Starts {moment(appointment?.timeSlot?.startTime).fromNow()}
+                  </p>
+                );
+              }
+              return null;
+            })()}
           </div>
         </div>
       ))}

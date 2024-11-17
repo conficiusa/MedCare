@@ -14,35 +14,42 @@ import "@livekit/components-styles";
 import { useEffect, useState } from "react";
 import { Track } from "livekit-client";
 import { useRouter, usePathname } from "next/navigation";
+import { generateRoomToken } from "@/lib/getTokens";
+import { Session } from "next-auth";
+import { ErrorReturn } from "@/lib/definitions";
+import { toast } from "sonner";
+import Link from "next/link";
 
-export default function Page() {
-  // TODO: get user input for room and name
-  const room = "quickstart-room";
-  const name = "quickstart-user";
+export default function VideoCall({
+  room,
+  session,
+}: {
+  room: { name: string; sid: string; maxParticipants: number };
+  session: Session;
+}) {
   const [token, setToken] = useState("");
+  const [error, setError] = useState<ErrorReturn | undefined>(undefined);
+
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
     (async () => {
       try {
-        const resp = await fetch(
-          `/api/get-participant-token?room=${room}&username=${name}`
-        );
-        const data = await resp.json();
-        if (resp?.status === 401) {
-          const params = new URLSearchParams();
-          params.set("redirect", `${pathname}`);
-          router.push(`/sign-in?${params.toString()}`);
+        const data = await generateRoomToken(session?.user?.id as string, room);
+        if ("data" in data) {
+          setToken(data?.data?.token);
+        } else {
+          setToken("");
+          setError(data);
         }
-        setToken(data.token);
       } catch (e) {
         console.error(e);
       }
     })();
-  }, [pathname, router]);
+  }, [pathname, router, session]);
 
-  if (token === "" || !token) {
+  if (!token && !error) {
     return (
       <div
         style={{
@@ -53,6 +60,26 @@ export default function Page() {
         }}
       >
         <h1>Authenticating request...</h1>
+      </div>
+    );
+  }
+
+
+  if (error) {
+    // useEffect(() => {
+    //   if (error) {
+    //     toast?.error(error?.message);
+    //   }
+    // }, [error, toast]);
+    return (
+      <div className="flex justify-center items-center h-[100dvh] flex-col">
+        <h1>{error?.message}</h1>
+        <p className="text-sm">
+          If you have a valid appointment yet the error persists, kindly{" "}
+          <Link className="text-primary" href={"/contact"}>
+            Contact us
+          </Link>
+        </p>
       </div>
     );
   }

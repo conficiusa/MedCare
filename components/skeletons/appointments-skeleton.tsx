@@ -6,9 +6,9 @@ export default function AppointmentsSkeleton() {
       {[...Array(4)].map((_, index) => (
         <div
           key={index}
-          className="flex flex-col sm:flex-row items-stretch sm:items-center border rounded-lg shadow-sm bg-white"
+          className="flex flex-col sm:flex-row items-stretch sm:items-center border rounded-lg shadow-sm"
         >
-          <div className="text-center p-4 sm:p-6 border-b sm:border-b-0 sm:border-r w-full sm:w-24 bg-gray-50">
+          <div className="text-center p-4 sm:p-6 border-b sm:border-b-0 sm:border-r w-full sm:w-24">
             <Skeleton className="h-4 w-8 mx-auto mb-1" />
             <Skeleton className="h-8 w-12 mx-auto" />
           </div>

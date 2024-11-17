@@ -33,8 +33,9 @@ const ServiceDetails = ({
     endTime: "",
   });
   const availableDates = availability.map((item) => new Date(item.date));
-  const [isPending, setIsPending] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { push } = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   // Get the available time slots for the selected date
   const availableTimeSlots = useMemo(() => {
@@ -67,7 +68,7 @@ const ServiceDetails = ({
       }
 
       // Check if the selected timeslot is available
-      setIsPending(true);
+      setIsLoading(true);
       const timeslot = await findTimeSlotBySlotId(selectedTime?.id as string);
 
       // Check if the timeslot is available
@@ -112,18 +113,28 @@ const ServiceDetails = ({
         }).toString();
 
         // Redirect to the checkout page
-        push(`/find-a-doctor/${availability[0]?.doctorId}/checkout?${query}`);
-      } else {
-        toast.error("Could not create appointment", {
-          description: data?.message,
+        startTransition(() => {
+          push(`/find-a-doctor/${availability[0]?.doctorId}/checkout?${query}`);
         });
+      } else {
+        return {
+          error: data?.message,
+          message: "An unexpected error occurred",
+          status: "fail",
+          statusCode: 500,
+          type: "Server Error",
+        };
       }
     } catch (error: any) {
-      toast.error("Could not create appointment", {
-        description: error.message,
-      });
+      return {
+        error: error,
+        message: "An unexpected error occurred",
+        status: "fail",
+        statusCode: 500,
+        type: "Server Error",
+      };
     } finally {
-      setIsPending(false);
+      setIsLoading(false);
     }
   };
 
@@ -226,7 +237,25 @@ const ServiceDetails = ({
                 </p>
               </div>
               <div>
-                <Button onClick={handleCreateAppointment} disabled={isPending}>
+                <Button
+                  onClick={() => {
+                    toast.promise(handleCreateAppointment, {
+                      loading: "Creating appointment...",
+                      success: (data) => {
+                        console.log(data);
+                        if (data?.status === "fail") {
+                          throw new Error(data?.message);
+                        } else {
+                          return "Appointment created successfully";
+                        }
+                      },
+                      error: (error) => {
+                        return "Failed to create appointment";
+                      },
+                    });
+                  }}
+                  disabled={isLoading || isPending}
+                >
                   Book Now
                 </Button>
               </div>

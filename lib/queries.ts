@@ -8,6 +8,7 @@ import {
   Appointment as AppointmentType,
   AvailabilityType,
   Doctor,
+  ReturnType,
 } from "@/lib/definitions";
 import { buildDoctorAggregationPipeline } from "@/lib/aggregations";
 import { auth } from "@/auth";
@@ -127,8 +128,6 @@ export const fetchUserAppointments = reactcache(
         ...doc.toObject(),
       })) as AppointmentType[];
 
-      console.log("plainAppointments", plainAppointments);
-
       return plainAppointments;
     } catch (error) {
       console.error("Error fetching appointments", error);
@@ -174,11 +173,46 @@ export const FetchAppointment = async (id: string) => {
     if (!appointment) {
       return { message: "Appointment not found" };
     }
-
     const plainAppointment = appointment?.toObject();
-
     return { data: plainAppointment as Partial<AppointmentType> };
   } catch (error: any) {
     return { error };
+  }
+};
+export const FetchAppointmentByRoomId = async (
+  id: string
+): Promise<ReturnType> => {
+  try {
+    const authsession = await auth();
+    if (!authsession) {
+      redirect("/sign-in");
+    }
+    await connectToDatabase();
+    const appointment = await Appointment.findOne({ "room.name": id });
+    if (!appointment) {
+      return {
+        message: "Appointment not found",
+        error: "Appointment not found",
+        status: "fail",
+        statusCode: 404,
+        type: "Not found",
+      };
+    }
+    const plainAppointment = appointment?.toObject();
+    return {
+      data: plainAppointment as Partial<AppointmentType>,
+      status: "success",
+      statusCode: 200,
+      message: "Appointments",
+    };
+  } catch (error: any) {
+    console.log(error);
+    return {
+      message: "Could not load appointment data",
+      error: error?.message,
+      status: "fail",
+      statusCode: 500,
+      type: "Server Error",
+    };
   }
 };

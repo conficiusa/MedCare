@@ -99,6 +99,7 @@ const AppointmentSchema = new Schema<IAppointment>(
 );
 
 AppointmentSchema?.index({ doctorId: 1, date: 1, time: 1 });
+AppointmentSchema.index({ "room.sid": 1 });
 const Appointment =
   models.Appointment || model<IAppointment>("Appointment", AppointmentSchema);
 

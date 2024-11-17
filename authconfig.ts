@@ -29,7 +29,7 @@ export const authConfig: NextAuthConfig = {
         "/profile",
         "/settings",
         "/admin",
-        "/room",
+        "/consultation",
         "/dashboard",
       ];
       const onboardingPaths = [

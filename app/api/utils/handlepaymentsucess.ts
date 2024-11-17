@@ -101,7 +101,7 @@ export async function handleSuccessfulPayment(
         room: {
           name: room.name,
           sid: room.sid,
-          url: room?.maxParticipants,
+          maxParticipants: room?.maxParticipants,
         },
       },
       {
@@ -132,7 +132,6 @@ export async function handleSuccessfulPayment(
     };
   } catch (error: any) {
     console.error("Error updating appointment status:", error);
-
 
     // Handle the error
     if (error instanceof MongooseError) {

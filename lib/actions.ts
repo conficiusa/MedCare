@@ -7,6 +7,7 @@ import { z } from "zod";
 import {
   Appointment as AppointmentType,
   ErrorReturn,
+  ITimeSlot,
   ReturnType,
   SuccessReturn,
 } from "@/lib//definitions";
@@ -294,7 +295,7 @@ const markTimeSlotAsBooked = async (
 
     //return sucess result
     return {
-      data: result?.timeSlot[0],
+      data: result?.timeSlots.find((slot: ITimeSlot) => slot.slotId === slotId),
       message: "Time slot marked as booked",
       status: "success",
       statusCode: 200,
