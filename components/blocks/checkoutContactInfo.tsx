@@ -23,7 +23,7 @@ const CheckoutContactInfo = ({
           icon={<UserIcon />}
           required
         >
-          <Input className="h-14 pl-10" />
+          <Input className="h-14 pl-10" disabled />
         </FormBuilderWithIcons>
         <FormBuilderWithIcons
           name="email"
@@ -37,7 +37,7 @@ const CheckoutContactInfo = ({
           descriptionClassName="font-light text-xs"
           required
         >
-          <Input className="h-14 pl-10" />
+          <Input className="h-14 pl-10" disabled />
         </FormBuilderWithIcons>
       </div>
     </section>
