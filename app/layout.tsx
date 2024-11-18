@@ -6,7 +6,7 @@ import Navbar from "@/components/blocks/navbar";
 import Footer from "@/components/blocks/footer";
 import { Toaster } from "@/components/ui/sonner";
 import AuthProvider from "@/components/wrappers/sessionProvider";
-import { Analytics } from "@vercel/analytics/react";
+// import { Analytics } from "@vercel/analytics/react";
 import Providers from "@/components/wrappers/providers";
 import { ThemeProvider } from "@/lib/theme-provider";
 
@@ -33,8 +33,8 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <Navbar />
               <main role="main">
+              <Navbar />
                 {modal}
                 {children}
                 <Toaster />

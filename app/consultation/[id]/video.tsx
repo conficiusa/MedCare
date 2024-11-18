@@ -17,7 +17,6 @@ import { useRouter, usePathname } from "next/navigation";
 import { generateRoomToken } from "@/lib/getTokens";
 import { Session } from "next-auth";
 import { ErrorReturn } from "@/lib/definitions";
-import { toast } from "sonner";
 import Link from "next/link";
 
 export default function VideoCall({

@@ -25,7 +25,7 @@ import moment from "moment";
 import { Session } from "next-auth";
 import Link from "next/link";
 
-const UpcomingAppointment = async ({ session }: { session: Session }) => {
+const PendingAppointment = async ({ session }: { session: Session }) => {
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
   const currentTime = new Date();
@@ -211,4 +211,4 @@ const UpcomingAppointment = async ({ session }: { session: Session }) => {
   );
 };
 
-export default UpcomingAppointment;
+export default PendingAppointment;
