@@ -26,7 +26,7 @@ const Consultation = async ({ params }: Bookingprops) => {
 
   if (!data) {
     return (
-      <div className="flex justify-center items-center h-[100dvh] flex-col">
+      <div className="flex justify-center items-center h-[100dvh] flex-col max:sm:px-4">
         <h1>Failed to load appointment</h1>
         <p className="text-sm">
           If you have a valid appointment yet the error persists, kindly{" "}
@@ -41,7 +41,7 @@ const Consultation = async ({ params }: Bookingprops) => {
     return <VideoCall room={data?.data?.room as Room} session={session} />;
   if (data?.status === "fail")
     return (
-      <div className="flex justify-center items-center h-[100dvh] flex-col">
+      <div className="flex justify-center items-center h-[100dvh] flex-col max:sm:px-4">
         <h1>{data?.message}</h1>
         <p className="text-sm">
           If you have a valid appointment yet the error persists, kindly{" "}

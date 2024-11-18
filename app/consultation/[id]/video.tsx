@@ -63,7 +63,6 @@ export default function VideoCall({
     );
   }
 
-
   if (error) {
     // useEffect(() => {
     //   if (error) {
@@ -71,7 +70,7 @@ export default function VideoCall({
     //   }
     // }, [error, toast]);
     return (
-      <div className="flex justify-center items-center h-[100dvh] flex-col">
+      <div className="flex justify-center items-center h-[100dvh] flex-col max:sm:px-4">
         <h1>{error?.message}</h1>
         <p className="text-sm">
           If you have a valid appointment yet the error persists, kindly{" "}

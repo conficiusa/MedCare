@@ -4,6 +4,7 @@ import { Session } from "next-auth";
 import { Suspense } from "react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import AppointmentsSkeleton from "@/components/skeletons/appointments-skeleton";
+import PendingAppointment from "./pending";
 
 const tabs = [
   { value: "upcoming", label: "Upcoming Today" },
@@ -36,6 +37,11 @@ const AppointmentTabs = ({ session }: { session: Session }) => {
       <TabsContent value="upcoming">
         <Suspense fallback={<AppointmentsSkeleton />}>
           <UpcomingAppointment session={session} />
+        </Suspense>
+      </TabsContent>
+      <TabsContent value="pending">
+        <Suspense fallback={<AppointmentsSkeleton />}>
+          <PendingAppointment session={session} />
         </Suspense>
       </TabsContent>
     </Tabs>

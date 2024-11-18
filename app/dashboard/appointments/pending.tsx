@@ -37,8 +37,7 @@ const PendingAppointment = async ({ session }: { session: Session }) => {
     filter: {
       paid: true,
       date: {
-        $gte: startOfToday,
-        $lt: startOfTomorrow,
+        $gte: startOfTomorrow,
       },
       $expr: {
         $gte: [
