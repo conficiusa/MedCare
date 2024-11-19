@@ -46,7 +46,7 @@ export default function VideoCall({
         console.error(e);
       }
     })();
-  }, [pathname, router, session]);
+  }, [pathname, router, session,room]);
 
   if (!token && !error) {
     return (
