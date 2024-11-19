@@ -13,7 +13,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         { status: 401 }
       );
     }
-    
+
     const { email, amount, channels, metadata } = await request.json();
     const params = JSON.stringify({
       email,
@@ -21,8 +21,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       channels,
       metadata,
       reference: uuidv4(),
-      firstName: session?.user?.name?.split(" ")[0],
-      lastName: session?.user?.name?.split(" ")[1],
+      first_name: session?.user?.name?.split(" ")[0],
+      last_name: session?.user?.name?.split(" ")[1],
       phone: session?.user?.phone,
       key: process.env.NEXT_PUBLIC_PAYSTACK_TEST_PUBLIC_KEY as string,
     });

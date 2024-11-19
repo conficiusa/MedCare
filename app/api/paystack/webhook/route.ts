@@ -66,7 +66,7 @@ export async function POST(req: Request): Promise<NextResponse> {
         </div>
       `;
       await sendEmail(
-        "addawebadua@gmail.com",
+        event?.data?.metadata?.patient_email,
         "Appointment Confirmation",
         emailToPatient
       );
@@ -120,7 +120,7 @@ export async function POST(req: Request): Promise<NextResponse> {
       `;
 
     await sendEmail(
-      "addawebadua@gmail.com",
+      event?.data?.metadata?.patient_email,
       "Could not confirm appointment",
       email
     );

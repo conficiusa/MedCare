@@ -5,7 +5,6 @@ import Appointment from "@/models/Appointment";
 import Transaction from "@/models/Transactions";
 import { RoomServiceClient } from "livekit-server-sdk";
 import { MongooseError } from "mongoose";
-import { validate } from "uuid";
 
 const apiKey = process.env.LIVEKIT_API_KEY;
 const apiSecret = process.env.LIVEKIT_API_SECRET;
