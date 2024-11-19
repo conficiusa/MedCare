@@ -1,14 +1,11 @@
-import { CircleDot, Star, Stethoscope } from "lucide-react";
-import React, { Suspense } from "react";
+import { CircleDot, Stethoscope } from "lucide-react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn, formatCurrency } from "@/lib/utils";
 import Image from "next/image";
 import { DoctorCard } from "@/lib/definitions";
 import Ratings from "@/components/blocks/ratingStars";
-import { fetchDoctorCardData } from "@/lib/queries";
-import NotFound from "@/app/(patients)/find-a-doctor/not-found";
-import CardOnlineSkeleton from "@/components/skeletons/onlineCardSkeleton";
 
 const DocCardOnline = async ({
   className,
@@ -22,7 +19,7 @@ const DocCardOnline = async ({
       {doctors?.map((doctor) => (
         <div
           className={cn(
-            " min-w-full md:min-w-[15rem] max-w-full p-4 rounded-md max-sm:shadow-sm dark:bg-muted/30 bg-background",
+            "min-w-full  md:min-w-[15rem] max-w-full p-4 rounded-md max-sm:shadow-sm dark:bg-muted/30 bg-background",
             className
           )}
           key={doctor.id}
@@ -65,8 +62,8 @@ const DocCardOnline = async ({
             </div>
           </div>
           <div className="flex items-center justify-between mt-6">
-            <Button className="" variant={"outline"} size={"sm"}>
-              Consult now
+            <Button className="" variant={"outline"} size={"sm"} asChild>
+              <Link href={`/find-a-doctor/consult/${doctor.id}`}>Consult</Link>
             </Button>
             <Link
               href={`/find-a-doctor/${doctor.id}`}

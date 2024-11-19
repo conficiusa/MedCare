@@ -1,9 +1,7 @@
 import DocCardOnline from "@/components/blocks/DocCardOnline";
-import CardOnlineSkeleton from "@/components/skeletons/onlineCardSkeleton";
-import { TabsContent } from "@/components/ui/tabs";
 import { DoctorCard } from "@/lib/definitions";
 import { fetchDoctorCardData } from "@/lib/queries";
-import React, { Suspense } from "react";
+import React from "react";
 import NotFound from "../not-found";
 
 const Datacards = async () => {

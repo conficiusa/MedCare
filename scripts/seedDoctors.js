@@ -157,11 +157,15 @@ const generateAvailability = (doctorId) => {
   const today = new Date();
   return Array.from({ length: 7 }, (_, i) => {
     const date = new Date(today);
-    date.setUTCDate(today.getUTCDate() + i);
+    date.setUTCDate(today.getUTCDate() + i); // Increment date by i days
+    const expiresAt = new Date(date); // Clone the date
+    expiresAt.setUTCDate(expiresAt.getUTCDate() + 1); // Move to the next day
+    expiresAt.setUTCHours(0, 0, 0, 0); // Set to 12:00 AM (start of the day)
+
     return {
       doctorId,
       date,
-      expiresAt: new Date(date).setUTCHours(23, 59, 59, 999),
+      expiresAt,
       timeSlots: generateTimeSlots(date),
     };
   });
