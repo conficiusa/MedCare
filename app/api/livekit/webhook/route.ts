@@ -12,6 +12,7 @@ export async function POST(req: Request): Promise<NextResponse> {
       await req.text(),
       req.headers.get("authorization") as string
     );
+    console.log("event", event);
     return NextResponse.json(
       { message: "Webhook received", event },
       { status: 200 }
