@@ -60,7 +60,7 @@ const PendingAppointment = async ({ session }: { session: Session }) => {
   if (appointments.length === 0) {
     return (
       <div className="h-44 mt-6 w-full border border-dashed rounded-lg flex justify-center items-center">
-        <h1 className="text-sm">You have no upcoming appointments today</h1>
+        <h1 className="text-sm">You have no pending appointments today</h1>
       </div>
     );
   }

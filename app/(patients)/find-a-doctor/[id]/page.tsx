@@ -26,19 +26,19 @@ const DoctorProfile = async ({ params }: DoctorProfileProps) => {
           <DoctorProfileAside doctor={doctor} />
         </Suspense>
         <div className="max-lg:px-8">
-          <Tabs defaultValue="service" className="mt-4">
+          <Tabs defaultValue="about" className="mt-4">
             <TabsList className="bg-transparent md:w-2/3 justify-between grid grid-cols-3">
-              <TabsTrigger
-                value="service"
-                className="data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:border-b-2 border-primary rounded-none transition-none data-[state=active]:shadow-none"
-              >
-                Service Details
-              </TabsTrigger>
               <TabsTrigger
                 value="about"
                 className="data-[state=active]:bg-transparent  data-[state=active]:text-primary data-[state=active]:border-b-2 border-primary rounded-none transition-none data-[state=active]:shadow-none"
               >
                 About
+              </TabsTrigger>
+              <TabsTrigger
+                value="service"
+                className="data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:border-b-2 border-primary rounded-none transition-none data-[state=active]:shadow-none"
+              >
+                Service Details
               </TabsTrigger>
               <TabsTrigger
                 value="reviews"
@@ -47,11 +47,11 @@ const DoctorProfile = async ({ params }: DoctorProfileProps) => {
                 Patient Reviews
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="service">
-              <ServiceDetails availability={availability} doctor={doctor} />
-            </TabsContent>
             <TabsContent value="about">
               <AboutDoctor doctor={doctor} />
+            </TabsContent>
+            <TabsContent value="service">
+              <ServiceDetails availability={availability} doctor={doctor} />
             </TabsContent>
           </Tabs>
         </div>
