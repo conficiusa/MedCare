@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { string, z } from "zod";
 
 const multiSelectSchema = z.object({
   label: z.string(),
@@ -40,6 +40,7 @@ export const PatientOnboardingSchema = z.object({
   image: z
     .string()
     .nullable()
+    .optional()
     .refine(
       (file) => {
         if (!file) return true;
@@ -77,6 +78,81 @@ export const PatientOnboardingSchema = z.object({
   medicalHistory: z
     .string()
     .max(900, "Medical history must be less than 300 characters"),
+});
+
+export const onDoctorBoardingSchema1 = z.object({
+  languages: z
+    .array(multiSelectSchema)
+    .min(1, "Please select a language")
+    .max(4, "You can only select up to 4 languages"),
+  gender: z.string().min(1, "Please enter your gender"),
+  phone: z.string(),
+  dob: z
+    .date({
+      required_error: "Please enter your date of birth",
+    })
+    .refine(
+      (date) => date && date <= new Date(),
+      "Please enter a valid date of birth"
+    )
+    .refine(
+      (date) => !date || date >= new Date(1900, 1, 1),
+      "Please enter a valid date of birth"
+    ),
+  role: z.enum(["patient", "doctor"]),
+});
+export const onDoctorBoardingSchema2 = z.object({
+  region: z.string().min(1, "Please enter your region"),
+  city: z.string().min(1, "Please enter your city/town"),
+  country: z.string().min(1, "Please enter your country"),
+  address_1: z.string(),
+  address_2: z.string().min(1, "Please enter your country"),
+});
+export const onDoctorBoardingSchema3 = z
+  .object({
+    license_number: z.string().min(1, "Please enter your Registration number "),
+    bio: z.string().min(1, "Please tell us about yourself"),
+    experience: z.coerce.number({
+      required_error: "Experience level is required",
+      invalid_type_error: "Experience must be a number",
+    }),
+    current_facility: z.string().min(1, "Please enter your current facility "),
+    certifications: z
+      .array(multiSelectSchema)
+      .max(4, "You can only select up to 4 certifications"),
+    specialities: z
+      .array(multiSelectSchema)
+      .max(4, "You can only select up to 4 specialities"),
+  })
+  .refine(
+    (data) => {
+      if (!data?.experience) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "experience level is required",
+      path: ["experience"],
+    }
+  );
+export const onDoctorBoardingSchema4 = z.object({
+  media: z.array(string()).min(1, "Please select at least one medium"),
+  rate: z.coerce
+    .number({
+      required_error: "Experience level is required",
+      invalid_type_error: "Experience must be a number",
+    })
+    .refine((value) => value > 0, {
+      message: "Rate must be greater than 0",
+    }),
+  bank: z.string().min(1, "Please Select a provider "),
+  payment_channel: z.string().min(1, "Please select your payment channel "),
+  account_number: z.string().min(1, "Please enter account number"),
+  account_name: z.string().min(1, "Please enter the name on the account"),
+});
+export const onDoctorBoardingSchema5 = z.object({
+  image: z.string().min(1, "Failed to get image url"),
 });
 
 export const CheckoutSchema = z

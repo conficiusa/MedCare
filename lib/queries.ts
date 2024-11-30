@@ -1,6 +1,5 @@
 "use server";
 import connectToDatabase from "./mongoose";
-import User from "@/models/User";
 import { applyCaseInsensitiveRegex, applyQueryOptions } from "@/lib/utils";
 import Availability from "@/models/Availability";
 import mongoose from "mongoose";
@@ -8,6 +7,7 @@ import {
   Appointment as AppointmentType,
   AvailabilityType,
   Doctor,
+  DoctorCard,
   ReturnType,
 } from "@/lib/definitions";
 import { buildDoctorAggregationPipeline } from "@/lib/aggregations";
@@ -16,6 +16,8 @@ import Appointment from "@/models/Appointment";
 import { cache as reactcache } from "react";
 import { redirect } from "next/navigation";
 import { startOfDay } from "date-fns";
+import User from "@/models/User";
+import { unstable_cache as nextcache } from "next/cache";
 
 interface QueryOptions {
   filter?: Record<string, any>;
@@ -25,33 +27,45 @@ interface QueryOptions {
 }
 
 // Fetch doctor card data
-export const fetchDoctorCardData = async (options: QueryOptions) => {
-  try {
-    await connectToDatabase();
-    const defaultFilter = { role: "doctor" };
-    let filter = { ...defaultFilter, ...options.filter };
-    filter = { ...filter, ...applyCaseInsensitiveRegex(filter) };
+export const fetchDoctorCardData = async (
+  options: QueryOptions
+): Promise<ReturnType> => {
+  await connectToDatabase();
+  const defaultFilter = { role: "doctor" };
+  let filter = { ...defaultFilter, ...options.filter };
+  filter = { ...filter, ...applyCaseInsensitiveRegex(filter) };
 
-    // Build the aggregation pipeline using the utility function
-    const pipeline = buildDoctorAggregationPipeline(filter, options);
+  // Build the aggregation pipeline using the utility function
+  const pipeline = buildDoctorAggregationPipeline(filter, options);
 
-    // Execute the aggregation
-    const doctors = await User.aggregate(pipeline);
+  // Execute the aggregation
+  const doctors = await User.aggregate(pipeline);
 
-    // Manually apply the transformation
-    const transformedDoctors = doctors.map((doc) => {
-      const ret = { ...doc }; // Spread the document into a new object
-      ret.id = ret._id.toString();
-      delete ret._id;
-      delete ret.__v;
-      return ret;
-    });
+  // Manually apply the transformation
+  const transformedDoctors = doctors.map((doc) => {
+    const ret = { ...doc }; // Spread the document into a new object
+    ret.id = ret._id.toString();
+    delete ret._id;
+    delete ret.__v;
+    return ret;
+  });
 
-    return transformedDoctors;
-  } catch (error: any) {
-    console.error("Error fetching doctors", error);
-    throw new Error("Error fetching doctors");
+  // If no doctors are found, return a 404
+  if (transformedDoctors.length === 0) {
+    return {
+      error: "No doctors match you query",
+      message: "Adjust your query if set. or check back later",
+      status: "fail",
+      statusCode: 404,
+      type: "Not found",
+    };
   }
+  return {
+    data: transformedDoctors as DoctorCard[],
+    statusCode: 200,
+    message: "Load success",
+    status: "success",
+  };
 };
 
 //fetch doctor dynamic data
@@ -69,7 +83,7 @@ export const fetchDoctorData = reactcache(async (id: string) => {
       return { doctor: null, availability: [] };
     }
 
-    let doctorQuery = User.findById(id).select("-password");
+    let doctorQuery = User.findById(id);
     let availabilityQuery = Availability.find({
       doctorId: new mongoose.Types.ObjectId(id),
       $or: [{ date: { $gte: startOfDay(new Date()) } }],
@@ -216,3 +230,39 @@ export const FetchAppointmentByRoomId = async (
     };
   }
 };
+
+export const fetchUserData = nextcache(
+  async (id: string): Promise<ReturnType> => {
+    try {
+      const user = await User.findById(id);
+
+      if (!user) {
+        return {
+          error: "User not found",
+          message: "Failed to fetch user data",
+          status: "fail",
+          statusCode: 404,
+          type: "Not found",
+        };
+      }
+
+      return {
+        data: user.toObject(),
+        message: "user fetched succesfully",
+        statusCode: 200,
+        status: "success",
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        error: "Server error occured",
+        message: "Failed to fetch user data",
+        status: "fail",
+        statusCode: 404,
+        type: "Server error",
+      };
+    }
+  },
+  ["user"],
+  { revalidate: 3600, tags: ["user"] }
+);

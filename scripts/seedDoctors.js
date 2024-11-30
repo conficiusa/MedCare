@@ -133,12 +133,13 @@ const certifications = [
 ];
 
 const generateTimeSlots = (date) => {
-  const startHour = 10 + Math.floor(Math.random() * 3);
-  return Array.from({ length: 5 }, (_, i) => {
+  const slotsPerDay = 24; // One slot per hour for a full day
+  return Array.from({ length: slotsPerDay }, (_, i) => {
     const startTime = new Date(date);
-    startTime.setUTCHours(startHour + i, 0, 0, 0);
+    startTime.setUTCHours(i, 0, 0, 0); // Start of the hour
     const endTime = new Date(startTime);
-    endTime.setUTCHours(startHour + i + 1);
+    endTime.setHours(startTime.getHours() + 1); // One hour later
+
     return {
       slotId: new ObjectId().toString(),
       startTime: startTime.toISOString(),

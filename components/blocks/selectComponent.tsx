@@ -63,8 +63,8 @@ export default function SelectComponent({
             <SelectContent>
               {items?.length > 0 ? (
                 items?.map((item, index) => (
-                  <SelectItem value={item.value} key={index}>
-                    {item.label}
+                  <SelectItem value={item?.value.toString()} key={index}>
+                    {item?.label}
                   </SelectItem>
                 ))
               ) : (

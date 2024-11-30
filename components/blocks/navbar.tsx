@@ -5,14 +5,16 @@ import Sidebar from "@/components/blocks/sidebar";
 import { auth } from "@/auth";
 import UserDp from "@/components/blocks/userDP";
 import { ThemeToggler } from "@/components/blocks/themeToggler";
+import { cn } from "@/lib/utils";
+import Logo from "./logo";
 
 const Navbar = async () => {
   const session = await auth();
 
   return (
-    <header className="container sticky top-0 left-0 py-4 bg-background/95 duration-500 flex items-center w-full z-50 backdrop-blur-[5.9px] backdrop-saturate-[180%] border-b-[1px]">
-      <nav className="flex w-full justify-between">
-        <div className="flex items-center  gap-4 max-sm:w-full">
+    <header className="md:container max-md:px-2 sticky top-0 left-0 py-4 bg-background/95 duration-500 flex items-center w-full z-50 backdrop-blur-[5.9px] backdrop-saturate-[180%] border-b-[1px]">
+      <nav className="flex w-full justify-between items-center">
+        <div className="flex items-center gap-3  max-sm:w-full">
           <div>
             <Sidebar>
               <Button size={"icon"} variant="ghost">
@@ -20,21 +22,22 @@ const Navbar = async () => {
               </Button>
             </Sidebar>
           </div>
-          <h1 className="text-lg md:text-lg lg:text-xl font-semibold">
-            {" "}
-            MedCare Hub
-          </h1>
+          <Link href="/">
+            <h1
+              className={cn(
+                "text-md  lg:text-xl font-bold flex items-center gap-1 "
+              )}
+            >
+              MedCare Hub <Logo className="w-8 h-8" />
+            </h1>
+          </Link>
         </div>
         <div className="flex sm:hidden items-center gap-5">
           {session ? (
             <div>
               <UserDp />
             </div>
-          ) : (
-            <Button asChild size={"sm"}>
-              <Link href="/sign-in"> Join or Sign In</Link>
-            </Button>
-          )}
+          ) : null}
           <ThemeToggler />
         </div>
         <ul className="text-sm sm:flex gap-8 items-center hidden ">

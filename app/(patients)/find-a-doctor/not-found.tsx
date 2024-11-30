@@ -13,7 +13,8 @@ export default function NotFound({ className }: { className?: string }) {
       <Frown className="w-10 text-muted-foreground" />
       <h2 className="text-xl font-semibold">No Doctors Available </h2>
       <p>
-        adjust your filters if there any. Or check back later for Open Slots{" "}
+        Adjust your filters if you have set any. Or check back later for Open
+        Slots
       </p>
       <Link
         href="/find-a-doctor"

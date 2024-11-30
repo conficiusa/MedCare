@@ -3,9 +3,12 @@ import { auth, signIn } from "@/auth";
 import { AuthError } from "next-auth";
 import { IAppointmentSchema, SignInSchema } from "@/lib/schema";
 import connectToDatabase from "@/lib/mongoose";
+import { put } from "@vercel/blob";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 import {
   Appointment as AppointmentType,
+  Doctor,
   ErrorReturn,
   ITimeSlot,
   ReturnType,
@@ -264,6 +267,46 @@ export const CreateAppointment = async (
   }
 };
 
+export async function upload(formData: FormData): Promise<ReturnType> {
+  const authSession = await auth();
+
+  if (!authSession) {
+    return {
+      error: "Not Authenticated",
+      message: "You must be logged in to upload an image",
+      status: "fail",
+      statusCode: 401,
+      type: "Authentication Error",
+    } as ErrorReturn;
+  }
+  const file = formData.get("file") as File;
+  const filename = `${Date.now()}-${file.name}`;
+  if (!file) {
+    throw new Error("No file uploaded");
+  }
+  try {
+    const blob = await put(filename, file, {
+      access: "public",
+    });
+    revalidatePath("/");
+    return {
+      data: blob,
+      message: "upload successful",
+      status: "success",
+      statusCode: 200,
+    };
+  } catch (error) {
+    console.error("Error uploading file:", error);
+    return {
+      error: error,
+      message: "Error uploading file",
+      status: "fail",
+      statusCode: 500,
+      type: "Server Error",
+    };
+  }
+}
+
 const markTimeSlotAsBooked = async (
   slotId: string,
   patientId: string
@@ -305,6 +348,85 @@ const markTimeSlotAsBooked = async (
     return {
       error: error,
       message: "error marking timeslot as booked",
+      status: "fail",
+      statusCode: 500,
+      type: "Server Error",
+    } as ErrorReturn;
+  }
+};
+
+type DeepPartial<T> = {
+  [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
+};
+// Generic onboarding handler
+export const handleDoctorOnboarding = async (
+  step: number,
+  data: any,
+  schema: z.ZodSchema,
+  fieldMap: DeepPartial<Doctor>
+): Promise<ReturnType> => {
+  const authSession = await auth();
+  if (!authSession) {
+    return {
+      error: "Not Authenticated",
+      message: "You must be logged in to complete onboarding process",
+      status: "fail",
+      statusCode: 401,
+      type: "Authentication Error",
+    } as ErrorReturn;
+  }
+
+  try {
+    // Validate data using the provided schema
+    const parsedData = schema.safeParse(data);
+    if (!parsedData.success) {
+      return {
+        error: parsedData.error.flatten().fieldErrors,
+        message: "Invalid data",
+        status: "fail",
+        statusCode: 400,
+        type: "ValidationError",
+      } as ErrorReturn;
+    }
+
+    // Add onboarding level dynamically
+    const updateData: DeepPartial<Doctor> = {
+      ...fieldMap,
+      onboarding_level: step,
+    };
+
+    console.log(updateData);
+    const updatedDoctor = await User.findByIdAndUpdate(
+      authSession.user.id,
+      updateData,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!updatedDoctor) {
+      return {
+        error: "Bad Request",
+        message: "Onboarding process failed",
+        status: "fail",
+        statusCode: 400,
+        type: "Database error",
+      } as ErrorReturn;
+    }
+
+    revalidateTag("user");
+    return {
+      data: updatedDoctor.toObject(),
+      message: `Step ${step} completed successfully.`,
+      status: "success",
+      statusCode: 200,
+    } as SuccessReturn;
+  } catch (error: any) {
+    console.log(error);
+    return {
+      error: "A server error occured",
+      message: error.message,
       status: "fail",
       statusCode: 500,
       type: "Server Error",

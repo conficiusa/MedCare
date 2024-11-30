@@ -9,6 +9,7 @@ import AuthProvider from "@/components/wrappers/sessionProvider";
 // import { Analytics } from "@vercel/analytics/react";
 import Providers from "@/components/wrappers/providers";
 import { ThemeProvider } from "@/lib/theme-provider";
+import TanstackProvider from "@/components/wrappers/tanstackProvider";
 
 export const metadata: Metadata = {
   title: "Medcare Hub",
@@ -29,23 +30,25 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <AuthProvider>
         <Providers>
-          <body className={cn("antialiased w-full", inter.className)}>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <Navbar />
-              <main role="main">
-                {modal}
-                {children}
-                <Toaster />
-                {/* <Analytics /> */}
-              </main>
-              <Footer />
-            </ThemeProvider>
-          </body>
+          <TanstackProvider>
+            <body className={cn("antialiased w-full", inter.className)}>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <Navbar />
+                <main role="main">
+                  {modal}
+                  {children}
+                  <Toaster />
+                  {/* <Analytics /> */}
+                </main>
+                <Footer />
+              </ThemeProvider>
+            </body>
+          </TanstackProvider>
         </Providers>
       </AuthProvider>
     </html>

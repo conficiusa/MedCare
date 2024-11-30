@@ -19,7 +19,7 @@ interface MultiSelectorProps {
   empty?: React.ReactNode;
   placeholder?: string;
   label: string;
-  rest?: any;
+  rest?: MultiSelectorProps
   groupBy?: string;
   maxSelected?: number;
   description?: string;
@@ -54,7 +54,7 @@ const MultiSelector = ({
                 placeholder={placeholder}
                 hidePlaceholderWhenSelected
                 emptyIndicator={empty}
-                className="z-30"
+                className="z-30 bg-background"
                 groupBy={groupBy}
                 maxSelected={maxSelected}
                 onMaxSelected={onMaxSelected}

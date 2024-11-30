@@ -40,14 +40,14 @@ const AccountTypeForm = () => {
             className={`w-full p-4 rounded-lg border-2 transition-all duration-200 ${
               accountType === "patient"
                 ? "border-primary bg-primary/10"
-                : "border-gray-200"
+                : "border-border"
             }`}
           >
             <div className="flex items-center space-x-2">
               <UserIcon className="w-6 h-6 text-primary" />
               <span className="font-medium">Patient Account</span>
             </div>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-muted-foreground">
               For individuals seeking medical care
             </p>
           </div>
@@ -61,15 +61,15 @@ const AccountTypeForm = () => {
             className={`w-full p-4 rounded-lg border-2 transition-all duration-200 ${
               accountType === "doctor"
                 ? "border-primary bg-primary/10"
-                : "border-gray-200"
+                : "border-border"
             }`}
           >
             <div className="flex items-center space-x-2">
               <StethoscopeIcon className="w-6 h-6 text-primary" />
               <span className="font-medium">Doctor Account</span>
             </div>
-            <p className="mt-1 text-sm text-gray-500">
-              For healthcare professionals
+            <p className="mt-1 text-sm text-muted-foreground">
+              For healthcare providers
             </p>
           </div>
         </Label>

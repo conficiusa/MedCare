@@ -40,7 +40,10 @@ const ServiceCards = () => {
   return (
     <div className="grid md:grid-cols-2 gap-y-4 gap-x-6">
       {ServiceCardsDetails.map((card: ServiceCard, idx: number) => (
-        <Card className="gap-3 shadow-md" key={idx}>
+        <Card
+          className="gap-3 shadow-md dark:bg-muted/30 bg-background"
+          key={idx}
+        >
           <CardHeader className="py-3">
             <p>{card.icon}</p>
             <CardTitle className="text-[14px] font-semibold">

@@ -16,27 +16,24 @@ const UserSchema = new Schema<IUser, Model<IUser>>(
       unique: true,
       lowercase: true,
     },
-    password: {
-      type: String,
-      required: [true, "Password is required"],
-      minlength: [8, "Password must be at least 8 characters long"],
-    },
-    confirmPassword: {
-      type: String,
-      required: [true, "Please confirm your password"],
-      validate: {
-        validator: function (el) {
-          return el === this.password;
-        },
-        message: "Passwords do not match!",
-      },
-    },
+
     role: {
       type: String,
       enum: ["doctor", "patient"],
       required: function (this: IUser) {
         return this.isNew ? false : true; // Required during onboarding
       },
+    },
+    address_1: {
+      type: String,
+      required: [true, "address is required"],
+    },
+    address_2: {
+      type: String,
+    },
+    onboarding_level: {
+      type: Number,
+      required: [true, "required"],
     },
     languages: {
       type: [String],
@@ -87,6 +84,7 @@ const UserSchema = new Schema<IUser, Model<IUser>>(
     },
     doctorInfo: {
       type: DoctorInfoSchema,
+      default: {},
       required: function () {
         return this.role === "doctor";
       },
@@ -113,13 +111,6 @@ const UserSchema = new Schema<IUser, Model<IUser>>(
   }
 );
 
-// Password hashing before save
-UserSchema.pre<IUser>("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 12);
-  this.confirmPassword = undefined;
-  next();
-});
 UserSchema.pre<IUser>("save", function (next) {
   if (this.isModified("name")) {
     this.name = this.name

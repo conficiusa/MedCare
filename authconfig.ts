@@ -21,7 +21,13 @@ export const authConfig: NextAuthConfig = {
       });
 
       const isLoggedIn = !!auth?.user;
-      const isProfileCompleted = !!token?.role;
+      const isProfileCompleted = (role: "doctor" | "patient") => {
+        if (role === "doctor") {
+          return Number(token?.onboarding_level) === 7;
+        } else {
+          return Number(token?.onboarding_level) === 4;
+        }
+      };
 
       const protectedPaths = [
         "/onboarding",
@@ -46,11 +52,17 @@ export const authConfig: NextAuthConfig = {
 
       if (isProtectedPath) {
         if (isLoggedIn) {
-          if (isProfileCompleted) {
+          if (isProfileCompleted(token?.role as "doctor" | "patient")) {
             if (request.nextUrl.pathname === "/onboarding") {
-              return Response.redirect(
-                new URL("/find-a-doctor", request.nextUrl)
-              );
+              if (token?.role === "doctor") {
+                return Response.redirect(
+                  new URL("/doctor/dashboard", request.nextUrl)
+                );
+              } else {
+                return Response.redirect(
+                  new URL("/find-a-doctor", request.nextUrl)
+                );
+              }
             }
             return true;
           }
@@ -65,7 +77,7 @@ export const authConfig: NextAuthConfig = {
           );
         }
         return true; // Avoid loop by only redirecting if not already on /login
-      } else if (isLoggedIn && request.nextUrl.pathname !== "/find-a-doctor") {
+      } else if (isLoggedIn) {
         return Response.redirect(new URL("/find-a-doctor", request.nextUrl));
       }
 

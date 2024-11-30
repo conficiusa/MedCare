@@ -16,6 +16,14 @@ const config: Config = {
       },
     },
     extend: {
+      width: {
+        "popover-content-width-same-as-its-trigger":
+          "var(--radix-popover-trigger-width)",
+      },
+      maxHeight: {
+        "popover-content-width-same-as-its-trigger":
+          "var(--radix-popover-content-available-height)",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

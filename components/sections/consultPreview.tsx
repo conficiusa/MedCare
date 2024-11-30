@@ -4,24 +4,22 @@ import DocCardOnline from "@/components/blocks/DocCardOnline";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import DocCardInPerson from "@/components/blocks/DocCardInPerson";
-import { DoctorCard } from "@/lib/definitions";
 import { fetchDoctorCardData } from "@/lib/queries";
-import NotFound from "@/app/(patients)/find-a-doctor/not-found";
 import { Suspense } from "react";
 import CardOnlineSkeleton from "@/components/skeletons/onlineCardSkeleton";
+import NotFound from "@/app/(patients)/find-a-doctor/not-found";
 
 const ConsultationPreview = async () => {
-  const doctors: DoctorCard[] =
-    (await fetchDoctorCardData({
-      limit: 4,
-      sort: { "doctorInfo.rating": -1, "doctorInfo.rate": 1 },
-    }).catch((error: any) => {
-      console.error(error);
-      return [];
-    })) || [];
+  const data = await fetchDoctorCardData({
+    limit: 4,
+    sort: { "doctorInfo.rating": -1, "doctorInfo.rate": 1 },
+  });
 
-  if (doctors.length === 0) {
-    return <NotFound />;
+  if ("error" in data) {
+    if (data?.statusCode === 404) {
+      return <NotFound />;
+    }
+    return <div>{data.message}</div>;
   }
   return (
     <section className="sm:bg-muted/30 min-h-[500px] my-16 rounded-sm ">
@@ -66,7 +64,7 @@ const ConsultationPreview = async () => {
             <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-6">
               <Suspense fallback={<CardOnlineSkeleton />}>
                 <DocCardOnline
-                  doctors={doctors}
+                  doctors={data?.data}
                   className="shadow-sm border-[1px]"
                 />
               </Suspense>

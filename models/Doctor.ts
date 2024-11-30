@@ -1,31 +1,126 @@
-import { DoctorInfo } from "@/lib/definitions";
 import { Schema } from "mongoose";
+import { IDoctorInfo } from "@/lib/definitions";
 
-export const DoctorInfoSchema = new Schema<DoctorInfo>(
+export const DoctorInfoSchema = new Schema<IDoctorInfo>(
   {
-    specialties: {
-      type: [String],
-      required: [true, "Specialties are required"],
-    },
-    experience: {
+    account_number: {
       type: String,
-      required: [true, "Experience is required"],
+      validate: {
+        validator: function (value: string) {
+          if (this.onboarding_level >= 5) {
+            return value != null && value.trim().length > 0;
+          }
+          return true;
+        },
+        message: "Account number is required",
+      },
+    },
+    account_name: {
+      type: String,
+      validate: {
+        validator: function (value: string) {
+          if (this.onboarding_level >= 5) {
+            return value != null && value.trim().length > 0;
+          }
+          return true;
+        },
+        message: "Account name is required",
+      },
+    },
+    bank: {
+      type: String,
+      validate: {
+        validator: function (value: string) {
+          console.log("bank", value);
+          if (this.onboarding_level >= 5) {
+            return value != null && value.trim().length > 0;
+          }
+          return true;
+        },
+        message: "Bank is required",
+      },
+    },
+    media: {
+      type: [String],
+      validate: {
+        validator: function (value: string[]) {
+          if (this.onboarding_level >= 5) {
+            return value != null && value.length > 0;
+          }
+          return true;
+        },
+        message: "Media is required",
+      },
+    },
+    rating: Number,
+    onboarding_level: {
+      type: Number,
+      default: 0,
+    },
+    specialities: [String],
+    current_facility: String,
+    experience: {
+      type: Number,
+      validate: {
+        validator: function (value: number) {
+          if (this.onboarding_level >= 4) {
+            return value != null;
+          }
+          return true;
+        },
+        message: "Experience is required",
+      },
     },
     rate: {
       type: Number,
-      required: [true, "Rate is required"],
+      validate: {
+        validator: function (value: number) {
+          if (this.onboarding_level >= 5) {
+            return value != null;
+          }
+          return true;
+        },
+        message: "Rate is required",
+      },
     },
-    certifications: {
-      type: [String],
+    payment_channel: {
+      type: String,
+      validate: {
+        validator: function (value: string) {
+          if (this.onboarding_level >= 5) {
+            return value != null && value.trim().length > 0;
+          }
+          return true;
+        },
+        message: "Payment channel is required",
+      },
     },
-    rating: {
-      type: Number,
-    },
+    certifications: [String],
     bio: {
       type: String,
-      required: [true, "Bio is required"],
+      validate: {
+        validator: function (value: string) {
+          if (this.onboarding_level >= 4) {
+            return value != null && value.trim().length > 0;
+          }
+          return true;
+        },
+        message: "Bio is required",
+      },
     },
-    // Add other doctor-specific fields here
+
+    license_number: {
+      type: String,
+      validate: {
+        validator: function (value: string) {
+          if (this.onboarding_level >= 4) {
+            return value != null && value.trim().length > 0;
+          }
+          return true;
+        },
+        message: "License number is required",
+      },
+    },
   },
-  { _id: false } // Prevents creation of an additional _id field for subdocuments
+  { _id: false }
 );

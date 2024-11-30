@@ -24,11 +24,13 @@ const specialities: string[] = [
   "Infectious Diseases",
 ];
 const FindDoctor = async () => {
-  const session = await auth();
 
+  
+  const session = await auth();
   if (!session) {
     redirect("/sign-in");
   }
+
   return (
     <section className="min-h-[calc(100dvh_-_8rem)] rounded-sm bg-muted dark:bg-background">
       <div className="p-10 max-sm:px-4 max-sm:py-6">

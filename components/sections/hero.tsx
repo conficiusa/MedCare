@@ -1,6 +1,7 @@
 import { CalendarCheck2, CreditCard, Globe, LockKeyhole } from "lucide-react";
 import Image from "next/image";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 const Hero = () => {
   return (
@@ -15,7 +16,7 @@ const Hero = () => {
             Expert Care At Your <br /> FingerTips
           </h2>
           <p className="text-sm text-muted-foreground">
-          Enjoy the convenience of virtual consultations from the comfort of
+            Enjoy the convenience of virtual consultations from the comfort of
             your home, eliminating the need for long wait times and travel
             hassles.
           </p>
@@ -62,8 +63,8 @@ const Hero = () => {
             ))}
           </ul>
           <div className="w-full flex max-lg:justify-center">
-            <Button className="mt-8 w-1/2 max-lg:mx-auto" size={"lg"}>
-              Get Started
+            <Button className="mt-8 w-1/2 max-lg:mx-auto" size={"lg"} asChild>
+              <Link href={"/sign-in"}>Get Started</Link>
             </Button>
           </div>
         </div>

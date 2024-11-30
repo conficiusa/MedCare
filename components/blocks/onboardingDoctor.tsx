@@ -1,71 +1,54 @@
 "use client";
-
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-import OnboardingSideNav from "@/components/blocks/onboardingSideNav";
-import OnboardingUserProfile from "@/components/sections/onboardingUserProfile";
-import { Form } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { PatientOnboardingSchema } from "@/lib/schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import OnboardingAddress from "@/components/sections/onboardingAddress";
-import OnBoardingMedicalHistory from "@/components/sections/onboardingMedicalHistory";
+import OnboardingDoctorProfile from "@/components/sections/onboardingDoctorProfile";
+import OnboardingDoctorAddress from "@/components/sections/onboardingDoctorAddress";
+import DoctorOnboardingSideNav from "./doctorOnboardingSideNav";
+import DoctorOnboardingCredentials from "@/components/sections/onBoardingDoctorCredentials";
+import DoctorOnboardingServiceDetails from "@/components/sections/onboardingDoctorServiceDetails";
+import DoctorImageUpload from "@/components/sections/onboardingDoctorProfileUpload";
+import { Doctor } from "@/lib/definitions";
 import { useSession } from "next-auth/react";
-import OnboardingProfileUpload from "@/components/sections/onboardingprofileupload";
-import { usePatientOnboard } from "@/lib/formSubmissions";
 import { useRouter } from "next/navigation";
+import { Session } from "next-auth";
 import { toast } from "sonner";
 
-export type Step = "details" | "location" | "history" | "profile" | "welcome";
-export default function PatientOnboarding() {
+export type Step =
+  | "details"
+  | "location"
+  | "credentials"
+  | "profile"
+  | "bank_account"
+  | "welcome";
+export default function DoctorOnboarding({ user }: { user: Doctor }) {
   const [currentStep, setCurrentStep] = useState<Step>("details");
-  const [isPending, startTransition] = useTransition();
+  const { update, data: session } = useSession();
   const router = useRouter();
-
-  const { data: session, update } = useSession();
-
-  const { onPatientOnboard } = usePatientOnboard(session, update);
-
-  const handleSubmit = (data: z.output<typeof PatientOnboardingSchema>) => {
-    startTransition(async () => {
-      try {
-        await onPatientOnboard(data);
-        router.push("/find-a-doctor");
-      } catch (error: any) {
-        toast.error(error.message);
-      }
-    });
-  };
-  const form = useForm<z.output<typeof PatientOnboardingSchema>>({
-    resolver: zodResolver(PatientOnboardingSchema),
-    defaultValues: {
-      dob: null,
-      role: "patient",
-      city: "",
-      phone: "",
-      gender: "",
-      region: "",
-      country: "Ghana",
-      languages: [],
-      conditions: [],
-      medicalHistory: "",
-    },
-  });
-
   const steps: Step[] = [
     "details",
     "location",
-    "history",
+    "credentials",
+    "bank_account",
     "profile",
     "welcome",
   ];
 
-  const skipableSteps: Step[] = ["history", "profile"];
+  useEffect(() => {
+    if (!session) {
+      router.push("/sign-in");
+    }
+  }, [session, router]);
+
+  useEffect(() => {
+    if (user?.onboarding_level && user.onboarding_level > 1) {
+      setCurrentStep(steps[user?.onboarding_level - 1]);
+    }
+  }, [user]);
+  const skipableSteps: Step[] = ["profile"];
 
   const handleNext = () => {
     const currentIndex = steps.indexOf(currentStep);
@@ -85,39 +68,57 @@ export default function PatientOnboarding() {
     switch (currentStep) {
       case "details":
         return (
-          <OnboardingUserProfile
-            form={form}
-            session={session}
+          <OnboardingDoctorProfile
             steps={steps}
             currentStep={currentStep}
             setCurrentStep={setCurrentStep}
+            user={user}
+            update={update}
+            session={session as Session}
           />
         );
       case "location":
         return (
-          <OnboardingAddress
-            form={form}
+          <OnboardingDoctorAddress
             steps={steps}
             currentStep={currentStep}
             setCurrentStep={setCurrentStep}
+            user={user}
+            update={update}
+            session={session as Session}
           />
         );
-      case "history":
+      case "credentials":
         return (
-          <OnBoardingMedicalHistory
-            form={form}
+          <DoctorOnboardingCredentials
             currentStep={currentStep}
             steps={steps}
             setCurrentStep={setCurrentStep}
+            user={user}
+            update={update}
+            session={session as Session}
+          />
+        );
+      case "bank_account":
+        return (
+          <DoctorOnboardingServiceDetails
+            currentStep={currentStep}
+            steps={steps}
+            setCurrentStep={setCurrentStep}
+            user={user}
+            update={update}
+            session={session as Session}
           />
         );
       case "profile":
         return (
-          <OnboardingProfileUpload
-            form={form}
+          <DoctorImageUpload
+            currentStep={currentStep}
             steps={steps}
             setCurrentStep={setCurrentStep}
-            image={session?.user?.image}
+            user={user}
+            update={update}
+            session={session as Session}
           />
         );
       case "welcome":
@@ -137,11 +138,7 @@ export default function PatientOnboarding() {
                 className="object-cover"
               />
             </div>
-            <Button
-              disabled={isPending}
-              className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-md"
-              onClick={form.handleSubmit(handleSubmit)}
-            >
+            <Button className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-md">
               Finish up
             </Button>
           </div>
@@ -151,9 +148,9 @@ export default function PatientOnboarding() {
 
   return (
     <div className="min-h-[100dvh] bg-muted dark:bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-4xl bg-card dark:bg-card/40 rounded-xl shadow-lg overflow-hidden">
+      <div className="w-full max-w-4xl dark:bg-muted/30 bg-background rounded-xl shadow-lg overflow-hidden">
         <div className="flex flex-col md:flex-row">
-          <OnboardingSideNav currentStep={currentStep} steps={steps} />
+          <DoctorOnboardingSideNav currentStep={currentStep} steps={steps} />
           <div className="w-full md:w-[calc(100%-240px)] p-6 flex flex-col justify-between min-h-[600px] ">
             <AnimatePresence mode="wait">
               <motion.div
@@ -164,9 +161,7 @@ export default function PatientOnboarding() {
                 transition={{ duration: 0.3 }}
                 className="flex flex-col items-center justify-center sm:px-4"
               >
-                <Form {...form}>
-                  <form className="w-full">{renderStepContent()}</form>
-                </Form>
+                <div className="w-full">{renderStepContent()}</div>
               </motion.div>
             </AnimatePresence>
             <div className="flex justify-between items-center mt-8">

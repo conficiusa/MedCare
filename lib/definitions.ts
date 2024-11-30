@@ -6,9 +6,7 @@ import React from "react";
 export interface IUser extends Document {
   name: string;
   email: string;
-  password: string;
   image?: string;
-  confirmPassword: string | undefined;
   role?: "doctor" | "patient" | null;
   languages?: string[];
   country?: string;
@@ -17,7 +15,10 @@ export interface IUser extends Document {
   dob?: Date;
   phone?: string;
   gender?: string;
-  doctorInfo?: DoctorInfo; // Optional for patients
+  address_1?: string;
+  address_2?: string;
+  onboarding_level: number;
+  doctorInfo?: IDoctorInfo; // Optional for patients
 }
 
 export interface ITransaction extends Document {
@@ -34,6 +35,22 @@ export interface ITransaction extends Document {
   status: "pending" | "completed" | "failed";
   channel: PaymentMethod;
   mobileMoneyType?: MobileMoneyType;
+}
+export interface IDoctorInfo extends Document {
+  current_facility?: string;
+  specialities?: string[];
+  experience: number;
+  rate: number;
+  certifications?: string[];
+  rating?: number;
+  bio: string;
+  license_number: string;
+  account_name: string;
+  account_number: string;
+  bank: string;
+  payment_channel: string;
+  onboarding_level: number;
+  media: string[];
 }
 export interface IAppointment extends Document {
   doctor: {
@@ -89,6 +106,17 @@ export interface ITimeSlot {
   updatedAt: Date;
 }
 
+//onboarding steps
+export interface IOnboardingState extends Document {
+  userId: Types.ObjectId; // Reference to the user
+  currentStep: number; // Current step in the onboarding process
+  completedSteps: string[]; // List of completed steps
+  data: Record<string, any>; // Additional data for each step
+  role: "doctor" | "patient"; // Role of the user being onboarded
+  createdAt: Date; // Timestamp when onboarding started
+  updatedAt: Date; // Timestamp when onboarding was last updated
+}
+
 // Define the main availability schema interface
 export interface IAvailability extends Document {
   doctorId: Types.ObjectId;
@@ -104,12 +132,20 @@ export interface IAvailability extends Document {
 ////////////Application definitions///////////
 
 export interface DoctorInfo {
-  specialties: string[];
-  experience: string;
+  current_facility?: string;
+  specialities?: string[];
+  experience: number;
   rate: number;
   certifications?: string[];
   rating?: number;
   bio: string;
+  license_number: string;
+  account_name: string;
+  account_number: string;
+  bank: string;
+  payment_channel: string;
+  onboarding_level: number;
+  media: string[];
 }
 
 export interface DoctorCard {
@@ -127,6 +163,8 @@ export interface Doctor {
   image: string;
   role: "doctor" | "patient" | null;
   languages: string[];
+  address_1: string;
+  address_2: string;
   country: string;
   region: string;
   city: string;
@@ -134,6 +172,7 @@ export interface Doctor {
   phone: string;
   gender: string;
   doctorInfo: DoctorInfo;
+  onboarding_level: number;
 }
 
 export interface Appointment {
@@ -215,12 +254,10 @@ export interface SuccessReturn extends dataReturn {
 }
 export type ReturnType = ErrorReturn | SuccessReturn;
 
-
 export interface User {
   _id: string;
   name: string;
   email: string;
-  password: string;
   image?: string;
   role?: "doctor" | "patient" | null;
   languages?: string[];
@@ -231,16 +268,6 @@ export interface User {
   phone?: string;
   gender?: string;
   doctorInfo?: DoctorInfo; // Optional for patients
-}
-
-// Doctor profile interface, extending the user
-export interface DoctorInfo {
-  specialties: string[];
-  experience: string;
-  rate: number;
-  certifications?: string[];
-  rating?: number;
-  bio: string;
 }
 
 export interface AvailabilityType {

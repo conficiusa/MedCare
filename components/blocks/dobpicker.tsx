@@ -62,7 +62,6 @@ const CalenderDatePicker = ({
                   toYear={new Date().getFullYear()}
                   selected={field.value}
                   onSelect={field.onChange}
-                  showOutsideDays={false}
                   disabled={(date) =>
                     date > new Date() || date < new Date("1900-01-01")
                   }
