@@ -35,7 +35,6 @@ const OnboardingDoctorAddress = ({
   update,
   setCurrentStep,
 }: OnboardingAddressProps) => {
-    console.log("session2", session);
 
   const form = useForm<z.output<typeof onDoctorBoardingSchema2>>({
     resolver: zodResolver(onDoctorBoardingSchema2),

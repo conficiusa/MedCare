@@ -35,7 +35,6 @@ const DoctorOnboardingCredentials = ({
   update: UpdateSession;
   session: Session;
 }) => {
-  console.log("session3", session);
 
   const form = useForm<z.output<typeof onDoctorBoardingSchema3>>({
     resolver: zodResolver(onDoctorBoardingSchema3),

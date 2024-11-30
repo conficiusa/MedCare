@@ -34,7 +34,6 @@ export default function DoctorImageUpload({
   session: Session;
   update: UpdateSession;
 }) {
-  console.log("session5", session);
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const form = useForm<z.output<typeof onDoctorBoardingSchema5>>({

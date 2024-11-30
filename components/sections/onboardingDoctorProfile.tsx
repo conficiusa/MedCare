@@ -36,7 +36,6 @@ const OnboardingDoctorProfile = ({
   session: Session;
   update: UpdateSession;
 }) => {
-  console.log("session1", session);
   const form = useForm<z.output<typeof onDoctorBoardingSchema1>>({
     resolver: zodResolver(onDoctorBoardingSchema1),
     defaultValues: {

@@ -44,7 +44,6 @@ const DoctorOnboardingServiceDetails = ({
   update: UpdateSession;
   session: Session;
 }) => {
-  console.log("session4", session);
 
   const [selectedMethods, setSelectedMethods] = useState<ConsultationMethod[]>(
     user?.doctorInfo?.media && user?.doctorInfo?.media?.length > 0
