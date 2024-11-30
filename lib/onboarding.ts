@@ -58,10 +58,23 @@ export const DoctorOnboardStepThree = (
       onboarding_level: 4,
     },
   });
-export const DoctorOnboardStepFour = (
+export const DoctorOnboardStepFour = async (
   data: z.output<typeof onDoctorBoardingSchema4>
-) =>
-  handleDoctorOnboarding(5, data, onDoctorBoardingSchema4, {
+) => {
+  const authSession = await auth();
+
+  if (!authSession) {
+    return {
+      error: "Not Authenticated",
+      message: "You must be logged in to create an appointment",
+      status: "fail",
+      statusCode: 401,
+      type: "Authentication Error",
+    } as ErrorReturn;
+  }
+
+  const user = await User.findById(authSession?.user?.id);
+  return handleDoctorOnboarding(5, data, onDoctorBoardingSchema4, {
     doctorInfo: {
       bank: data?.bank,
       account_name: data?.bank,
@@ -69,9 +82,16 @@ export const DoctorOnboardStepFour = (
       payment_channel: data?.payment_channel,
       media: data?.media,
       account_number: data?.account_number,
+      license_number: user?.doctorInfo?.license_number,
+      current_facility: user?.doctorInfo?.current_facility,
+      experience: user?.doctorInfo?.experience ?? 0,
+      specialities: user?.doctorInfo?.specialities,
+      bio: user?.doctorInfo?.bio,
+      certifications: user?.doctorInfo?.certifications?.map,
       onboarding_level: 5,
     },
   });
+};
 
 export const DoctorOnboardStepFive = async (
   data: z.output<typeof onDoctorBoardingSchema5>
@@ -95,8 +115,19 @@ export const DoctorOnboardStepFive = async (
   return handleDoctorOnboarding(6, data, onDoctorBoardingSchema5, {
     image: data?.image,
     doctorInfo: {
+      bank: user?.doctorInfo?.bank,
+      account_name: user?.doctorInfo?.bank,
+      rate: user?.doctorInfo?.rate,
+      payment_channel: user?.doctorInfo?.payment_channel,
+      media: user?.doctorInfo?.media,
+      account_number: user?.doctorInfo?.account_number,
+      license_number: user?.doctorInfo?.license_number,
+      current_facility: user?.doctorInfo?.current_facility,
+      experience: user?.doctorInfo?.experience ?? 0,
+      specialities: user?.doctorInfo?.specialities,
+      bio: user?.doctorInfo?.bio,
+      certifications: user?.doctorInfo?.certifications?.map,
       onboarding_level: 6,
-      media: user.doctorInfo.media,
     },
   });
 };
