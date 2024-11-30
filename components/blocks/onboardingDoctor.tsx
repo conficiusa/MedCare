@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -15,7 +15,6 @@ import { Doctor } from "@/lib/definitions";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Session } from "next-auth";
-import { toast } from "sonner";
 
 export type Step =
   | "details"
@@ -24,24 +23,29 @@ export type Step =
   | "profile"
   | "bank_account"
   | "welcome";
-export default function DoctorOnboarding({ user }: { user: Doctor }) {
-  const [currentStep, setCurrentStep] = useState<Step>("details");
-  const { update, data: session } = useSession();
-  const router = useRouter();
-  const steps: Step[] = [
-    "details",
-    "location",
-    "credentials",
-    "bank_account",
-    "profile",
-    "welcome",
-  ];
 
-  useEffect(() => {
-    if (!session) {
-      router.push("/sign-in");
-    }
-  }, [session, router]);
+export default function DoctorOnboarding({
+  user,
+  session,
+}: {
+  user: Doctor;
+  session: Session;
+}) {
+  const [currentStep, setCurrentStep] = useState<Step>("details");
+  const { update } = useSession();
+  const router = useRouter();
+
+  const steps: Step[] = useMemo(
+    () => [
+      "details",
+      "location",
+      "credentials",
+      "bank_account",
+      "profile",
+      "welcome",
+    ],
+    []
+  );
 
   useEffect(() => {
     if (user?.onboarding_level && user.onboarding_level > 1) {

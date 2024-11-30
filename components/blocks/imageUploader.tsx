@@ -9,6 +9,7 @@ import {
   ZoomOut,
   RotateCcw,
   Trash,
+  Camera,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -32,8 +33,8 @@ interface ImageUploadProps {
   disabled?: boolean;
   isCircular?: boolean;
   showControls?: boolean;
+  existingImageUrl?: string;
   onSave: (file: File) => Promise<void>;
-  prevImage?: string;
 }
 
 export default function ImageUpload({
@@ -41,13 +42,15 @@ export default function ImageUpload({
   id,
   image,
   setImage,
+  existingImageUrl,
   disabled = false,
   isCircular = false,
   showControls = true,
-  prevImage,
   onSave,
 }: ImageUploadProps) {
-  const [preview, setPreview] = useState<string | null>(add || null);
+  const [preview, setPreview] = useState<string | null>(
+    existingImageUrl || null
+  );
   const [uploadProgress, setUploadProgress] = useState(0);
   const [scale, setScale] = useState(1);
   const [rotate, setRotate] = useState(0);
@@ -86,16 +89,17 @@ export default function ImageUpload({
         );
         ctx.restore();
 
-        setPreview(canvasRef.current.toDataURL("image/webp"));
+        setPreview(canvasRef.current.toDataURL("image/png"));
       }
     }
   }, [scale, rotate]);
-
+  
   useEffect(() => {
     if (image) {
       const reader = new FileReader();
       reader.onloadend = () => {
         const img = new Image();
+        img.crossOrigin = "anonymous";
         img.onload = () => {
           imageRef.current = img;
           updatePreview();
@@ -103,12 +107,18 @@ export default function ImageUpload({
         img.src = reader.result as string;
       };
       reader.readAsDataURL(image);
-    } else if (prevImage) {
-      setPreview(prevImage);
+    } else if (existingImageUrl) {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        imageRef.current = img;
+        updatePreview();
+      };
+      img.src = existingImageUrl;
     } else {
       setPreview(null);
     }
-  }, [image, prevImage, updatePreview]);
+  }, [image, existingImageUrl, updatePreview]);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -207,6 +217,18 @@ export default function ImageUpload({
               )}
             >
               <canvas ref={canvasRef} className="w-full h-full" />
+              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="icon"
+                  className="bg-white hover:bg-gray-100"
+                  {...getRootProps()}
+                >
+                  <Camera className="h-6 w-6 text-gray-800" />
+                  <input {...getInputProps()} />
+                </Button>
+              </div>
             </div>
             <div className="flex flex-col items-center space-y-4 w-full">
               {showControls && (

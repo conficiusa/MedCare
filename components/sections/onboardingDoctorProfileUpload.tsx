@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import ImageUpload from "@/components/blocks/imageUploader";
 import { upload } from "@/lib/actions";
 import { z } from "zod";
 import { onDoctorBoardingSchema5 } from "@/lib/schema";
@@ -18,6 +17,7 @@ import { DoctorOnboardStepFive } from "@/lib/onboarding";
 import { Doctor } from "@/lib/definitions";
 import { Session } from "next-auth";
 import { UpdateSession } from "next-auth/react";
+import ImageUpload from "@/components/blocks/imageUploader";
 
 export default function DoctorImageUpload({
   currentStep,
@@ -34,7 +34,6 @@ export default function DoctorImageUpload({
   session: Session;
   update: UpdateSession;
 }) {
-
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const form = useForm<z.output<typeof onDoctorBoardingSchema5>>({
     resolver: zodResolver(onDoctorBoardingSchema5),
@@ -109,7 +108,7 @@ export default function DoctorImageUpload({
             isCircular={false}
             showControls={false}
             onSave={onSave}
-            prevImage={prevImage as string}
+            existingImageUrl={prevImage as string}
           />
         </form>
       </CardContent>

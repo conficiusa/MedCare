@@ -35,7 +35,6 @@ const DoctorOnboardingCredentials = ({
   update: UpdateSession;
   session: Session;
 }) => {
-
   const form = useForm<z.output<typeof onDoctorBoardingSchema3>>({
     resolver: zodResolver(onDoctorBoardingSchema3),
     defaultValues: {
@@ -47,7 +46,7 @@ const DoctorOnboardingCredentials = ({
               user?.doctorInfo?.certifications?.includes(cert.value)
             )
           : [],
-      experience: undefined,
+      experience: Number(user?.doctorInfo?.experience) ?? undefined,
       license_number: user?.doctorInfo?.license_number ?? "",
       specialities:
         user?.doctorInfo?.specialities?.length &&
@@ -140,7 +139,7 @@ const DoctorOnboardingCredentials = ({
               <Input placeholder="experience level" type="number" />
             </FormBuilder>
             <MultiSelector
-              defaultOptions={conditions}
+              defaultOptions={specializations}
               form={form}
               name="specialities"
               empty="No specialities"
@@ -153,13 +152,13 @@ const DoctorOnboardingCredentials = ({
               }}
             />
             <MultiSelector
-              defaultOptions={conditions}
+              defaultOptions={certifications}
               form={form}
               name="certifications"
               empty="No certifications"
               label="Choose your certifications (Optional but recommended)"
-              description="If your speciality is not in the dropdown. you can create you by typing it in"
-              placeholder="Select Speciality"
+              description="If you you have certifications not included in the list. you can type them in"
+              placeholder="Choose your certifications"
               maxSelected={4}
               onMaxSelected={(maxlimit) => {
                 toast.info(`you have reached the maximum limit of ${maxlimit}`);

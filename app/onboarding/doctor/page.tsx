@@ -18,7 +18,7 @@ const Component = async () => {
   if ("error" in user) {
     redirect("/sign-in");
   }
-  return <OnboardingDoctor user={user?.data} />;
+  return <OnboardingDoctor user={user?.data} session={authsession} />;
 };
 
 export default Component;
