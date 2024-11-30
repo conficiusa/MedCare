@@ -87,7 +87,7 @@ export const DoctorOnboardStepFour = async (
       experience: user?.doctorInfo?.experience ?? 0,
       specialities: user?.doctorInfo?.specialities,
       bio: user?.doctorInfo?.bio,
-      certifications: user?.doctorInfo?.certifications?.map,
+      certifications: user?.doctorInfo?.certifications,
       onboarding_level: 5,
     },
   });
