@@ -47,7 +47,7 @@ export default function ImageUpload({
   prevImage,
   onSave,
 }: ImageUploadProps) {
-  const [preview, setPreview] = useState<string | null>(prevImage || null);
+  const [preview, setPreview] = useState<string | null>(add || null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [scale, setScale] = useState(1);
   const [rotate, setRotate] = useState(0);
