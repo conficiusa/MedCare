@@ -1,14 +1,8 @@
 import { auth } from "@/auth";
+import DoctorOnboarding from "@/components/blocks/onboardingDoctor";
 import { fetchUserData } from "@/lib/queries";
-import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 
-const OnboardingDoctor = dynamic(
-  () => import("@/components/blocks/onboardingDoctor"),
-  {
-    ssr: false,
-  }
-);
 const Component = async () => {
   const authsession = await auth();
   if (!authsession) {
@@ -18,7 +12,7 @@ const Component = async () => {
   if ("error" in user) {
     redirect("/sign-in");
   }
-  return <OnboardingDoctor user={user?.data} session={authsession} />;
+  return <DoctorOnboarding user={user?.data} session={authsession} />;
 };
 
 export default Component;
