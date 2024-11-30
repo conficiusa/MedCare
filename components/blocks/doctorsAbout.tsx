@@ -8,7 +8,7 @@ const AboutDoctor = ({ doctor }: { doctor: Doctor }) => {
         <ul className="flex gap-10 items-center text-sm mt-4">
           <li className="flex flex-col justify-center gap-2">
             <p className="font-semibold">Specialities</p>
-            <p>{doctor?.doctorInfo?.specialties?.join(", ")}</p>
+            <p>{doctor?.doctorInfo?.specialities?.join(", ")}</p>
           </li>
           <li className="flex flex-col justify-center gap-2">
             <p className="font-semibold">Licenses & Certifications</p>

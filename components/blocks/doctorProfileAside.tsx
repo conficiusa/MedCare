@@ -38,7 +38,7 @@ const DoctorProfileAside = ({ doctor }: { doctor: Doctor }) => {
           <p className="flex items-center gap-2 text-xs text-muted-foreground">
             <Stethoscope strokeWidth={1.8} className="w-4 h-4" />
             <span className="text-xs">
-              {doctor?.doctorInfo?.specialties?.join(", ")}
+              {doctor?.doctorInfo?.specialities?.join(", ")}
             </span>
           </p>
           <p className="mt-6 text-sm font-medium">

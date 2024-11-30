@@ -45,7 +45,7 @@ const Paymentdoctorcard = ({
                 <p className="font-medium"> Dr. {doctor?.name}</p>
                 <p className="text-xs font-light text-muted-foreground flex gap-1">
                   <Stethoscope strokeWidth={1} className="w-4 h-4" />
-                  {doctor?.doctorInfo?.specialties?.join(", ")}
+                  {doctor?.doctorInfo?.specialities?.join(", ")}
                 </p>
               </div>
             </div>

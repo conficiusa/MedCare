@@ -46,7 +46,7 @@ const DocCardOnline = async ({
                 <p className="flex items-start gap-1">
                   <Stethoscope className="w-3.5 h-3.5" strokeWidth={1.8} />
                   <span className="text-xs">
-                    {doctor?.doctorInfo?.specialties?.join(", ")}
+                    {doctor?.doctorInfo?.specialities?.join(", ")}
                   </span>
                 </p>
               </div>

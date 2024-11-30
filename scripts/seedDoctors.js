@@ -232,7 +232,7 @@ const usersData = names.map((name, index) => ({
   createdAt: new Date(),
   updatedAt: new Date(),
   doctorInfo: {
-    specialties: [
+    specialities: [
       specializations[index % specializations.length],
       specializations[(index + 1) % specializations.length],
     ],
