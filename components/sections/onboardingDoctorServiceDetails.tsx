@@ -43,8 +43,8 @@ const DoctorOnboardingServiceDetails = ({
   user: Doctor;
   update: UpdateSession;
   session: Session;
-  }) => {
-    console.log("session4", session);
+}) => {
+  console.log("session4", session);
 
   const [selectedMethods, setSelectedMethods] = useState<ConsultationMethod[]>(
     user?.doctorInfo?.media && user?.doctorInfo?.media?.length > 0
@@ -86,7 +86,7 @@ const DoctorOnboardingServiceDetails = ({
     if (selectedPayMethod) {
       form.setValue("payment_channel", selectedPayMethod);
     }
-  }, []);
+  }, [form, selectedPayMethod]);
 
   useEffect(() => {
     if (selectedMethods) {

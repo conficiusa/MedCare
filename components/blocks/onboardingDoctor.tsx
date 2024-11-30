@@ -47,7 +47,7 @@ export default function DoctorOnboarding({ user }: { user: Doctor }) {
     if (user?.onboarding_level && user.onboarding_level > 1) {
       setCurrentStep(steps[user?.onboarding_level - 1]);
     }
-  }, [user]);
+  }, [user, steps]);
   const skipableSteps: Step[] = ["profile"];
 
   const handleNext = () => {
