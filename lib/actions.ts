@@ -171,6 +171,15 @@ export const CreateAppointment = async (
     //connect to the  database
     await connectToDatabase();
 
+    if (authsession?.user?.id === appointmentData?.doctor?.doctorId) {
+      return {
+        error: "Invalid Appointment",
+        message: "You cannot book an appointment with yourself",
+        status: "fail",
+        statusCode: 400,
+        type: "Bad Request",
+      } as ErrorReturn;
+    }
     // Find the doctor
     const doctor = await User.findById(
       appointmentData?.doctor?.doctorId

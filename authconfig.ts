@@ -103,7 +103,7 @@ export const authConfig: NextAuthConfig = {
       } else if (isLoggedIn) {
         if (isDoctor) {
           return Response.redirect(
-            new URL("/doctor/dashboard", request.nextUrl)
+            new URL("/doctor/dashboard/appointments", request.nextUrl)
           );
         } else {
           return Response.redirect(new URL("/find-a-doctor", request.nextUrl));

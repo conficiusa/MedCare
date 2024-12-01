@@ -32,7 +32,7 @@ export default async function DoctorUserDp() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>Profile</DropdownMenuItem>
-          <Link href="doctor/dashboard/appointments">
+          <Link href="/doctor/dashboard/appointments">
             <DropdownMenuItem>Dashboard</DropdownMenuItem>
           </Link>
           <DropdownMenuItem>Make a complain</DropdownMenuItem>
