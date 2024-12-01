@@ -10,10 +10,11 @@ import {
   SidebarFooter,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { DoctorSidebarMain } from "./mainNav";
 
 // This is sample data.
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function DoctorDashboardSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar
       collapsible="icon"
@@ -22,7 +23,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       className="pt-[75px] bg-muted dark:bg-muted/40ma"
     >
       <SidebarContent>
-        <NavMain />
+        <DoctorSidebarMain />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

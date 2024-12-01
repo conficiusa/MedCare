@@ -5,7 +5,7 @@ import NotFound from "../not-found";
 
 const Datacards = async () => {
   const data = await fetchDoctorCardData({
-    limit: 4,
+    limit: 100,
     sort: { "doctorInfo.rating": -1, "doctorInfo.rate": 1 },
   });
 

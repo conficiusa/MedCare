@@ -6,6 +6,7 @@ import {
   ClipboardPlus,
   Currency,
   Settings2,
+  TrendingUp,
   Upload,
   type LucideIcon,
 } from "lucide-react";
@@ -45,57 +46,45 @@ const items: itemsTypes[] = [
     items: [
       {
         title: "Appointments",
-        url: "/dashboard/appointments",
+        url: "/doctor/dashboard/appointments",
       },
       {
-        title: "Book Appointment",
-        url: "/find-a-doctor",
-      },
-      {
-        title: "Reschedule Appointment",
-        url: "/dashboard/appointments/reschedule",
-      },
-      {
-        title: "Lab Requests",
-        url: "/dashboard/appointments/lab-requests",
-      },
-      {
-        title: "Prescriptions",
-        url: "/dashboard/appointments/prescriptions",
+        title: "Schedule",
+        url: "/doctor/dashboard/schedule",
       },
     ],
   },
   {
-    title: "Billing",
-    url: "/dashboard/billing",
+    title: "Consultation Reports",
+    url: "/doctor/dashboard/consultation-reports",
     icon: Currency,
     items: [
       {
-        title: "Invoices",
-        url: "/dashboard/billing/invoices",
+        title: "Consultation Reports",
+        url: "/doctor/dashboard/consultation-reports",
       },
       {
-        title: "Payments",
-        url: "/dashboard/billing/payments",
+        title: "Prescription Reports",
+        url: "/doctor/dashboard/prescription-reports",
       },
     ],
   },
   {
-    title: "Manage Records",
-    url: "/dashboard/records",
-    icon: ClipboardPlus,
+    title: "Analytics",
+    url: "/doctor/dashboard/analytics",
+    icon: TrendingUp,
     items: [
       {
-        title: "Uploaded Records",
-        url: "/dashboard/records/uploaded",
+        title: "Consultation Analytics",
+        url: "/doctor/dashboard/analytics/consultation",
       },
       {
-        title: "Consultation Records",
-        url: "/dashboard/records/consultation",
+        title: "Revenue Analytics",
+        url: "/doctor/dashboard/analytics/revenue",
       },
       {
-        title: "Prescription Records",
-        url: "/dashboard/records/prescription",
+        title: "Patient Analytics",
+        url: "/doctor/dashboard/analytics/patient",
       },
     ],
   },
@@ -123,7 +112,7 @@ const items: itemsTypes[] = [
     ],
   },
 ];
-export function NavMain() {
+export function DoctorSidebarMain() {
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Appointments</SidebarGroupLabel>
@@ -137,7 +126,7 @@ export function NavMain() {
           >
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
+                <SidebarMenuButton tooltip={item.title} className="text-[13px]">
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
@@ -147,7 +136,10 @@ export function NavMain() {
                 <SidebarMenuSub>
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
-                      <SidebarMenuSubButton asChild>
+                      <SidebarMenuSubButton
+                        asChild
+                        className="text-xs text-muted-foreground"
+                      >
                         <a href={subItem.url}>
                           <span>{subItem.title}</span>
                         </a>

@@ -7,6 +7,7 @@ import UserDp from "@/components/blocks/userDP";
 import { ThemeToggler } from "@/components/blocks/themeToggler";
 import { cn } from "@/lib/utils";
 import Logo from "./logo";
+import DoctorUserDp from "./doctorUserDp";
 
 const Navbar = async () => {
   const session = await auth();
@@ -35,7 +36,11 @@ const Navbar = async () => {
         <div className="flex sm:hidden items-center gap-5">
           {session ? (
             <div>
-              <UserDp />
+              {session?.user?.role === "patient" ? (
+                <UserDp />
+              ) : (
+                <DoctorUserDp />
+              )}
             </div>
           ) : null}
           <ThemeToggler />
@@ -65,7 +70,11 @@ const Navbar = async () => {
                 </li>
               )}
 
-              <UserDp />
+              {session?.user?.role === "patient" ? (
+                <UserDp />
+              ) : (
+                <DoctorUserDp />
+              )}
             </>
           )}
           <ThemeToggler />
