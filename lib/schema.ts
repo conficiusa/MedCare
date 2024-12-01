@@ -155,6 +155,10 @@ export const onDoctorBoardingSchema5 = z.object({
   image: z.string().min(1, "Failed to get image url"),
 });
 
+export const onDoctorBoardingSchema6 = z.object({
+  verification: z.enum(["not_started", "verifying", "approved", "failed"]),
+});
+
 export const CheckoutSchema = z
   .object({
     fullName: z.string().min(1, "Please enter your full name."),

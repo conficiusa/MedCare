@@ -39,7 +39,7 @@ const OnboardingDoctorProfile = ({
   const form = useForm<z.output<typeof onDoctorBoardingSchema1>>({
     resolver: zodResolver(onDoctorBoardingSchema1),
     defaultValues: {
-      dob: new Date(user?.dob) ?? undefined,
+      dob: user?.dob ? new Date(user?.dob) : undefined,
       role: "doctor",
       gender: user?.gender ?? "",
       languages:

@@ -52,6 +52,11 @@ export const DoctorInfoSchema = new Schema<IDoctorInfo>(
         message: "Media is required",
       },
     },
+    verification: {
+      type: String,
+      enum: ["not_started", "verifying", "approved", "failed"],
+      default: "not_started",
+    },
     rating: Number,
     onboarding_level: {
       type: Number,

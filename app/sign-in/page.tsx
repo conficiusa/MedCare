@@ -58,7 +58,7 @@ export default function SignInPage() {
       <div className="flex items-center justify-between mb-8">
         <Link
           href="#"
-          className="text-sm text-gray-600 hover:text-gray-900 flex items-center"
+          className="text-sm text-muted-foreground hover:text-muted-foreground/70 flex items-center"
         >
           <ChevronLeft className="w-4 h-4 mr-1" />
           Back to home
@@ -89,12 +89,12 @@ export default function SignInPage() {
         </div>
       </div>
       <h2 className="sm:text-3xl text-2xl font-bold mb-2">Welcome back</h2>
-      <p className="text-gray-600 mb-8">Sign in to your account to continue</p>
+      <p className="text-sm text-muted-foreground mb-8">Sign in to your account to continue</p>
       <form action={handleGoogleSignIn}>
         <Button
           variant="outline"
           disabled={isPending}
-          className="w-full mb-4 bg-white hover:bg-gray-50 border dark:bg-background "
+          className="w-full mb-4 "
         >
           <svg
             className="w-5 h-5 mr-2"
@@ -129,7 +129,7 @@ export default function SignInPage() {
         </span>
       </div>
       <SignInform />
-      <p className="mt-6 text-sm text-center text-gray-600">
+      <p className="mt-6 text-sm text-center text-muted-foreground">
         Don&apos;t have an account?{" "}
         <Link href="/sign-up" className="font-medium">
           Sign up

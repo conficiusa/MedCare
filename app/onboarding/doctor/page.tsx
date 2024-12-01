@@ -1,18 +1,12 @@
-import { auth } from "@/auth";
-import DoctorOnboarding from "@/components/blocks/onboardingDoctor";
-import { fetchUserData } from "@/lib/queries";
-import { redirect } from "next/navigation";
+import ServerDocOnboard from "@/components/sections/serverdocOnboard";
+import { Suspense } from "react";
 
-const Component = async () => {
-  const authsession = await auth();
-  if (!authsession) {
-    redirect("/sign-in");
-  }
-  const user = await fetchUserData(authsession?.user?.id as string);
-  if ("error" in user) {
-    redirect("/sign-in");
-  }
-  return <DoctorOnboarding user={user?.data} session={authsession} />;
+const Page = async () => {
+  return (
+    <Suspense fallback={<p>loading...</p>}>
+      <ServerDocOnboard />
+    </Suspense>
+  );
 };
 
-export default Component;
+export default Page;

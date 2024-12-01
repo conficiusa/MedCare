@@ -51,6 +51,7 @@ export interface IDoctorInfo extends Document {
   payment_channel: string;
   onboarding_level: number;
   media: string[];
+  verification: "not_started" | "verifying" | "approved" |"failed";
 }
 export interface IAppointment extends Document {
   doctor: {
@@ -145,6 +146,7 @@ export interface DoctorInfo {
   bank: string;
   payment_channel: string;
   onboarding_level: number;
+  verification: "not_started" | "verifying" | "approved" | "failed";
   media: string[];
 }
 

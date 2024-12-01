@@ -13,8 +13,8 @@ import DoctorOnboardingServiceDetails from "@/components/sections/onboardingDoct
 import DoctorImageUpload from "@/components/sections/onboardingDoctorProfileUpload";
 import { Doctor } from "@/lib/definitions";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { Session } from "next-auth";
+import { OnboardingAlert } from "./validDataalert";
 
 export type Step =
   | "details"
@@ -33,7 +33,6 @@ export default function DoctorOnboarding({
 }) {
   const [currentStep, setCurrentStep] = useState<Step>("details");
   const { update } = useSession();
-  const router = useRouter();
 
   const steps: Step[] = useMemo(
     () => [
@@ -142,9 +141,9 @@ export default function DoctorOnboarding({
                 className="object-cover"
               />
             </div>
-            <Button className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-md">
-              Finish up
-            </Button>
+            <div>
+              <OnboardingAlert update={update} session={session as Session} />
+            </div>
           </div>
         );
     }

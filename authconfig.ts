@@ -6,9 +6,9 @@ export const authConfig: NextAuthConfig = {
     signIn: "/sign-in",
     newUser: "/onboarding",
   },
-  //refer to https://github.com/nextauthjs/next-auth/discussions/9133 in production
+  // Refer to https://github.com/nextauthjs/next-auth/discussions/9133 in production
   callbacks: {
-    //protect pages and redirect to unboarding
+    // Protect pages and redirect to onboarding
     async authorized({ auth, request }) {
       const token = await getToken({
         req: request,
@@ -21,13 +21,10 @@ export const authConfig: NextAuthConfig = {
       });
 
       const isLoggedIn = !!auth?.user;
-      const isProfileCompleted = (role: "doctor" | "patient") => {
-        if (role === "doctor") {
-          return Number(token?.onboarding_level) === 7;
-        } else {
-          return Number(token?.onboarding_level) === 4;
-        }
-      };
+      const role = token?.role as "doctor" | "patient";
+      const onboardingLevel = Number(token?.onboarding_level);
+      const isProfileCompleted = (role: "doctor" | "patient") =>
+        role === "doctor" ? onboardingLevel === 7 : onboardingLevel === 4;
 
       const protectedPaths = [
         "/onboarding",
@@ -37,6 +34,7 @@ export const authConfig: NextAuthConfig = {
         "/admin",
         "/consultation",
         "/dashboard",
+        "/doctor"
       ];
       const onboardingPaths = [
         "/onboarding",
@@ -49,15 +47,40 @@ export const authConfig: NextAuthConfig = {
       const isOnboardingPath = onboardingPaths.some((path) =>
         request.nextUrl.pathname.startsWith(path)
       );
+      const isDoctor = role === "doctor";
+      const doctorVerification = token?.doctorInfo?.verification;
+      const currentPath = request.nextUrl.pathname;
 
       if (isProtectedPath) {
         if (isLoggedIn) {
-          if (isProfileCompleted(token?.role as "doctor" | "patient")) {
-            if (request.nextUrl.pathname === "/onboarding") {
-              if (token?.role === "doctor") {
-                return Response.redirect(
-                  new URL("/doctor/dashboard", request.nextUrl)
-                );
+          if (isProfileCompleted(role)) {
+            if (currentPath === "/onboarding") {
+              if (isDoctor) {
+                console.log(role);
+                switch (doctorVerification) {
+                  case "approved":
+                    return Response.redirect(
+                      new URL("/doctor/dashboard", request.nextUrl)
+                    );
+                  case "verifying":
+                    return Response.redirect(
+                      new URL(
+                        "/onboarding/doctor/awaiting-verification",
+                        request.nextUrl
+                      )
+                    );
+                  case "failed":
+                    return Response.redirect(
+                      new URL(
+                        "/onboarding/doctor/verification-failed",
+                        request.nextUrl
+                      )
+                    );
+                  default:
+                    throw new Error("Invalid onboarding data", {
+                      cause: "The verification status could not be determined",
+                    });
+                }
               } else {
                 return Response.redirect(
                   new URL("/find-a-doctor", request.nextUrl)
@@ -65,20 +88,26 @@ export const authConfig: NextAuthConfig = {
               }
             }
             return true;
-          }
-          if (!isOnboardingPath) {
+          } else if (!isOnboardingPath) {
             return Response.redirect(new URL("/onboarding", request.nextUrl));
           }
-          return true; // Allow navigation within the onboarding flow// Avoid loop by only redirecting if not already on /onboarding
+          return true; // Allow navigation within the onboarding flow
+        } else {
+          if (currentPath !== "/sign-in") {
+            return Response.redirect(
+              new URL(`/sign-in?redirect=${currentPath}`, request.nextUrl)
+            );
+          }
+          return true; // Avoid loop by only redirecting if not already on /sign-in
         }
-        if (request.nextUrl.pathname !== "/sign-in") {
-          return Response.redirect(
-            new URL(`/sign-in?redirect=${request?.nextUrl}`, request.nextUrl)
-          );
-        }
-        return true; // Avoid loop by only redirecting if not already on /login
       } else if (isLoggedIn) {
-        return Response.redirect(new URL("/find-a-doctor", request.nextUrl));
+        if (isDoctor) {
+          return Response.redirect(
+            new URL("/doctor/dashboard", request.nextUrl)
+          );
+        } else {
+          return Response.redirect(new URL("/find-a-doctor", request.nextUrl));
+        }
       }
 
       return true;
