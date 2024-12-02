@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import SelectComponent from "@/components/blocks/selectComponent";
 import { regions } from "@/lib/data";
 import { Button } from "@/components/ui/button";
-import { Step } from "@/components/blocks/onboardingDoctor";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "../ui/form";
@@ -18,6 +17,7 @@ import { toast } from "sonner";
 import { Doctor } from "@/lib/definitions";
 import { UpdateSession } from "next-auth/react";
 import { Session } from "next-auth";
+import { Step } from "../blocks/onboardingDoctor";
 
 interface OnboardingAddressProps {
   currentStep: Step;
@@ -35,7 +35,6 @@ const OnboardingDoctorAddress = ({
   update,
   setCurrentStep,
 }: OnboardingAddressProps) => {
-
   const form = useForm<z.output<typeof onDoctorBoardingSchema2>>({
     resolver: zodResolver(onDoctorBoardingSchema2),
     defaultValues: {
@@ -88,7 +87,7 @@ const OnboardingDoctorAddress = ({
         <CardTitle
           className={cn("text-base antialiased font-semibold text-opacity-90")}
         >
-          Welcome Aboard!
+          Location & Address
         </CardTitle>
       </CardHeader>
       <Form {...form}>

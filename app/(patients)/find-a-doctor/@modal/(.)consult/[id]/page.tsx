@@ -18,7 +18,7 @@ const BookAppointment = async ({ params }: DoctorProfileProps) => {
   const { doctor, availability } = data;
   return (
     <Modal>
-      <ScheduleAppointment availability={availability} doctor={doctor} />;
+      <ScheduleAppointment availability={availability} doctor={doctor} />
     </Modal>
   );
 };

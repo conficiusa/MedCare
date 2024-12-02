@@ -7,8 +7,19 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { DoctorDashboardSidebar } from "./dashboardAppsidebar";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
-export default function Page({ children }: { children: React.ReactNode }) {
+export default async function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const session = await auth();
+
+  if (!session) {
+    redirect("/sign-in");
+  }
   return (
     <div>
       <SidebarProvider>

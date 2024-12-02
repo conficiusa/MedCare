@@ -94,19 +94,19 @@ const items: itemsTypes[] = [
     icon: Settings2,
     items: [
       {
-        title: "General",
+        title: "profile",
         url: "#",
       },
       {
-        title: "Team",
+        title: "account",
         url: "#",
       },
       {
-        title: "Billing",
+        title: "preferences",
         url: "#",
       },
       {
-        title: "Limits",
+        title: "",
         url: "#",
       },
     ],

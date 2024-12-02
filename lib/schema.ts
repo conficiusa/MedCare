@@ -1,4 +1,5 @@
 import { string, z } from "zod";
+import { isValidPhoneNumber } from "react-phone-number-input";
 
 const multiSelectSchema = z.object({
   label: z.string(),
@@ -183,6 +184,50 @@ export const CheckoutSchema = z
       path: ["mobileMoneyType"],
     }
   );
+
+//patient onboarding
+
+export const PatientOnboardingSchema1 = z.object({
+  languages: z
+    .array(multiSelectSchema)
+    .min(1, "Please select a language")
+    .max(4, "You can only select up to 4 languages"),
+  gender: z.string().min(1, "Please enter your gender"),
+  phone: z.string(),
+  dob: z
+    .date({
+      required_error: "Please enter your date of birth",
+    })
+    .refine(
+      (date) => date && date <= new Date(),
+      "Please enter a valid date of birth"
+    )
+    .refine(
+      (date) => !date || date >= new Date(1900, 1, 1),
+      "Please enter a valid date of birth"
+    ),
+  role: z.enum(["patient", "doctor"]),
+});
+
+export const PatientOnboardingSchema2 = z.object({
+  region: z.string().min(1, "Please enter your region"),
+  city: z.string().min(1, "Please enter your city/town"),
+  country: z.string().min(1, "Please enter your country"),
+  address_1: z.string(),
+  address_2: z.string().min(1, "Please enter your country"),
+});
+export const PatientOnboardingSchema3 = z.object({
+  conditions: z
+    .array(multiSelectSchema)
+    .max(6, "You can only select up to 6 conditions"),
+  medicalHistory: z
+    .string()
+    .max(900, "Medical history must be less than 900 characters"),
+});
+
+export const patientOnBoardingSchema4 = z.object({
+  verification: z.enum(["not_started", "verifying", "approved", "failed"]),
+});
 
 export const IAppointmentSchema = z
   .object({

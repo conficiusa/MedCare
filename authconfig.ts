@@ -24,7 +24,7 @@ export const authConfig: NextAuthConfig = {
       const role = token?.role as "doctor" | "patient";
       const onboardingLevel = Number(token?.onboarding_level);
       const isProfileCompleted = (role: "doctor" | "patient") =>
-        role === "doctor" ? onboardingLevel === 7 : onboardingLevel === 4;
+        role === "doctor" ? onboardingLevel === 7 : onboardingLevel === 5;
 
       const protectedPaths = [
         "/onboarding",

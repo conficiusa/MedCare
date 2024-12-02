@@ -180,7 +180,7 @@ export const DoctorOnboardStepFour = async (
     onboarding_level: 5,
     doctorInfo: {
       bank: data?.bank,
-      account_name: data?.bank,
+      account_name: data?.account_name,
       rate: data?.rate,
       payment_channel: data?.payment_channel,
       media: data?.media,
@@ -226,7 +226,7 @@ export const DoctorOnboardStepFive = async (
     onboarding_level: 6,
     doctorInfo: {
       bank: user?.doctorInfo?.bank,
-      account_name: user?.doctorInfo?.bank,
+      account_name: user?.doctorInfo?.account_name,
       rate: user?.doctorInfo?.rate,
       payment_channel: user?.doctorInfo?.payment_channel,
       media: user?.doctorInfo?.media,
@@ -272,7 +272,7 @@ export const DoctorOnboardStepSix = async (
     doctorInfo: {
       verification: data?.verification,
       bank: user?.doctorInfo?.bank,
-      account_name: user?.doctorInfo?.bank,
+      account_name: user?.doctorInfo?.account_name,
       rate: user?.doctorInfo?.rate,
       payment_channel: user?.doctorInfo?.payment_channel,
       media: user?.doctorInfo?.media,

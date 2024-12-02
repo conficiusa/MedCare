@@ -19,14 +19,14 @@ const OnboardingSideNav = ({
         </h1>
       </div>
       <nav className="relative">
-        <div className="absolute left-[11px] top-1 bottom-1 w-px bg-muted/50"></div>
-        <div className="space-y-6">
+        <div className="absolute left-[16px] top-1 bottom-1 w-px bg-muted/50"></div>
+        <div className="space-y-10">
           {steps.map((step, index) => (
             <div key={step} className="flex items-start relative z-10">
               <motion.div
-                className={`rounded-full bg-card p-1 ${
+                className={`rounded-full bg-muted p-2 ${
                   currentStep === step
-                    ? "text-primary"
+                    ? "text-white bg-primary"
                     : "text-muted-foreground"
                 }`}
                 animate={{ scale: currentStep === step ? 1.2 : 1 }}
@@ -39,7 +39,6 @@ const OnboardingSideNav = ({
                 {step === "details" && <User className="w-5 h-5" />}
                 {step === "location" && <MapPinHouse className="w-5 h-5" />}
                 {step === "history" && <HeartPulse className="w-5 h-5" />}
-                {step === "profile" && <Camera className="w-5 h-5" />}
                 {step === "welcome" && <Rocket className="w-5 h-5" />}
               </motion.div>
               <div className="ml-3">
@@ -51,7 +50,6 @@ const OnboardingSideNav = ({
                   {step === "details" && "Your details"}
                   {step === "location" && "Your location"}
                   {step === "history" && "Medical history"}
-                  {step === "profile" && "Picture"}
                   {step === "welcome" && "Welcome to Medcare"}
                 </p>
                 <p className="text-sm text-muted-foreground">
@@ -59,7 +57,6 @@ const OnboardingSideNav = ({
                   {step === "location" && "Set your location"}
                   {step === "history" &&
                     "Provide information on your medical history"}
-                  {step === "profile" && "Upload a profile picture"}
                   {step === "welcome" && "Get up and running in 3 minutes"}
                 </p>
               </div>

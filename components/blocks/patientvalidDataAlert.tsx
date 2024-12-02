@@ -18,13 +18,14 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { UpdateSession } from "next-auth/react";
 import { Session } from "next-auth";
-import { Doctor } from "@/lib/definitions";
-import { DoctorOnboardStepSix } from "@/lib/onboarding";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Form } from "../ui/form";
+import { sendEmailAction } from "@/lib/actions";
+import { PatientOnboardStepFour } from "@/lib/onboardingPatientactions";
+import { patientOnboardemail } from "@/lib/emails";
 
-export function OnboardingAlert({
+export function PatientOnboardingAlert({
   update,
   session,
 }: {
@@ -43,7 +44,7 @@ export function OnboardingAlert({
     data: z.output<typeof onDoctorBoardingSchema6>
   ) => {
     try {
-      const res = await DoctorOnboardStepSix(data);
+      const res = await PatientOnboardStepFour(data);
       console.log("res", res);
       if ("data" in res) {
         if (res?.statusCode === 200) {
@@ -58,10 +59,16 @@ export function OnboardingAlert({
               },
             },
           });
-          toast.success("Onboarding request received", {
-            description: "We will verify your data and activate your account",
+          toast.success("Welcome to Medcare-Hub", {
+            description:
+              "Enjoy expert healthcare from the comfort of your home",
           });
-          router.push("/onboarding/doctor/awaiting-verification");
+          await sendEmailAction(
+            session?.user?.email as string,
+            "Welcome to Medcare-Hub",
+            patientOnboardemail(session?.user?.name as string)
+          );
+          router.push("/find-a-doctor");
         }
       } else {
         toast.success("Failed", {
@@ -69,6 +76,7 @@ export function OnboardingAlert({
         });
       }
     } catch (error: any) {
+      console.error(error);
       toast.error(error.message);
     }
   };
@@ -88,10 +96,13 @@ export function OnboardingAlert({
             <AlertDialogHeader>
               <AlertDialogTitle>Disclaimer</AlertDialogTitle>
               <AlertDialogDescription>
-                Providing false or fraudulent information during the onboarding
-                process is strictly prohibited. Such actions may result in the
-                immediate suspension of your account and could lead to legal
-                prosecution under applicable laws.
+                By completing the onboarding process, you confirm that all
+                information provided is accurate and truthful to the best of
+                your knowledge. Medcare Hub will not be held liable for any
+                consequences, mishaps, or legal actions resulting from
+                inaccurate, incomplete, or fraudulent information submitted
+                during onboarding. It is your responsibility to ensure the
+                integrity of the data provided.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

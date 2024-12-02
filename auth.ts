@@ -9,6 +9,7 @@ import bcrypt from "bcrypt";
 import { z } from "zod";
 import User from "@/models/User";
 import connectToDatabase from "@/lib/mongoose";
+import { PatientInfo } from "./lib/definitions";
 
 // Extending the default User type to include 'role'
 declare module "next-auth" {
@@ -23,6 +24,7 @@ declare module "next-auth" {
     gender?: string | undefined;
     image?: string | undefined | null;
     address_1?: string | undefined | null;
+    patientInfo?: PatientInfo;
     address_2?: string | undefined | null;
     doctorInfo?: {
       onboarding_level: number;
@@ -52,6 +54,7 @@ declare module "next-auth" {
       address_1?: string | undefined | null;
       address_2?: string | undefined | null;
       onboarding_level?: string | undefined;
+      patientInfo?: PatientInfo;
       doctorInfo?: {
         onboarding_level: number;
         current_facility: string | undefined;
@@ -80,6 +83,7 @@ declare module "next-auth/jwt" {
     image?: string | undefined | null;
     address_1?: string | undefined | null;
     address_2?: string | undefined | null;
+    patientInfo?: PatientInfo;
     doctorInfo?: {
       onboarding_level: number;
       current_facility: string | undefined;
@@ -158,6 +162,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         token.address_1 = existingOauthUser.address_1 || "";
         token.address_2 = existingOauthUser.address_2 || "";
         token.doctorInfo = existingOauthUser.doctorInfo || undefined;
+        token.patientInfo = existingOauthUser.patientInfo || undefined;
       }
       if (trigger === "update" && session) {
         const updatedUser = await User.findOne({ email: session?.user.email });
@@ -175,6 +180,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
           address_1: updatedUser?.address_1,
           address_2: updatedUser?.address_2,
           doctorInfo: updatedUser?.doctorInfo,
+          patientInfo: updatedUser?.patientInfo,
           onboarding_level: updatedUser?.onboarding_level,
           user: { ...session?.user },
         };
@@ -198,6 +204,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         session.user.doctorInfo = token?.doctorInfo;
         session.user.address_1 = token?.address_1;
         session.user.address_2 = token?.address_2;
+        session.user.patientInfo = token?.patientInfo;
       }
       if (trigger === "update") {
         session.user.role = token?.role;
@@ -213,6 +220,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         session.user.doctorInfo = token?.doctorInfo;
         session.user.address_1 = token?.address_1;
         session.user.address_2 = token?.address_2;
+        session.user.patientInfo = token?.patientInfo;
         return session;
       }
       return session;

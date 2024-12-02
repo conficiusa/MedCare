@@ -2,6 +2,7 @@ import { Model, model, models, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import { IUser } from "@/lib/definitions";
 import { DoctorInfoSchema } from "@/models/Doctor";
+import { PatientInfoSchema } from "./Patient";
 
 // User Schema
 const UserSchema = new Schema<IUser, Model<IUser>>(
@@ -72,7 +73,8 @@ const UserSchema = new Schema<IUser, Model<IUser>>(
     gender: {
       type: String,
       enum: ["Male", "Female"],
-      required: function (this: IUser) {
+      required: function (this: IUser, value: string) {
+        console.log("value", value);
         return this.isNew ? false : true; // Required during onboarding
       },
     },
@@ -87,6 +89,13 @@ const UserSchema = new Schema<IUser, Model<IUser>>(
       default: {},
       required: function () {
         return this.role === "doctor";
+      },
+    },
+    patientInfo: {
+      type: PatientInfoSchema,
+      default: {},
+      required: function () {
+        return this.role === "patient";
       },
     },
   },

@@ -1,4 +1,10 @@
-import { CircleDot, Stethoscope } from "lucide-react";
+import {
+  CircleDot,
+  MessageCircle,
+  MessageSquareDot,
+  Stethoscope,
+  Video,
+} from "lucide-react";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -6,6 +12,7 @@ import { cn, formatCurrency } from "@/lib/utils";
 import Image from "next/image";
 import { DoctorCard } from "@/lib/definitions";
 import Ratings from "@/components/blocks/ratingStars";
+import { TooltipBuilder } from "./tooltipBuilder";
 
 const DocCardOnline = async ({
   className,
@@ -49,6 +56,18 @@ const DocCardOnline = async ({
                     {doctor?.doctorInfo?.specialities?.join(", ")}
                   </span>
                 </p>
+              </div>
+              <div className="-mt-2 flex items-center gap-2 text-muted-foreground">
+                {doctor?.doctorInfo?.media?.includes("chat") && (
+                  <TooltipBuilder content="Available for realtime chat ">
+                    <MessageSquareDot className="w-5 h-5" strokeWidth={1.3} />
+                  </TooltipBuilder>
+                )}
+                {doctor?.doctorInfo?.media?.includes("video") && (
+                  <TooltipBuilder content="Available for video consultation">
+                    <Video className="w-5 h-5" strokeWidth={1.3} />
+                  </TooltipBuilder>
+                )}
               </div>
               {doctor?.doctorInfo?.rating && (
                 <div className="flex items-center gap-2 text-sm">

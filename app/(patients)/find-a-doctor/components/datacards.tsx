@@ -5,8 +5,14 @@ import NotFound from "../not-found";
 
 const Datacards = async () => {
   const data = await fetchDoctorCardData({
+    filter: {
+      "doctorInfo.verification": "approved",
+    },
     limit: 100,
-    sort: { "doctorInfo.rating": -1, "doctorInfo.rate": 1 },
+    sort: {
+      "doctorInfo.rating": -1,
+      "doctorInfo.rate": 1,
+    },
   });
 
   if ("error" in data) {

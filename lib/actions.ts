@@ -11,6 +11,7 @@ import {
   Doctor,
   ErrorReturn,
   ITimeSlot,
+  Patient,
   ReturnType,
   SuccessReturn,
 } from "@/lib//definitions";
@@ -19,6 +20,7 @@ import User from "@/models/User";
 import { isRedirectError } from "next/dist/client/components/redirect";
 import Availability from "@/models/Availability";
 import Appointment from "@/models/Appointment";
+import { sendEmail } from "@/app/api/utils/email";
 
 export async function emailAuth(
   email: z.output<typeof SignInSchema>,
@@ -440,5 +442,104 @@ export const handleDoctorOnboarding = async (
       statusCode: 500,
       type: "Server Error",
     } as ErrorReturn;
+  }
+};
+export const handlePatientOnboarding = async (
+  step: number,
+  data: any,
+  schema: z.ZodSchema,
+  fieldMap: DeepPartial<Patient>
+): Promise<ReturnType> => {
+  const authSession = await auth();
+  if (!authSession) {
+    return {
+      error: "Not Authenticated",
+      message: "You must be logged in to complete onboarding process",
+      status: "fail",
+      statusCode: 401,
+      type: "Authentication Error",
+    } as ErrorReturn;
+  }
+
+  try {
+    // Validate data using the provided schema
+    const parsedData = schema.safeParse(data);
+    if (!parsedData.success) {
+      return {
+        error: parsedData.error.flatten().fieldErrors,
+        message: "Invalid data",
+        status: "fail",
+        statusCode: 400,
+        type: "ValidationError",
+      } as ErrorReturn;
+    }
+
+    // Add onboarding level dynamically
+    const updateData: DeepPartial<Doctor> = {
+      ...fieldMap,
+      onboarding_level: step,
+    };
+
+    const updatedPatient = await User.findByIdAndUpdate(
+      authSession.user.id,
+      updateData,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!updatedPatient) {
+      return {
+        error: "Bad Request",
+        message: "Onboarding process failed",
+        status: "fail",
+        statusCode: 400,
+        type: "Database error",
+      } as ErrorReturn;
+    }
+
+    revalidateTag("user");
+    revalidatePath("/");
+    return {
+      data: updatedPatient.toObject(),
+      message: `Step ${step} completed successfully.`,
+      status: "success",
+      statusCode: 200,
+    } as SuccessReturn;
+  } catch (error: any) {
+    console.log(error);
+    return {
+      error: "A server error occured",
+      message: error.message,
+      status: "fail",
+      statusCode: 500,
+      type: "Server Error",
+    } as ErrorReturn;
+  }
+};
+
+export const sendEmailAction = async (
+  email: string,
+  subject: string,
+  message: string
+): Promise<ReturnType> => {
+  try {
+    await sendEmail(email, subject, message);
+    return {
+      message: "Email sent",
+      status: "success",
+      statusCode: 200,
+      data: {},
+    } as SuccessReturn;
+  } catch (error: any) {
+    console.log(error);
+    return {
+      message: "An unexpected error occurred.",
+      type: "Unexpected Error",
+      status: "fail",
+      statusCode: 500,
+      error: error,
+    };
   }
 };

@@ -15,6 +15,7 @@ import { Doctor } from "@/lib/definitions";
 import { useSession } from "next-auth/react";
 import { Session } from "next-auth";
 import { OnboardingAlert } from "./validDataalert";
+import signInImage from "@/public/signIn.jpg";
 
 export type Step =
   | "details"
@@ -134,11 +135,10 @@ export default function DoctorOnboarding({
             </p>
             <div className="w-full relative aspect-video bg-muted/20 dark:bg-background rounded-lg mb-8 overflow-hidden">
               <Image
-                src="/signIn.jpg"
+                src={signInImage}
                 alt="Onboarding"
-                fill
-                sizes="(min-width: 640px) 640px, 100vw"
                 className="object-cover"
+                priority
               />
             </div>
             <div>

@@ -59,7 +59,7 @@ export const applyCaseInsensitiveRegex = (filter: Record<string, any>) => {
 };
 
 export const formatCurrency = (amount: number) => {
-  return amount.toLocaleString("en-US", {
+  return amount?.toLocaleString("en-US", {
     style: "currency",
     currency: "GHS",
   });

@@ -19,126 +19,96 @@ const names = [
   "Michael Brown",
   "Emily Davis",
   "David Wilson",
-  "Sarah Taylor",
-  "Robert Miller",
-  "Jessica Anderson",
-  "Daniel Thomas",
-  "Laura Lee",
-  "Henry Walker",
-  "Megan Parker",
-  "Nathan Hill",
-  "Rebecca Green",
-  "Oliver Scott",
-  "Sophia Carter",
-  "Ethan Evans",
-  "Grace Hall",
-  "Benjamin Wright",
-  "Isabella King",
+  "Sophia Moore",
+  "Daniel Taylor",
+  "Olivia Anderson",
+  "Matthew Thomas",
+  "Emma Jackson",
+  "Ethan White",
+  "Isabella Harris",
   "James Martin",
-  "Olivia Lewis",
-  "Lucas Young",
-  "Emma Clark",
-  "Alexander Lee",
-  "Charlotte Harris",
-  "Liam Robinson",
-  "Amelia White",
-  "William Rodriguez",
+  "Mia Thompson",
+  "Alexander Garcia",
   "Ava Martinez",
-  "Mason Clark",
-  "Mia Walker",
-  "Logan Allen",
-  "Harper Lopez",
-  "Jackson Perez",
-  "Ella Gonzalez",
-  "Sebastian Rivera",
-  "Scarlett Morgan",
-  "Aiden James",
-  "Evelyn Morris",
-  "Elijah Ward",
-  "Abigail Cooper",
-  "Matthew Reed",
-  "Lily Cook",
-  "Lucas Brooks",
-  "Hannah Gray",
-  "Joseph Flores",
-  "Zoey Ramirez",
-  "Joshua Bennett",
-  "Riley Cruz",
+  "Benjamin Robinson",
+  "Charlotte Clark",
+  "Samuel Rodriguez",
+  "Amelia Lewis",
+  "Joseph Lee",
+  "Abigail Walker",
+  "Andrew Young",
+  "Victoria Hall",
+  "Christopher Allen",
+  "Grace Wright",
+  "Joshua King",
+  "Zoe Scott",
+  "Nathan Green",
+  "Lily Adams",
+  "Ryan Baker",
+  "Chloe Nelson",
+  "Logan Carter",
+  "Hannah Perez",
+  "Jacob Mitchell",
+  "Ella Roberts",
+  "Luke Phillips",
+  "Scarlett Turner",
+  "Henry Evans",
+  "Aria Edwards",
+  "William Collins",
+  "Penelope Parker",
+  "Jackson Stewart",
+  "Riley Sanchez",
+  "Sebastian Morris",
+  "Layla Cox",
+  "Jack Rogers",
+  "Madison Bell",
+  "Aiden Murphy",
+  "Nora Cooper",
 ];
 
 const specializations = [
   "Cardiology",
   "Pediatrics",
-  "Dermatology",
-  "Orthopedics",
   "Neurology",
-  "Oncology",
-  "Gynecology",
-  "Ophthalmology",
+  "Orthopedics",
+  "General Surgery",
+  "Dermatology",
   "Psychiatry",
-  "Gastroenterology",
-  "Anesthesiology",
   "Endocrinology",
+  "Ophthalmology",
+  "Gastroenterology",
+  "Oncology",
   "Nephrology",
-  "Rheumatology",
   "Pulmonology",
-  "Urology",
-  "Hematology",
-  "Immunology",
-  "Radiology",
-  "Pathology",
-  "Allergy and Immunology",
-  "Emergency Medicine",
-  "Family Medicine",
-  "Geriatrics",
-  "Infectious Disease",
-  "Internal Medicine",
-  "Nuclear Medicine",
-  "Plastic Surgery",
-  "Reproductive Endocrinology",
-  "Vascular Surgery",
+  "Rheumatology",
+  "Obstetrics and Gynecology",
 ];
 
 const certifications = [
   "Board Certified in Internal Medicine",
   "Fellowship in Cardiology",
-  "Certified in Pediatric Advanced Life Support",
-  "Diploma in Dermatology",
-  "Certification in Orthopedic Surgery",
-  "Certified Neurologist",
-  "Certified Oncologist",
-  "Board Certified in Obstetrics and Gynecology",
-  "Certified Ophthalmologist",
-  "Certified in Gastroenterology",
-  "Certification in Anesthesiology",
-  "Board Certified Endocrinologist",
-  "Certified Nephrologist",
-  "Fellowship in Rheumatology",
-  "Certified Pulmonologist",
-  "Board Certified Urologist",
-  "Certified Hematologist",
-  "Certified Immunologist",
-  "Certification in Radiology",
-  "Diploma in Pathology",
-  "Board Certified Allergist",
-  "Certified Emergency Medicine Physician",
-  "Board Certified Family Physician",
-  "Geriatric Medicine Certification",
-  "Certified in Infectious Disease",
-  "Board Certified Internist",
-  "Certified in Nuclear Medicine",
-  "Certified Plastic Surgeon",
-  "Board Certified Reproductive Endocrinologist",
-  "Certified Vascular Surgeon",
+  "Pediatric Advanced Life Support (PALS) Certified",
+  "Advanced Cardiovascular Life Support (ACLS) Certified",
+  "Certificate in Neurological Surgery",
+  "Dermatology Specialty Certificate",
+  "Psychiatry Board Certification",
+  "Certificate in Endocrine Disorders",
+  "Ophthalmology Clinical Fellowship",
+  "Gastroenterology Subspecialty Training",
+  "Oncology Research Fellowship",
+  "Nephrology Board Certification",
+  "Certificate in Pulmonary Medicine",
+  "Rheumatology Specialty Certificate",
+  "Obstetrics and Gynecology Fellowship",
 ];
 
 const generateTimeSlots = (date) => {
-  const slotsPerDay = 24; // One slot per hour for a full day
+  const slotsPerDay = 24;
   return Array.from({ length: slotsPerDay }, (_, i) => {
     const startTime = new Date(date);
-    startTime.setUTCHours(i, 0, 0, 0); // Start of the hour
+    startTime.setUTCHours(i, 0, 0, 0);
     const endTime = new Date(startTime);
-    endTime.setHours(startTime.getHours() + 1); // One hour later
+    endTime.setHours(startTime.getHours() + 1);
 
     return {
       slotId: new ObjectId().toString(),
@@ -158,10 +128,10 @@ const generateAvailability = (doctorId) => {
   const today = new Date();
   return Array.from({ length: 7 }, (_, i) => {
     const date = new Date(today);
-    date.setUTCDate(today.getUTCDate() + i); // Increment date by i days
-    const expiresAt = new Date(date); // Clone the date
-    expiresAt.setUTCDate(expiresAt.getUTCDate() + 1); // Move to the next day
-    expiresAt.setUTCHours(0, 0, 0, 0); // Set to 12:00 AM (start of the day)
+    date.setUTCDate(today.getUTCDate() + i);
+    const expiresAt = new Date(date);
+    expiresAt.setUTCDate(expiresAt.getUTCDate() + 1);
+    expiresAt.setUTCHours(0, 0, 0, 0);
 
     return {
       doctorId,
@@ -172,48 +142,10 @@ const generateAvailability = (doctorId) => {
   });
 };
 
-const generateBio = (name, specialization, experience, certifications) => {
-  const introduction = [
-    `With a heart dedicated to healing and a mind committed to knowledge, Dr. ${name} has carved a niche in ${specialization.toLowerCase()} over ${experience}.`,
-    `Known for an exceptional commitment to patient care, Dr. ${name} has over ${experience} specializing in ${specialization.toLowerCase()}, where their expertise shines.`,
-    `Driven by a passion for bettering lives, Dr. ${name} has spent ${experience} excelling in ${specialization.toLowerCase()}.`,
-  ];
-
-  const achievements = [
-    `Holding certifications such as ${certifications.join(
-      ", "
-    )}, Dr. ${name} continually pursues excellence.`,
-    `With esteemed qualifications like ${certifications.join(
-      ", "
-    )}, Dr. ${name} is regarded for skillful and compassionate care.`,
-    `Certified in areas such as ${certifications.join(
-      ", "
-    )}, Dr. ${name} brings trusted and specialized knowledge.`,
-  ];
-
-  const approach = [
-    `A blend of empathy and expertise defines Dr. ${name}'s approach, making each patient feel understood and valued.`,
-    `Patients often commend Dr. ${name} for their comforting demeanor and sharp diagnostic abilities.`,
-    `With a keen eye for detail and a warm bedside manner, Dr. ${name} provides a unique blend of care and accuracy.`,
-  ];
-
-  const passion = [
-    `Outside the clinic, Dr. ${name} is an avid advocate for community health awareness and often hosts workshops to educate the public.`,
-    `An advocate for holistic wellness, Dr. ${name} believes in empowering patients with knowledge for better long-term health.`,
-    `Passionate about advancing medical practices, Dr. ${name} frequently participates in conferences to share insights with peers.`,
-  ];
-
-  const personalTouch = [
-    `When not seeing patients, Dr. ${name} enjoys spending time with family, cooking new recipes, and reading about advances in ${specialization.toLowerCase()}.`,
-    `In personal life, Dr. ${name} loves hiking and finds solace in nature, which inspires a calm approach in their medical practice.`,
-    `Outside the medical realm, Dr. ${name} is a fan of classical music and often volunteers for local health events.`,
-  ];
-
-  return `${introduction[Math.floor(Math.random() * introduction.length)]} ${
-    achievements[Math.floor(Math.random() * achievements.length)]
-  } ${approach[Math.floor(Math.random() * approach.length)]} ${
-    passion[Math.floor(Math.random() * passion.length)]
-  } ${personalTouch[Math.floor(Math.random() * personalTouch.length)]}`;
+const generateMedia = (index) => {
+  if (index % 3 === 0) return ["video"];
+  if (index % 3 === 1) return ["chat"];
+  return ["video", "chat"];
 };
 
 const usersData = names.map((name, index) => ({
@@ -236,22 +168,24 @@ const usersData = names.map((name, index) => ({
       specializations[index % specializations.length],
       specializations[(index + 1) % specializations.length],
     ],
-    experience: `${5 + index} years`,
+    experience: `${5 + index}`,
     rate: 100 + index * 10,
     rating: Math.round((Math.random() * (5 - 1) + 1) * 10) / 10,
     certifications: [
       certifications[index % certifications.length],
       certifications[(index + 1) % certifications.length],
     ],
-    bio: generateBio(
-      name,
-      specializations[index % specializations.length],
-      `${5 + index} years`,
-      [
-        certifications[index % certifications.length],
-        certifications[(index + 1) % certifications.length],
-      ]
-    ),
+    bio: `Dr. ${name} has extensive experience in ${
+      specializations[index % specializations.length]
+    }`,
+    license_number: `LIC-${index + 1000}`,
+    account_name: `${name.split(" ")[0]} ${name.split(" ")[1]}`,
+    account_number: `12345678${index + 1}`,
+    bank: index % 2 === 0 ? "28" : "342",
+    payment_channel: index % 2 === 0 ? "mobile money" : "card",
+    onboarding_level: 7,
+    verification: "approved",
+    media: generateMedia(index),
   },
 }));
 

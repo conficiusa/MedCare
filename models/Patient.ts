@@ -1,8 +1,7 @@
-import { Model, model, models, Schema } from "mongoose";
-import { IPatientProfile } from "@/lib/definitions";
-import { string } from "zod";
+import { Schema } from "mongoose";
+import { IPatientInfo } from "@/lib/definitions";
 
-const PatientSchema = new Schema<IPatientProfile, Model<IPatientProfile>>(
+export const PatientInfoSchema = new Schema<IPatientInfo>(
   {
     conditions: {
       type: [String],
@@ -10,17 +9,8 @@ const PatientSchema = new Schema<IPatientProfile, Model<IPatientProfile>>(
     medicalHistory: {
       type: String,
     },
-    userId: {
-      type: String,
-      ref: "User",
-      required: true, // Ensures that every profile is linked to a user
-    },
   },
   {
-    timestamps: true,
+    _id: false,
   }
 );
-
-const Patient =
-  models.Patient || model<IPatientProfile>("Patient", PatientSchema);
-export default Patient;

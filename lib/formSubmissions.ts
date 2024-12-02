@@ -11,7 +11,6 @@ import { Session } from "next-auth";
 import { toast } from "sonner";
 import PaystackPop from "@paystack/inline-js";
 import { onSuccess } from "@/lib/paymentCallbacks";
-import { findTimeSlotBySlotId } from "./queries";
 
 export const useCreateAccount = () => {
   const onCreateAccount = async (data: z.output<typeof SignUpSchema>) => {

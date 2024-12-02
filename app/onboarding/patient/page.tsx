@@ -1,13 +1,19 @@
-import dynamic from "next/dynamic";
+import Loader from "@/components/blocks/loader";
+import ServerPatientOnboard from "@/components/sections/serverpatientOnboard";
+import { Suspense } from "react";
 
-const OnboardingPatient = dynamic(
-  () => import("@/components/sections/onbaordingPatient"),
-  {
-    ssr: false,
-  }
-);
-const Component = () => {
-  return <OnboardingPatient />;
+const Page = async () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="w-full h-screen flex justify-center items-center">
+          <Loader />
+        </div>
+      }
+    >
+      <ServerPatientOnboard />
+    </Suspense>
+  );
 };
 
-export default Component;
+export default Page;

@@ -18,6 +18,7 @@ export interface IUser extends Document {
   address_1?: string;
   address_2?: string;
   onboarding_level: number;
+  patientInfo?: IPatientInfo; // Optional for doctors
   doctorInfo?: IDoctorInfo; // Optional for patients
 }
 
@@ -51,8 +52,14 @@ export interface IDoctorInfo extends Document {
   payment_channel: string;
   onboarding_level: number;
   media: string[];
-  verification: "not_started" | "verifying" | "approved" |"failed";
+  verification: "not_started" | "verifying" | "approved" | "failed";
 }
+
+export interface IPatientInfo extends Document {
+  conditions?: string[];
+  medicalHistory?: string;
+}
+
 export interface IAppointment extends Document {
   doctor: {
     doctorId: ObjectId;
@@ -157,11 +164,15 @@ export interface DoctorCard {
   image: string;
 }
 
+export interface PatientInfo {
+  conditions?: string[];
+  medicalHistory?: string;
+}
+
 export interface Doctor {
   id: string;
   name: string;
   email: string;
-  password: string;
   image: string;
   role: "doctor" | "patient" | null;
   languages: string[];
@@ -174,6 +185,24 @@ export interface Doctor {
   phone: string;
   gender: string;
   doctorInfo: DoctorInfo;
+  onboarding_level: number;
+}
+export interface Patient {
+  id: string;
+  name: string;
+  email: string;
+  image: string;
+  role: "doctor" | "patient" | null;
+  languages: string[];
+  address_1: string;
+  address_2: string;
+  country: string;
+  region: string;
+  city: string;
+  dob: Date;
+  phone: string;
+  gender: string;
+  patientInfo: PatientInfo;
   onboarding_level: number;
 }
 
