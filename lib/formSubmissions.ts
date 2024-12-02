@@ -23,28 +23,6 @@ export const useCreateAccount = () => {
   };
   return { onCreateAccount };
 };
-export const usePatientOnboard = (
-  session: Session | null,
-  update: UpdateSession
-) => {
-  const onPatientOnboard = async (
-    data: z.output<typeof PatientOnboardingSchema>
-  ) => {
-    try {
-      const preparedData = {
-        ...data,
-        languages: data?.languages?.map((lang) => lang.value),
-        conditions: data?.conditions?.map((condition) => condition.value),
-      };
-      await axios.patch("/api/users/onboarding", preparedData);
-
-      await update({ ...session, user: { ...session?.user, role: "patient" } });
-    } catch (error) {
-      throw error;
-    }
-  };
-  return { onPatientOnboard };
-};
 
 export const VerifyPaystackPayment = async (
   reference: string,
