@@ -3,10 +3,8 @@ import axios from "axios";
 import { z } from "zod";
 import {
   CheckoutSchema,
-  PatientOnboardingSchema,
   SignUpSchema,
 } from "@/lib/schema";
-import { UpdateSession } from "next-auth/react";
 import { Session } from "next-auth";
 import { toast } from "sonner";
 import PaystackPop from "@paystack/inline-js";
