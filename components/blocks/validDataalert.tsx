@@ -35,7 +35,7 @@ export function OnboardingAlert({
   const form = useForm<z.output<typeof onDoctorBoardingSchema6>>({
     resolver: zodResolver(onDoctorBoardingSchema6),
     defaultValues: {
-      verification: "not_started",
+      verification: "verifying",
     },
   });
 
@@ -58,15 +58,10 @@ export function OnboardingAlert({
               },
             },
           });
-          toast.success("Onboarding request received", {
-            description: "We will verify your data and activate your account",
-          });
-          router.push("/onboarding/doctor/awaiting-verification");
+          return res;
         }
       } else {
-        toast.success("Failed", {
-          description: "If the error persist contact us",
-        });
+        return res;
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -74,8 +69,14 @@ export function OnboardingAlert({
   };
 
   const finishUp = async (data: z.output<typeof onDoctorBoardingSchema6>) => {
-    form.setValue("verification", "verifying");
-    await handleSubmit(data);
+    const response = await handleSubmit(data);
+
+    if (response?.status === "fail") {
+      form.setValue("verification", "not_started");
+      throw new Error(response?.message);
+    }
+
+    return response;
   };
   return (
     <Form {...form}>
@@ -97,7 +98,20 @@ export function OnboardingAlert({
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
-                onClick={() => form.handleSubmit(finishUp)()}
+                onClick={form.handleSubmit((data) =>
+                  toast.promise(finishUp(data), {
+                    loading: "Setting up your accounts...",
+                    success: (res) => {
+                      if (res?.statusCode === 200) {
+                        router.push("/dashboard");
+                        return "We will verify your information and get back to you.";
+                      } else {
+                        throw new Error("Failed to complete onboarding");
+                      }
+                    },
+                    error: (error) => error.message,
+                  })
+                )}
                 disabled={form.formState.isSubmitting}
               >
                 I understand

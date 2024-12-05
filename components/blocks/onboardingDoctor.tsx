@@ -48,7 +48,11 @@ export default function DoctorOnboarding({
   );
 
   useEffect(() => {
-    if (user?.onboarding_level && user.onboarding_level > 1) {
+    if (
+      user?.onboarding_level &&
+      user.onboarding_level > 1 &&
+      user?.onboarding_level < 7
+    ) {
       setCurrentStep(steps[user?.onboarding_level - 1]);
     }
   }, [user, steps]);

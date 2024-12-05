@@ -19,7 +19,7 @@ interface Bookingprops {
   searchParams: SearchParams;
 }
 const Booking = async ({ params, searchParams }: Bookingprops) => {
-  const session = auth();
+  const session = await auth();
 
   if (!session) {
     redirect("/sign-in");

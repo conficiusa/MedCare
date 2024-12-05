@@ -39,6 +39,7 @@ export const DoctorOnboardStepOne = async (
     image: user?.image,
     onboarding_level: 2,
     phone: data.phone,
+    gender: data?.gender,
     dob: data.dob,
     languages: data.languages?.map((item) => item.value),
     role: "doctor",

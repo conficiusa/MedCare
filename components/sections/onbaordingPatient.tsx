@@ -25,21 +25,19 @@ export default function PatientOnboarding({
 }) {
   const [currentStep, setCurrentStep] = useState<Step>("details");
   const { update } = useSession();
-  
-  
+
   const steps: Step[] = useMemo(
-    () => [
-      "details",
-      "location",
-      "history",
-      "welcome",
-    ],
+    () => ["details", "location", "history", "welcome"],
     []
   );
 
   const skipableSteps: Step[] = ["history"];
   useEffect(() => {
-    if (user?.onboarding_level && user.onboarding_level > 1) {
+    if (
+      user?.onboarding_level &&
+      user.onboarding_level > 1 &&
+      user?.onboarding_level < 5
+    ) {
       setCurrentStep(steps[user?.onboarding_level - 1]);
     }
   }, [user, steps]);

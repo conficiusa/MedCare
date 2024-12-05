@@ -23,7 +23,6 @@ const Consultation = async ({ params }: Bookingprops) => {
   }
 
   const data = await FetchAppointmentByRoomId(params?.id as string);
-
   if (!data) {
     return (
       <div className="flex justify-center items-center h-[100dvh] flex-col max:sm:px-4">

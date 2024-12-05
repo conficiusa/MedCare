@@ -69,7 +69,7 @@ export const fetchDoctorCardData = async (
 };
 
 //fetch doctor dynamic data
-export const fetchDoctorData = reactcache(async (id: string) => {
+export const fetchDoctorData = async (id: string) => {
   try {
     const authsession = await auth();
     if (!authsession) {
@@ -110,7 +110,7 @@ export const fetchDoctorData = reactcache(async (id: string) => {
     console.error("Could not load Doctor", error.stack || error);
     throw new Error("Error fetching doctor");
   }
-});
+};
 
 export const fetchUserAppointments = reactcache(
   async (id: string, queryOptions: QueryOptions) => {

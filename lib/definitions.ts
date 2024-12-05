@@ -247,6 +247,17 @@ export interface ServiceCard {
   footer: string;
 }
 
+export interface subaccountData {
+  business_name: string;
+  bank_code: string;
+  account_number: string;
+  percentage_charge: number;
+  primary_contact_email: string;
+  primary_contact_name: string;
+  primary_contact_phone: string;
+  settlement_bank: string;
+}
+
 type PaymentMethod = "card" | "bank_transfer" | "mobile_money";
 export type MobileMoneyType = "MTN" | "Vodafone" | "";
 

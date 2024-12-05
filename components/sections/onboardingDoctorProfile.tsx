@@ -20,6 +20,7 @@ import { DoctorOnboardStepOne } from "@/lib/onboarding";
 import { Doctor } from "@/lib/definitions";
 import { UpdateSession } from "next-auth/react";
 import { Session } from "next-auth";
+import { formatPhoneNumber } from "react-phone-number-input";
 
 const OnboardingDoctorProfile = ({
   steps,
@@ -39,14 +40,11 @@ const OnboardingDoctorProfile = ({
   const form = useForm<z.output<typeof onDoctorBoardingSchema1>>({
     resolver: zodResolver(onDoctorBoardingSchema1),
     defaultValues: {
-      dob: user?.dob ? new Date(user?.dob) : undefined,
+      dob: undefined,
       role: "doctor",
-      gender: user?.gender ?? "",
-      languages:
-        user.languages?.length > 0
-          ? languages.filter((lang) => user?.languages?.includes(lang.value))
-          : [],
-      phone: user?.phone ?? "",
+      gender: "",
+      languages: [],
+      phone: "",
     },
   });
   const handleSubmit = async (
@@ -85,6 +83,22 @@ const OnboardingDoctorProfile = ({
     }
   };
 
+  React.useEffect(() => {
+    if (user) {
+      form.setValue("dob", user?.dob ? new Date(user?.dob) : undefined);
+      form.setValue("gender", user?.gender);
+      form.setValue(
+        "languages",
+        user.languages?.length > 0
+          ? languages.filter((lang) => user?.languages?.includes(lang.value))
+          : []
+      );
+      form.setValue("phone", formatPhoneNumber(user?.phone));
+    }
+  }, [user, form, languages]);
+  React.useEffect(() => {
+    console.log(form.watch("phone"));
+  }, [form.watch("phone")]);
   return (
     <div className="w-full">
       <CardHeader className="px-0">
@@ -128,6 +142,7 @@ const OnboardingDoctorProfile = ({
                 placeholder="Phone number"
                 className="duration-300"
                 defaultCountry="GH"
+                initialValueFormat="national"
                 international={false}
               />
             </FormBuilder>

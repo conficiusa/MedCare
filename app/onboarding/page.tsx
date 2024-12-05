@@ -14,6 +14,8 @@ export default async function AccountTypeSelection() {
   if (!authsession) {
     redirect("/sign-in");
   }
+
+  console.log(authsession);
   if (authsession?.user?.role === "doctor") {
     redirect("/onboarding/doctor");
   } else if (authsession?.user?.role === "patient") {

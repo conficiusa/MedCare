@@ -49,6 +49,7 @@ const OnboardingPatientProfile = ({
       phone: user?.phone ?? "",
     },
   });
+ 
   const handleSubmit = async (
     data: z.output<typeof PatientOnboardingSchema1>
   ) => {
@@ -125,6 +126,7 @@ const OnboardingPatientProfile = ({
                 className="duration-300"
                 defaultCountry="GH"
                 international={false}
+                initialValueFormat="national"
               />
             </FormBuilder>
             <DatePickerForm

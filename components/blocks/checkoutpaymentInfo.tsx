@@ -3,9 +3,18 @@ import { CheckoutSchema } from "@/lib/schema";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { Label } from "../ui/label";
 import Image from "next/image";
+import mtn from "@/public/mtn.png";
+import telecel from "@/public/telecel.png";
+import airtel from "@/public/airtel.png";
+import visa from "@/public/visa.webp";
+
+const providersImages = [
+  { src: mtn, alt: "mtn logo" },
+  { src: telecel, alt: "telecel logo" },
+  { src: airtel, alt: "airtel logo" },
+];
+const cardProviders = [{ src: visa, alt: "visa logo" }];
 
 const CheckoutpaymentInfo = ({
   form,
@@ -14,9 +23,6 @@ const CheckoutpaymentInfo = ({
 }) => {
   const handleTabChange = (value: string) => {
     form.setValue("channel", value as "mobile_money" | "card");
-  };
-  const handleMobileMoneyChange = (value: string) => {
-    form.setValue("mobileMoneyType", value as "mtn" | "vod" | "atl");
   };
 
   return (
@@ -31,49 +37,58 @@ const CheckoutpaymentInfo = ({
           <TabsTrigger value="card">Card</TabsTrigger>
         </TabsList>
         <TabsContent value="mobile_money">
-          <RadioGroup
-            defaultValue="mtn"
-            onValueChange={handleMobileMoneyChange}
-          >
-            <div className="flex items-center gap-5 mt-5">
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="mtn" id="mtn" />
-                <Label htmlFor="mtn">
-                  <Image
-                    src="/mtn.png"
-                    alt="mtn logo"
-                    width={80}
-                    height={80}
-                    className="aspect-video object-cover w-auto h-auto"
-                  />
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="telecel" id="telecel" />
-                <Label htmlFor="telecel">
-                  <Image
-                    src="/telecel.png"
-                    alt="telecel logo"
-                    width={80}
-                    height={80}
-                    className="aspect-video object-cover w-[150px] h-[75px] "
-                  />
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="atl" id="airtel" />
-                <Label htmlFor="airtel">
-                  <Image
-                    src="/airtel.png"
-                    alt="airtel logo"
-                    width={80}
-                    height={80}
-                    className="aspect-video object-cover w-[150px] h-[75px] "
-                  />
-                </Label>
-              </div>
-            </div>
-          </RadioGroup>
+          <p className="text-sm border-1 my-2 text-muted-foreground">
+            We support:
+          </p>
+          <div className="flex items-center gap-4">
+            {providersImages.map((provider, index) => (
+              <Image
+                key={index}
+                src={provider.src}
+                alt={provider.alt}
+                width={100}
+                height={100}
+                className="aspect-video object-cover rounded-lg hidden sm:block  h-auto "
+              />
+            ))}
+            {providersImages.map((provider, index) => (
+              <Image
+                key={index}
+                src={provider.src}
+                alt={provider.alt}
+                width={60}
+                height={60}
+                className="aspect-video object-cover rounded-lg hidden max-sm:block  h-auto"
+              />
+            ))}
+          </div>
+        </TabsContent>
+        <TabsContent value="card">
+          <p className="text-sm border-1 my-2 text-muted-foreground">
+            We support:
+          </p>
+          <div>
+            {cardProviders.map((provider, index) => (
+              <Image
+                key={index}
+                src={provider.src}
+                alt={provider.alt}
+                width={100}
+                height={100}
+                className="aspect-video object-cover rounded-lg hidden sm:block  h-auto "
+              />
+            ))}
+            {cardProviders.map((provider, index) => (
+              <Image
+                key={index}
+                src={provider.src}
+                alt={provider.alt}
+                width={60}
+                height={60}
+                className="aspect-video object-cover rounded-lg hidden max-sm:block  h-auto"
+              />
+            ))}
+          </div>
         </TabsContent>
       </Tabs>
     </div>

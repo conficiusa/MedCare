@@ -92,6 +92,7 @@ export const onDoctorBoardingSchema1 = z.object({
     .date({
       required_error: "Please enter your date of birth",
     })
+    .optional()
     .refine(
       (date) => date && date <= new Date(),
       "Please enter a valid date of birth"
@@ -107,7 +108,7 @@ export const onDoctorBoardingSchema2 = z.object({
   city: z.string().min(1, "Please enter your city/town"),
   country: z.string().min(1, "Please enter your country"),
   address_1: z.string(),
-  address_2: z.string().min(1, "Please enter your country"),
+  address_2: z.string(),
 });
 export const onDoctorBoardingSchema3 = z
   .object({
@@ -160,30 +161,16 @@ export const onDoctorBoardingSchema6 = z.object({
   verification: z.enum(["not_started", "verifying", "approved", "failed"]),
 });
 
-export const CheckoutSchema = z
-  .object({
-    fullName: z.string().min(1, "Please enter your full name."),
-    appointment: z.string().min(1, "Invalid appointment id."),
-    email: z
-      .string()
-      .min(1, "please enter your email")
-      .email("Please enter a valid email address."),
-    channel: z.enum(["mobile_money", "card"]),
-    amount: z.number().int().positive("Amount must be greater than zero"),
-    mobileMoneyType: z.enum(["mtn", "atl", "vod"]).optional(),
-  })
-  .refine(
-    (data) => {
-      if (data.channel === "mobile_money" && !data.mobileMoneyType) {
-        return false;
-      }
-      return true;
-    },
-    {
-      message: "Mobile money type is required when the channel is mobile money",
-      path: ["mobileMoneyType"],
-    }
-  );
+export const CheckoutSchema = z.object({
+  fullName: z.string().min(1, "Please enter your full name."),
+  appointment: z.string().min(1, "Invalid appointment id."),
+  email: z
+    .string()
+    .min(1, "please enter your email")
+    .email("Please enter a valid email address."),
+  channel: z.enum(["mobile_money", "card"]),
+  amount: z.number().int().positive("Amount must be greater than zero"),
+});
 
 //patient onboarding
 
@@ -214,8 +201,9 @@ export const PatientOnboardingSchema2 = z.object({
   city: z.string().min(1, "Please enter your city/town"),
   country: z.string().min(1, "Please enter your country"),
   address_1: z.string(),
-  address_2: z.string().min(1, "Please enter your country"),
+  address_2: z.string(),
 });
+
 export const PatientOnboardingSchema3 = z.object({
   conditions: z
     .array(multiSelectSchema)
@@ -264,3 +252,19 @@ export const IAppointmentSchema = z
       path: ["online_medium"],
     }
   );
+
+export const subaccountDataSchema = z.object({
+  bank_code: z.string().min(1, "bank code required"),
+
+  settlement_bank: z.string().min(1, "settlement bank required"),
+
+  account_number: z.string().min(1, "account number required"),
+
+  percentage_charge: z.number().min(1, "percentage charge required"),
+
+  primary_contact_email: z.string().email("valid email required"),
+
+  primary_contact_name: z.string().min(1, "primary contact name required"),
+
+  primary_contact_phone: z.string().min(1, "primary contact phone required"),
+});

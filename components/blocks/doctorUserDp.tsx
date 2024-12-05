@@ -27,36 +27,59 @@ export default async function DoctorUserDp() {
           <AvatarImage src={session?.user?.image ?? undefined} alt={userName} />
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" collisionPadding={20}>
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>Profile</DropdownMenuItem>
-          <Link href="/doctor/dashboard/appointments">
-            <DropdownMenuItem>Dashboard</DropdownMenuItem>
-          </Link>
-          <DropdownMenuItem>Make a complain</DropdownMenuItem>
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>Privacy Policy</DropdownMenuItem>
+      {session?.user?.doctorInfo?.verification !== "approved" ? (
+        <DropdownMenuContent>
+          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <DropdownMenuItem>Make an enquiry</DropdownMenuItem>
+            <DropdownMenuItem>Settings</DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <form
+            action={async () => {
+              "use server";
+              await signOut({ redirectTo: "/" });
+            }}
+          >
+            <button className="relative w-full flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent">
+              logout
+            </button>
+          </form>
+        </DropdownMenuContent>
+      ) : (
+        <DropdownMenuContent className="w-56" collisionPadding={20}>
+          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <Link href="/doctor/dashboard/appointments">
+              <DropdownMenuItem>Dashboard</DropdownMenuItem>
+            </Link>
+            <DropdownMenuItem>Make a complain</DropdownMenuItem>
+            <DropdownMenuItem>Settings</DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem>Privacy Policy</DropdownMenuItem>
 
-          <DropdownMenuItem>Terms of Service</DropdownMenuItem>
-          <DropdownMenuItem>Support</DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <form
-          action={async () => {
-            "use server";
-            await signOut({ redirectTo: "/" });
-          }}
-        >
-          <button className="relative w-full flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent">
-            logout
-          </button>
-        </form>
-      </DropdownMenuContent>
+            <DropdownMenuItem>Terms of Service</DropdownMenuItem>
+            <DropdownMenuItem>Support</DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <form
+            action={async () => {
+              "use server";
+              await signOut({ redirectTo: "/" });
+            }}
+          >
+            <button className="relative w-full flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent">
+              logout
+            </button>
+          </form>
+        </DropdownMenuContent>
+      )}
     </DropdownMenu>
   );
 }
