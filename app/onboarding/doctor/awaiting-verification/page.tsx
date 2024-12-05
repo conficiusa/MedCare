@@ -3,10 +3,12 @@ import { Button } from "@/components/ui/button";
 import { verifyDoctorAccount } from "@/lib/actions";
 import { Clock } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export default function VerificationPage() {
   const { data: authSession } = useSession();
+  const router = useRouter();
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gray-100 dark:bg-background p-4">
       <div className="w-full max-w-md bg-background dark:bg-muted/40 rounded-3xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] p-8">
@@ -41,6 +43,7 @@ export default function VerificationPage() {
                   loading: "Verifying account..",
                   success: (data) => {
                     if (data.status === "success") {
+                      router.push("/doctor/dashboard/appointments");
                       return "Account verified Sucessfully";
                     }
                     throw new Error(data?.message);
