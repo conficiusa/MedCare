@@ -23,7 +23,6 @@ const CheckOutForm = ({ rate, id }: { rate: number; id: string }) => {
       fullName: session?.user?.name || "",
       email: session?.user?.email || "",
       channel: "mobile_money",
-      mobileMoneyType: "mtn",
       amount: rate,
       appointment: id,
     },
