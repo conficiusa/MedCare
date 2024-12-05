@@ -95,10 +95,8 @@ const OnboardingDoctorProfile = ({
       );
       form.setValue("phone", formatPhoneNumber(user?.phone));
     }
-  }, [user, form, languages]);
-  React.useEffect(() => {
-    console.log(form.watch("phone"));
-  }, [form.watch("phone")]);
+  }, [user, form]);
+
   return (
     <div className="w-full">
       <CardHeader className="px-0">

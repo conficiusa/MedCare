@@ -5,7 +5,7 @@ import { Clock } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 
-export default async function VerificationPage() {
+export default function VerificationPage() {
   const { data: authSession } = useSession();
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gray-100 dark:bg-background p-4">
@@ -24,7 +24,7 @@ export default async function VerificationPage() {
           </h1>
 
           <p className="text-gray-500 text-center">
-            We're reviewing your credentials and documentation. Further
+            We&apos;re reviewing your credentials and documentation. Further
             communication will be through your registered email.
           </p>
 
