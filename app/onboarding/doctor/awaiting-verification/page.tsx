@@ -4,11 +4,18 @@ import { verifyDoctorAccount } from "@/lib/actions";
 import { Clock } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { toast } from "sonner";
 
 export default function VerificationPage() {
-  const { data: authSession } = useSession();
+  const { data: authSession, update } = useSession();
   const router = useRouter();
+
+  useEffect(() => {
+    if (!authSession) {
+      router.push("/sign-in");
+    }
+  }, [authSession, router]);
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gray-100 dark:bg-background p-4">
       <div className="w-full max-w-md bg-background dark:bg-muted/40 rounded-3xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] p-8">
@@ -41,8 +48,18 @@ export default function VerificationPage() {
                 verifyDoctorAccount(authSession?.user?.id as string),
                 {
                   loading: "Verifying account..",
-                  success: (data) => {
+                  success: async (data) => {
                     if (data.status === "success") {
+                      await update({
+                        ...authSession,
+                        user: {
+                          ...authSession?.user,
+                          doctorInfo: {
+                            ...authSession?.user?.doctorInfo,
+                            verification: "approved",
+                          },
+                        },
+                      });
                       router.push("/doctor/dashboard/appointments");
                       return "Account verified Sucessfully";
                     }

@@ -12,6 +12,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 import {
   Appointment as AppointmentType,
+  Availability as AvailabilityType,
   Doctor,
   ErrorReturn,
   ITimeSlot,
@@ -552,7 +553,7 @@ export const sendEmailAction = async (
   }
 };
 
-export const verifyDoctorAccount = async (id: string) => {
+export const verifyDoctorAccount = async (id: string): Promise<ReturnType> => {
   try {
     const authSession = await auth();
     if (!authSession) {
@@ -690,6 +691,57 @@ export const createSubaccountAction = async (
     };
   } catch (error: any) {
     console.error(error);
+    return {
+      error: error,
+      message: error?.message || "An unexpected error occurred",
+      status: "fail",
+      statusCode: 500,
+      type: "Server Error",
+    } as ErrorReturn;
+  }
+};
+
+export const createAvailability = async (
+  data: AvailabilityType
+): Promise<ReturnType> => {
+  const authSession = await auth();
+  if (!authSession) {
+    return {
+      error: "Not Authenticated",
+      message: "You must be logged in to create availability",
+      status: "fail",
+      statusCode: 401,
+      type: "Authentication Error",
+    } as ErrorReturn;
+  }
+  try {
+    await connectToDatabase();
+    const existingAvailability = await Availability.findOne({
+      doctorId: data.doctorId,
+      date: data.date,
+    });
+    if (existingAvailability) {
+      existingAvailability.timeSlots = existingAvailability.timeSlots.concat(
+        data.timeSlots
+      );
+      await existingAvailability.save();
+      return {
+        status: "success",
+        message: "Availability updated successfully",
+        statusCode: 200,
+        data: existingAvailability,
+      } as SuccessReturn;
+    } else {
+      const newAvailability = new Availability(data);
+      await newAvailability.save();
+      return {
+        status: "success",
+        message: "Availability created successfully",
+        statusCode: 201,
+        data: newAvailability,
+      } as SuccessReturn;
+    }
+  } catch (error: any) {
     return {
       error: error,
       message: error?.message || "An unexpected error occurred",

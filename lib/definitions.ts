@@ -104,12 +104,6 @@ export interface ITimeSlot {
   endTime: string; // End time in "HH:mm" format
   isBooked: boolean; // Booking status
   patientId?: Types.ObjectId | null; // Patient who booked the slot, if any
-  cancellationReason?: string; // Reason if the slot was canceled
-  rescheduledTo?: {
-    date: Date;
-    startTime: string;
-    endTime: string;
-  } | null; // New slot if this one was rescheduled
   createdAt: Date;
   updatedAt: Date;
 }
@@ -138,6 +132,13 @@ export interface IAvailability extends Document {
 ////////////Application definitions///////////
 ////////////Application definitions///////////
 ////////////Application definitions///////////
+
+export interface Availability {
+  doctorId: string;
+  date: Date;
+  timeSlots: ITimeSlot[];
+  expiresAt: Date; // TTL field to automatically delete past slots
+}
 
 export interface DoctorInfo {
   current_facility?: string;

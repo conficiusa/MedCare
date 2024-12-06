@@ -268,3 +268,21 @@ export const subaccountDataSchema = z.object({
 
   primary_contact_phone: z.string().min(1, "primary contact phone required"),
 });
+
+const timeSlotSchema = z.object({
+  startTime: z.string().min(1, "Start time is required."),
+  endTime: z.string().min(1, "End time is required."),
+  isBooked: z.boolean().optional(),
+  patientId: z.string().nullable().optional(),
+});
+
+export const availabilitySchema = z.object({
+  doctorId: z
+    .string()
+    .regex(/^[a-fA-F0-9]{24}$/, "Invalid doctorId")
+    .min(1, "Doctor ID is required."),
+  date: z.date(),
+  timeSlots: z
+    .array(timeSlotSchema)
+    .min(1, "At least one time slot is required."),
+});

@@ -4,20 +4,14 @@ import mongoose, { Schema } from "mongoose";
 // Define the schema with the updated time slot structure
 const timeSlotSchema = new Schema<ITimeSlot>(
   {
-    slotId: { type: String, required: true }, // Unique ID for each slot
+    slotId: {
+      type: String,
+      default: () => new mongoose.Types.ObjectId().toString(),
+    },
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
     isBooked: { type: Boolean, default: false },
     patientId: { type: String, ref: "Patient", default: null },
-    cancellationReason: { type: String, default: null },
-    rescheduledTo: {
-      type: {
-        date: Date,
-        startTime: String,
-        endTime: String,
-      },
-      default: null,
-    },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
   },
