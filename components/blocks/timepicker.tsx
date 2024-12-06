@@ -57,23 +57,66 @@ export function TimePicker({
   };
 
   const incrementHours = () => {
-    const newHours = (hours + 1) % (is24Hour ? 24 : 12);
-    handleTimeChange(newHours || (is24Hour ? 0 : 12), minutes);
+    let newHours = (hours + 1) % (is24Hour ? 24 : 12);
+    if (!is24Hour) {
+      if (newHours === 0) newHours = 12; // Handle 12-hour format wrapping
+      const newMeridiem =
+        newHours === 12 ? (meridiem === "AM" ? "PM" : "AM") : meridiem;
+      handleTimeChange(newHours, minutes, newMeridiem);
+    } else {
+      handleTimeChange(newHours, minutes);
+    }
   };
 
   const decrementHours = () => {
-    const newHours = (hours - 1 + (is24Hour ? 24 : 12)) % (is24Hour ? 24 : 12);
-    handleTimeChange(newHours || (is24Hour ? 23 : 12), minutes);
+    let newHours = (hours - 1 + (is24Hour ? 24 : 12)) % (is24Hour ? 24 : 12);
+    if (!is24Hour) {
+      if (newHours === 0) newHours = 12; // Handle 12-hour format wrapping
+      const newMeridiem =
+        newHours === 11 ? (meridiem === "AM" ? "PM" : "AM") : meridiem;
+      handleTimeChange(newHours, minutes, newMeridiem);
+    } else {
+      handleTimeChange(newHours, minutes);
+    }
   };
-
   const incrementMinutes = () => {
-    const newMinutes = (minutes + 1) % 60;
-    handleTimeChange(hours, newMinutes);
+    let newMinutes = (minutes + 1) % 60;
+    let newHours = hours;
+    let newMeridiem = meridiem;
+
+    if (newMinutes === 0) {
+      // Handle hour increment when minutes wrap to 0
+      newHours = (hours + 1) % (is24Hour ? 24 : 12);
+      if (!is24Hour) {
+        if (newHours === 0) newHours = 12; // Handle wrapping to 12-hour format
+        if (newHours === 12) {
+          // Toggle meridiem when crossing 12
+          newMeridiem = meridiem === "AM" ? "PM" : "AM";
+        }
+      }
+    }
+
+    handleTimeChange(newHours, newMinutes, newMeridiem as "AM" | "PM");
   };
 
   const decrementMinutes = () => {
-    const newMinutes = (minutes - 1 + 60) % 60;
-    handleTimeChange(hours, newMinutes);
+    let newMinutes = (minutes - 1 + 60) % 60;
+    let newHours = hours;
+    let newMeridiem = meridiem;
+
+    if (newMinutes === 59) {
+      // Handle hour decrement when minutes wrap to 59
+      newHours = (hours - 1 + (is24Hour ? 24 : 12)) % (is24Hour ? 24 : 12);
+      if (!is24Hour) {
+        if (newHours === 0) newHours = 12; // Handle wrapping to 12-hour format
+        if (newHours === 11) {
+          // Toggle meridiem when crossing 12
+          newMeridiem = meridiem === "AM" ? "PM" : "AM";
+        }
+      }
+    }
+
+    handleTimeChange(newHours, newMinutes, newMeridiem as "AM" | "PM");
   };
 
   const toggleMeridiem = () => {

@@ -20,10 +20,10 @@ const timeSlotSchema = new Schema<ITimeSlot>(
 
 const availabilitySchema = new Schema<IAvailability>(
   {
-    doctorId: { type: Schema.Types.ObjectId, ref: "Doctor", required: true },
+    doctorId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     date: { type: Date, required: true },
     timeSlots: { type: [timeSlotSchema], required: true },
-    expiresAt: { type: Date, required: true }, // TTL expiration field
+    expiresAt: { type: Date }, // TTL expiration field
   },
   {
     timestamps: true,
@@ -65,3 +65,5 @@ const Availability =
   mongoose.model<IAvailability>("Availability", availabilitySchema);
 
 export default Availability;
+
+

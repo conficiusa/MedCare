@@ -2,6 +2,14 @@
 import { auth, signIn } from "@/auth";
 import { AuthError } from "next-auth";
 import {
+  isBefore,
+  isAfter,
+  differenceInMinutes,
+  parseISO,
+  isEqual,
+} from "date-fns";
+import {
+  availabilitySchema,
   IAppointmentSchema,
   SignInSchema,
   subaccountDataSchema,
@@ -12,7 +20,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 import {
   Appointment as AppointmentType,
-  Availability as AvailabilityType,
+  AvailabilityType,
   Doctor,
   ErrorReturn,
   ITimeSlot,
@@ -373,7 +381,7 @@ const markTimeSlotAsBooked = async (
   }
 };
 
-type DeepPartial<T> = {
+export type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
 };
 // Generic onboarding handler
@@ -702,7 +710,7 @@ export const createSubaccountAction = async (
 };
 
 export const createAvailability = async (
-  data: AvailabilityType
+  data: DeepPartial<AvailabilityType>
 ): Promise<ReturnType> => {
   const authSession = await auth();
   if (!authSession) {
@@ -714,37 +722,154 @@ export const createAvailability = async (
       type: "Authentication Error",
     } as ErrorReturn;
   }
+
   try {
     await connectToDatabase();
+
+    const parsedData = availabilitySchema.safeParse(data);
+    if (!parsedData?.success) {
+      console.error(parsedData.error.flatten().fieldErrors);
+      return {
+        error: parsedData.error.flatten().fieldErrors,
+        message: "Invalid data",
+        status: "fail",
+        statusCode: 400,
+        type: "ValidationError",
+      } as ErrorReturn;
+    }
+
+    const { timeSlots, date } = data;
+    if (!timeSlots || timeSlots.length === 0) {
+      return {
+        error: "Time slots are required",
+        message: "No time slots provided",
+        status: "fail",
+        statusCode: 400,
+        type: "ValidationError",
+      } as ErrorReturn;
+    }
+
+    const startTime = parseISO(timeSlots[0]?.startTime as string);
+    const endTime = parseISO(timeSlots[0]?.endTime as string);
+
+    // Validate slot duration
+    const slotDuration = differenceInMinutes(endTime, startTime);
+    if (slotDuration < 15 || slotDuration > 60) {
+      return {
+        error: "Invalid slot duration",
+        message: "Time slots must be between 15 minutes and 1 hour",
+        status: "fail",
+        statusCode: 400,
+        type: "ValidationError",
+      } as ErrorReturn;
+    }
+
+    // Check for overlapping slots
     const existingAvailability = await Availability.findOne({
-      doctorId: data.doctorId,
-      date: data.date,
+      doctorId: authSession?.user?.id,
+      date,
     });
+
     if (existingAvailability) {
-      existingAvailability.timeSlots = existingAvailability.timeSlots.concat(
-        data.timeSlots
-      );
+      for (const existingSlot of existingAvailability.timeSlots) {
+        const existingStart = parseISO(existingSlot.startTime);
+        const existingEnd = parseISO(existingSlot.endTime);
+
+        const startsWithin =
+          isAfter(startTime, existingStart) && isBefore(startTime, existingEnd);
+        const endsWithin =
+          isAfter(endTime, existingStart) && isBefore(endTime, existingEnd);
+        const encapsulates =
+          isBefore(startTime, existingStart) && isAfter(endTime, existingEnd);
+        const exactMatch =
+          isEqual(startTime, existingStart) && isEqual(endTime, existingEnd);
+
+        if (startsWithin || endsWithin || encapsulates || exactMatch) {
+          return {
+            error: "Overlapping time slots",
+            message: "The selected period overlaps with an existing slot",
+            status: "fail",
+            statusCode: 400,
+            type: "ValidationError",
+          } as ErrorReturn;
+        }
+      }
+
+      // Append new slot to existing slots
+      existingAvailability.timeSlots =
+        existingAvailability.timeSlots.concat(timeSlots);
       await existingAvailability.save();
+      revalidateTag("availability");
       return {
         status: "success",
         message: "Availability updated successfully",
         statusCode: 200,
-        data: existingAvailability,
+        data: existingAvailability.toObject(),
       } as SuccessReturn;
     } else {
+      // Create new availability
       const newAvailability = new Availability(data);
       await newAvailability.save();
+      revalidateTag("availability");
       return {
         status: "success",
         message: "Availability created successfully",
         statusCode: 201,
-        data: newAvailability,
+        data: newAvailability.toObject(),
       } as SuccessReturn;
     }
   } catch (error: any) {
+    console.log(error);
     return {
-      error: error,
+      error: error?.message,
       message: error?.message || "An unexpected error occurred",
+      status: "fail",
+      statusCode: 500,
+      type: "Server Error",
+    } as ErrorReturn;
+  }
+};
+export const deleteSlot = async (slotId: string): Promise<ReturnType> => {
+  const authSession = await auth();
+  if (!authSession) {
+    return {
+      error: "Not Authenticated",
+      message: "You must be logged in to create availability",
+      status: "fail",
+      statusCode: 401,
+      type: "Authentication Error",
+    } as ErrorReturn;
+  }
+
+  try {
+    await connectToDatabase();
+    const availability = await Availability.findOne({
+      "timeSlots.slotId": slotId,
+    });
+    if (!availability) {
+      return {
+        error: "Slot not found",
+        message: "The slot you are trying to delete does not exist",
+        status: "fail",
+        statusCode: 404,
+        type: "Not Found",
+      } as ErrorReturn;
+    }
+    availability.timeSlots = availability.timeSlots.filter(
+      (slot: ITimeSlot) => slot.slotId !== slotId
+    );
+    await availability.save();
+    revalidateTag("availability");
+    return {
+      status: "success",
+      message: "Slot deleted successfully",
+      statusCode: 203,
+    } as SuccessReturn;
+  } catch (error: any) {
+    console.error(error);
+    return {
+      error: error?.message,
+      message: "An unexpected error occurred",
       status: "fail",
       statusCode: 500,
       type: "Server Error",

@@ -60,7 +60,7 @@ export default function VerificationPage() {
                           },
                         },
                       });
-                      router.push("/doctor/dashboard/appointments");
+                      router.push("/doctor/dashboard/schedule");
                       return "Account verified Sucessfully";
                     }
                     throw new Error(data?.message);

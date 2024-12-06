@@ -266,3 +266,45 @@ export const fetchUserData = nextcache(
   ["user"],
   { revalidate: 3600, tags: ["user"] }
 );
+
+export const fetchDoctorAvailibility = nextcache(
+  async (id: string): Promise<ReturnType> => {
+    try {
+      await connectToDatabase();
+      const availabilities = await Availability.find({
+        doctorId: new mongoose.Types.ObjectId(id),
+      });
+
+      if (!availabilities || availabilities.length === 0) {
+        return {
+          error: "No open slots found",
+          message: "No open slots found",
+          status: "fail",
+          statusCode: 404,
+          type: "Not found",
+        };
+      }
+
+      return {
+        data: availabilities.map((doc) => ({
+          id: doc.id.toString(),
+          doctorId: doc.doctorId.toString(),
+          ...doc.toObject(),
+        })),
+        statusCode: 200,
+        message: "Load success",
+        status: "success",
+      };
+    } catch (error: any) {
+      return {
+        error: "Failed to fetch open slots",
+        message: error?.message,
+        status: "fail",
+        statusCode: 500,
+        type: "Server error",
+      };
+    }
+  },
+  ["availability"],
+  { revalidate: 3600, tags: ["availability"] }
+);

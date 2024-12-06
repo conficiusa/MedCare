@@ -12,16 +12,16 @@ export const buildDoctorAggregationPipeline = (
         as: "availability",
       },
     },
-    // {
-    //   $match: {
-    //     availability: {
-    //       $elemMatch: {
-    //         date: { $gte: new Date() }, // Only future dates
-    //         timeSlots: { $exists: true, $ne: [] }, // Non-empty time slots
-    //       },
-    //     },
-    //   },
-    // },
+    {
+      $match: {
+        availability: {
+          $elemMatch: {
+            date: { $gte: new Date() }, // Only future dates
+            timeSlots: { $exists: true, $ne: [] }, // Non-empty time slots
+          },
+        },
+      },
+    },
     {
       $project: {
         name: 1,

@@ -18,7 +18,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { UpdateSession } from "next-auth/react";
 import { Session } from "next-auth";
-import { Doctor } from "@/lib/definitions";
 import { DoctorOnboardStepSix } from "@/lib/onboarding";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";

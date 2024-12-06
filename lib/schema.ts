@@ -281,7 +281,7 @@ export const availabilitySchema = z.object({
     .string()
     .regex(/^[a-fA-F0-9]{24}$/, "Invalid doctorId")
     .min(1, "Doctor ID is required."),
-  date: z.date(),
+  date: z.string().min(1, "Date is required."),
   timeSlots: z
     .array(timeSlotSchema)
     .min(1, "At least one time slot is required."),
