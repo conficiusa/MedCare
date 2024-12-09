@@ -273,7 +273,7 @@ export const fetchDoctorAvailibility = nextcache(
       await connectToDatabase();
       const availabilities = await Availability.find({
         doctorId: new mongoose.Types.ObjectId(id),
-      });
+      }).sort({ date: 1 });
 
       if (!availabilities || availabilities.length === 0) {
         return {

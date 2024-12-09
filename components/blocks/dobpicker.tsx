@@ -65,6 +65,9 @@ const CalenderDatePicker = ({
                   disabled={(date) =>
                     date > new Date() || date < new Date("1900-01-01")
                   }
+                  classNames={{
+                    caption_label:"hidden",
+                  }}
                 />
               </PopoverContent>
             </Popover>

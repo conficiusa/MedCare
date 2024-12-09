@@ -858,7 +858,15 @@ export const deleteSlot = async (slotId: string): Promise<ReturnType> => {
     availability.timeSlots = availability.timeSlots.filter(
       (slot: ITimeSlot) => slot.slotId !== slotId
     );
-    await availability.save();
+
+    if (availability.timeSlots.length === 0) {
+      // Delete the availability if no timeslots remain
+      await Availability.deleteOne({ _id: availability._id });
+    } else {
+      // Save the updated availability
+      await availability.save();
+    }
+
     revalidateTag("availability");
     return {
       status: "success",

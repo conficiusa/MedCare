@@ -5,7 +5,7 @@ const AboutDoctor = ({ doctor }: { doctor: Doctor }) => {
     <div className="grid gap-5 text-sm max-w-4xl py-4">
       <p>{doctor?.doctorInfo?.bio}</p>
       <div>
-        <ul className="flex gap-10 items-center text-sm mt-4">
+        <ul className="flex max-sm:flex-col gap-10 sm:items-center text-sm mt-4">
           <li className="flex flex-col justify-center gap-2">
             <p className="font-semibold">Specialities</p>
             <p>{doctor?.doctorInfo?.specialities?.join(", ")}</p>

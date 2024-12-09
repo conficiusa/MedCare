@@ -115,13 +115,54 @@ const generateTimeSlots = (date) => {
       startTime: startTime.toISOString(),
       endTime: endTime.toISOString(),
       isBooked: false,
-      patientId: null,
-      cancellationReason: null,
-      rescheduledTo: null,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
   });
+};
+
+const generateBio = (name, specialization, experience, certifications) => {
+  const introduction = [
+    `With a heart dedicated to healing and a mind committed to knowledge, Dr. ${name} has carved a niche in ${specialization.toLowerCase()} over ${experience}.,
+    Known for an exceptional commitment to patient care, Dr. ${name} has over ${experience} specializing in ${specialization.toLowerCase()}, where their expertise shines.,
+    Driven by a passion for bettering lives, Dr. ${name} has spent ${experience} excelling in ${specialization.toLowerCase()}.`,
+  ];
+
+  const achievements = [
+    ` Holding certifications such as ${certifications.join(
+      ", "
+    )}, Dr. ${name} continually pursues excellence.,
+    With esteemed qualifications like ${certifications.join(
+      ", "
+    )}, Dr. ${name} is regarded for skillful and compassionate care.,
+    Certified in areas such as ${certifications.join(
+      ", "
+    )}, Dr. ${name} brings trusted and specialized knowledge.`,
+  ];
+
+  const approach = [
+    `A blend of empathy and expertise defines Dr. ${name}'s approach, making each patient feel understood and valued.,
+    Patients often commend Dr. ${name} for their comforting demeanor and sharp diagnostic abilities.,
+    With a keen eye for detail and a warm bedside manner, Dr. ${name} provides a unique blend of care and accuracy.`,
+  ];
+
+  const passion = [
+    ` Outside the clinic, Dr. ${name} is an avid advocate for community health awareness and often hosts workshops to educate the public.,
+    An advocate for holistic wellness, Dr. ${name} believes in empowering patients with knowledge for better long-term health.,
+    Passionate about advancing medical practices, Dr. ${name} frequently participates in conferences to share insights with peers.`,
+  ];
+
+  const personalTouch = [
+    `When not seeing patients, Dr. ${name} enjoys spending time with family, cooking new recipes, and reading about advances in ${specialization.toLowerCase()}.,
+    In personal life, Dr. ${name} loves hiking and finds solace in nature, which inspires a calm approach in their medical practice.,
+    Outside the medical realm, Dr. ${name} is a fan of classical music and often volunteers for local health events.`,
+  ];
+
+  return `${introduction[Math.floor(Math.random() * introduction.length)]} ${
+    achievements[Math.floor(Math.random() * achievements.length)]
+  } ${approach[Math.floor(Math.random() * approach.length)]} ${
+    passion[Math.floor(Math.random() * passion.length)]
+  } ${personalTouch[Math.floor(Math.random() * personalTouch.length)]}`;
 };
 
 const generateAvailability = (doctorId) => {
@@ -148,46 +189,47 @@ const generateMedia = (index) => {
   return ["video", "chat"];
 };
 
-const usersData = names.map((name, index) => ({
-  name: name,
-  email: `${name.split(" ").join("").toLowerCase()}@example.com`,
-  password: bcrypt.hashSync("password123", 12),
-  role: "doctor",
-  languages: ["English", index % 2 === 0 ? "French" : "Spanish"],
-  country: "Ghana",
-  region: index % 2 === 0 ? "Northern Region" : "Southern Region",
-  dob: new Date(1985, 1, index + 1),
-  city: index % 3 === 0 ? "Tamale" : index % 3 === 1 ? "Accra" : "Kumasi",
-  image: index % 2 === 0 ? sampleImageUrl : sampleImageTwoUrl,
-  gender: index % 2 === 0 ? "Male" : "Female",
-  phone: `+23355500000${index + 1}`,
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  doctorInfo: {
-    specialities: [
-      specializations[index % specializations.length],
-      specializations[(index + 1) % specializations.length],
-    ],
-    experience: `${5 + index}`,
-    rate: 100 + index * 10,
-    rating: Math.round((Math.random() * (5 - 1) + 1) * 10) / 10,
-    certifications: [
-      certifications[index % certifications.length],
-      certifications[(index + 1) % certifications.length],
-    ],
-    bio: `Dr. ${name} has extensive experience in ${
-      specializations[index % specializations.length]
-    }`,
-    license_number: `LIC-${index + 1000}`,
-    account_name: `${name.split(" ")[0]} ${name.split(" ")[1]}`,
-    account_number: `12345678${index + 1}`,
-    bank: index % 2 === 0 ? "28" : "342",
-    payment_channel: index % 2 === 0 ? "mobile money" : "card",
-    onboarding_level: 7,
-    verification: "approved",
-    media: generateMedia(index),
-  },
-}));
+const usersData = names.map((name, index) => {
+  const specialization1 = specializations[index % specializations.length];
+  const specialization2 = specializations[(index + 1) % specializations.length];
+  const certification1 = certifications[index % certifications.length];
+  const certification2 = certifications[(index + 1) % certifications.length];
+
+  return {
+    name: name,
+    email: `${name.split(" ").join("").toLowerCase()}${Math.floor(
+      Math.random() * 10000
+    )}@example.com`,
+    password: bcrypt.hashSync("password123", 12),
+    role: "doctor",
+    languages: ["English", index % 2 === 0 ? "French" : "Spanish"],
+    country: "Ghana",
+    region: index % 2 === 0 ? "Northern Region" : "Southern Region",
+    dob: new Date(1985, 1, index + 1),
+    city: index % 3 === 0 ? "Tamale" : index % 3 === 1 ? "Accra" : "Kumasi",
+    image: index % 2 === 0 ? sampleImageUrl : sampleImageTwoUrl,
+    gender: index % 2 === 0 ? "Male" : "Female",
+    phone: `+233555000${Math.floor(100 + index)}`,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    doctorInfo: {
+      specialities: [specialization1, specialization2],
+      experience: `${5 + index}`,
+      rate: 100 + index * 10,
+      rating: Math.round((Math.random() * (5 - 1) + 1) * 10) / 10,
+      certifications: [certification1, certification2],
+      bio: `Dr. ${name} specializes in ${specialization1} and has demonstrated excellence in their field. Patients commend Dr. ${name} for their dedication, expertise, and ability to build lasting patient relationships. They are certified in ${certification1} and ${certification2}, continually advancing healthcare excellence.`,
+      license_number: `LIC-${Math.floor(1000 + index * 3)}`,
+      account_name: `${name.split(" ")[0]} ${name.split(" ")[1]}`,
+      account_number: `${Math.floor(12345678 + index * 101)}`,
+      bank: index % 2 === 0 ? "28" : "342",
+      payment_channel: index % 2 === 0 ? "mobile money" : "card",
+      onboarding_level: 7,
+      verification: "approved",
+      media: generateMedia(index),
+    },
+  };
+});
 
 async function seedUsersAndProfiles() {
   try {

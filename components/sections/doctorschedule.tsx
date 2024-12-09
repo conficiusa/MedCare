@@ -64,7 +64,6 @@ export default function Schedule({
       setEndTime(updatedEndTime);
     }
   }, [selectedDate]);
-  console.log(data);
 
   const addSlot = async () => {
     const availability: DeepPartial<AvailabilityType> = {
@@ -77,8 +76,7 @@ export default function Schedule({
         },
       ],
     };
-    console.log("sel", selectedDate);
-    console.log("avail", availability);
+
     const response = await createAvailability(availability);
     return response;
   };
@@ -103,6 +101,7 @@ export default function Schedule({
               selected={selectedDate}
               onSelect={setSelectedDate}
               className="rounded-md border w-full"
+              disabled={(date) => date < new Date()}
               classNames={{
                 months:
                   "flex w-full flex-col sm:flex-row space-y-6 sm:space-x-4 sm:space-y-0 flex-1",

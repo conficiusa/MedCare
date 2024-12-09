@@ -52,11 +52,7 @@ export function PatientOnboardingAlert({
             ...session,
             user: {
               ...session.user,
-              doctorInfo: {
-                ...session?.user?.doctorInfo,
-                onboarding_level: res?.data?.doctorInfo?.onboarding_level,
-                verification: res?.data?.doctorInfo?.onboarding_level,
-              },
+              onboarding_level: res?.data?.onboarding_level,
             },
           });
           toast.success("Welcome to Medcare-Hub", {

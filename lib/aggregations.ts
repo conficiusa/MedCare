@@ -3,7 +3,7 @@ export const buildDoctorAggregationPipeline = (
   options: { sort?: Record<string, 1 | -1>; limit?: number; page?: number }
 ) => {
   const pipeline: any[] = [
-    { $match: filter }, // Apply the filter
+    { $match: filter }, // Apply the initial filter
     {
       $lookup: {
         from: "availabilities", // Collection name for availabilities
@@ -12,14 +12,20 @@ export const buildDoctorAggregationPipeline = (
         as: "availability",
       },
     },
+    { $unwind: "$availability" }, // Unwind the availability array
     {
       $match: {
-        availability: {
-          $elemMatch: {
-            date: { $gte: new Date() }, // Only future dates
-            timeSlots: { $exists: true, $ne: [] }, // Non-empty time slots
-          },
-        },
+        "availability.date": { $gte: new Date() }, // Only future dates
+        "availability.timeSlots": { $exists: true, $ne: [] }, // Non-empty time slots
+      },
+    },
+    {
+      $group: {
+        _id: "$_id", // Regroup by doctor ID
+        name: { $first: "$name" },
+        image: { $first: "$image" },
+        doctorInfo: { $first: "$doctorInfo" },
+        availability: { $push: "$availability" },
       },
     },
     {
@@ -27,6 +33,7 @@ export const buildDoctorAggregationPipeline = (
         name: 1,
         image: 1,
         doctorInfo: 1,
+        availability: 1, // Include grouped availability if needed
       },
     },
   ];

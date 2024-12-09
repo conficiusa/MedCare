@@ -90,3 +90,96 @@ export const patientOnboardemail = (name: string) => {
 </html>
 `;
 };
+
+export const doctorAppointmentEmail = (
+  doctorName: string,
+  patientName: string,
+  appointmentDate: string,
+  appointmentTime: string
+) => {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appointment Notification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      background-color: #4CAF50;
+      color: #ffffff;
+      padding: 20px;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .content {
+      padding: 20px;
+    }
+    .content p {
+      margin: 0 0 10px;
+    }
+    .content .details {
+      background-color: #f4f7f6;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+    .content .details p {
+      margin: 5px 0;
+    }
+    .footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      background-color: #f9f9f9;
+      color: #777;
+    }
+    .footer a {
+      color: #4CAF50;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header">
+      <h1>New Appointment Booked</h1>
+    </div>
+    <div class="content">
+      <p>Dear Dr. ${doctorName},</p>
+      <p>We are pleased to inform you that a new appointment has been booked. Please find the details below:</p>
+      <div class="details">
+        <p><strong>Patient Name:</strong> ${patientName}</p>
+        <p><strong>Appointment Date:</strong> ${appointmentDate}</p>
+        <p><strong>Time:</strong> ${appointmentTime}</p>
+      </div>
+      <p>If need to reschedule this appointment, please do so in your dashboard at least 10 minutes before the appointment time.</p>
+      <p>Thank you for being a valued partner in providing quality healthcare services.</p>
+    </div>
+    <div class="footer">
+      <p>MedCare Hub &copy; 2024</p>
+      <p><a href="https://medcare-hub.vercel.app/doctor/dashboard/appointments">Visit your dashboard</a> to view more details.</p>
+    </div>
+  </div>
+</body>
+</html>`;
+};
