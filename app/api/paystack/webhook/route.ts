@@ -5,6 +5,7 @@ import { handleSuccessfulPayment } from "@/app/api/utils/handlepaymentsucess";
 import { sendEmail } from "../../utils/email";
 import moment from "moment";
 import { ErrorReturn, SuccessReturn } from "@/lib/definitions";
+import { doctorAppointmentEmail } from "@/lib/emails";
 
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY as string;
 function verifySignature(body: string, signature: string): boolean {
@@ -64,11 +65,29 @@ export async function POST(req: Request): Promise<NextResponse> {
           <p style="font-size: 16px;">The Telemedicine Platform Team</p>
         </div>
       `;
-      await sendEmail(
-        event?.data?.metadata?.patient_email,
-        "Appointment Confirmation",
-        emailToPatient
-      );
+      Promise.all([
+        sendEmail(
+          event?.data?.metadata?.patient_email,
+          "Appointment Confirmation",
+          emailToPatient
+        ),
+        sendEmail(
+          event?.data?.metadata?.doctor_email,
+          "Appointment Confirmation",
+          doctorAppointmentEmail(
+            appointment?.doctor?.name,
+            appointment?.patient?.name,
+            moment(appointment?.date).format("dddd, MMMM Do YYYY"),
+            moment(appointment?.date).format("hh:mm A")
+          )
+        ),
+      ])
+        .then((results) => {
+          console.log("Emails sent successfully:", results);
+        })
+        .catch((error) => {
+          console.error("Error sending emails:", error);
+        });
       return NextResponse.json(
         {
           message: "Appointment confirmed",

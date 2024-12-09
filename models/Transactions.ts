@@ -23,13 +23,14 @@ const CheckoutSchema = new Schema<ITransaction>(
     },
     cardType: {
       type: String,
+      enum: ["visa ", "mastercard"],
       required: function (this: ITransaction) {
         return this.channel === "card";
       },
       validate: {
         validator: function (this: ITransaction, value: string) {
           if (this.channel !== "card") return true;
-          return ["visa", "mastercard"].includes(value);
+          return ["visa ", "mastercard"].includes(value);
         },
         message: "Invalid cardType for card transactions",
       },

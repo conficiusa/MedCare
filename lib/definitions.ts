@@ -31,7 +31,7 @@ export interface ITransaction extends Document {
   amount: number;
   currency: string;
   receiptNumber: string;
-  cardType: "visa" | "mastercard";
+  cardType: "visa "  | "mastercard";
   IpAddress: string;
   paidAt: string;
   status: "pending" | "completed" | "failed";
@@ -268,7 +268,7 @@ export interface Transaction {
   appointmentId: string;
   purpose: "Online Consultation";
   patientId: string;
-  cardType: "visa" | "mastercard";
+  cardType: "visa " | "mastercard";
   doctorId: string;
   amount: number;
   currency: string;
