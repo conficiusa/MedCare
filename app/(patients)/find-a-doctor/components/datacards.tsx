@@ -8,7 +8,7 @@ const Datacards = async () => {
     filter: {
       "doctorInfo.verification": "approved",
     },
-    limit: 100,
+    limit: 10,
     sort: {
       "doctorInfo.rating": -1,
       "doctorInfo.rate": 1,
