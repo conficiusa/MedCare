@@ -47,6 +47,7 @@ export async function handleSuccessfulPayment(
       mobileMoneyType: data?.authorization?.bank,
       paidAt: data?.paidAt,
       receiptNumber: data?.receiptNumber,
+      cardType: data?.authorization?.card_type,
     };
 
     // Save the transaction

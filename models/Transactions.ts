@@ -21,16 +21,30 @@ const CheckoutSchema = new Schema<ITransaction>(
       enum: ["card", "bank_transfer", "mobile_money"],
       required: true,
     },
+    cardType: {
+      type: String,
+      required: function (this: ITransaction) {
+        return this.channel === "card";
+      },
+      validate: {
+        validator: function (this: ITransaction, value: string) {
+          if (this.channel !== "card") return true;
+          return ["visa", "mastercard"].includes(value);
+        },
+        message: "Invalid cardType for card transactions",
+      },
+    },
     mobileMoneyType: {
       type: String,
-      enum: ["MTN", "Vodafone", "AirtelTigo"],
-      // Custom validation: Only required if paymentMethod is 'mobile_money'
+      required: function (this: ITransaction) {
+        return this.channel === "mobile_money";
+      },
       validate: {
-        validator: function (this: ITransaction) {
-          return this.channel !== "mobile_money" || !!this.mobileMoneyType;
+        validator: function (this: ITransaction, value: string) {
+          if (this.channel !== "mobile_money") return true;
+          return ["MTN", "Vodafone", "AirtelTigo"].includes(value);
         },
-        message:
-          "mobile money provider is required for mobile money transactions",
+        message: "Invalid mobileMoneyType for mobile money transactions",
       },
     },
   },

@@ -31,6 +31,7 @@ export interface ITransaction extends Document {
   amount: number;
   currency: string;
   receiptNumber: string;
+  cardType: "visa" | "mastercard";
   IpAddress: string;
   paidAt: string;
   status: "pending" | "completed" | "failed";
@@ -260,13 +261,14 @@ export interface subaccountData {
 }
 
 type PaymentMethod = "card" | "bank_transfer" | "mobile_money";
-export type MobileMoneyType = "MTN" | "Vodafone" | "";
+export type MobileMoneyType = "MTN" | "Vodafone" | "AirtelTigo";
 
 export interface Transaction {
   id: string;
   appointmentId: string;
   purpose: "Online Consultation";
   patientId: string;
+  cardType: "visa" | "mastercard";
   doctorId: string;
   amount: number;
   currency: string;
