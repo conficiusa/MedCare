@@ -270,7 +270,6 @@ const ScheduleAppointment = ({
                     toast.promise(handleCreateAppointment, {
                       loading: "Creating appointment...",
                       success: (data) => {
-                        console.log(data);
                         if (data?.status === "fail") {
                           throw new Error(data?.message);
                         } else {

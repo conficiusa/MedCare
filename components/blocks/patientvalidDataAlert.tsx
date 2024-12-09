@@ -45,7 +45,6 @@ export function PatientOnboardingAlert({
   ) => {
     try {
       const res = await PatientOnboardStepFour(data);
-      console.log("res", res);
       if ("data" in res) {
         if (res?.statusCode === 200) {
           await update({

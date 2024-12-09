@@ -192,7 +192,7 @@ export default function ImageUpload({
         return "success";
       }
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       return error?.message;
     }
   };

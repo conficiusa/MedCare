@@ -107,7 +107,6 @@ const DoctorOnboardingServiceDetails = ({
   ) => {
     try {
       const res = await DoctorOnboardStepFour(data);
-      console.log(res);
       if ("data" in res) {
         if (res?.statusCode === 200) {
           await update({

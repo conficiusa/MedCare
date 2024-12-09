@@ -31,7 +31,6 @@ export const DoctorInfoSchema = new Schema<IDoctorInfo>(
       type: String,
       validate: {
         validator: function (value: string) {
-          console.log("bank", value);
           if (this.onboarding_level >= 5) {
             return value != null && value.trim().length > 0;
           }

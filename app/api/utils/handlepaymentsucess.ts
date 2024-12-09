@@ -90,7 +90,6 @@ export async function handleSuccessfulPayment(
     // Update the appointment status
 
     //log room for debuging
-    console.log(room);
     const appointment = await Appointment.findByIdAndUpdate(
       appointmentId,
       {

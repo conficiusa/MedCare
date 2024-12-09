@@ -70,7 +70,7 @@ export async function emailAuth(
       data: {},
     } as SuccessReturn;
   } catch (error: any) {
-    console.log(error);
+    console.error(error);
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
@@ -421,8 +421,6 @@ export const handleDoctorOnboarding = async (
       ...fieldMap,
       onboarding_level: step,
     };
-
-    console.log(updateData);
     const updatedDoctor = await User.findByIdAndUpdate(
       authSession.user.id,
       updateData,
@@ -450,7 +448,7 @@ export const handleDoctorOnboarding = async (
       statusCode: 200,
     } as SuccessReturn;
   } catch (error: any) {
-    console.log(error);
+    console.error(error);
     return {
       error: "A server error occured",
       message: error.message,
@@ -525,7 +523,7 @@ export const handlePatientOnboarding = async (
       statusCode: 200,
     } as SuccessReturn;
   } catch (error: any) {
-    console.log(error);
+    console.error(error);
     return {
       error: "A server error occured",
       message: error.message,
@@ -550,7 +548,7 @@ export const sendEmailAction = async (
       data: {},
     } as SuccessReturn;
   } catch (error: any) {
-    console.log(error);
+    console.error(error);
     return {
       message: "An unexpected error occurred.",
       type: "Unexpected Error",
@@ -574,8 +572,6 @@ export const verifyDoctorAccount = async (id: string): Promise<ReturnType> => {
       } as ErrorReturn;
     }
     const doctor: IUser | null = await User.findById(id);
-
-    console.log("doctor", doctor);
     //check if doctor exists
     if (!doctor) {
       return {
@@ -666,7 +662,6 @@ export const createSubaccountAction = async (
         type: "ValidationError",
       } as ErrorReturn;
     }
-    console.log(params);
     const response = await fetch("https://api.paystack.co/subaccount", {
       method: "POST",
       headers: {
@@ -677,9 +672,6 @@ export const createSubaccountAction = async (
     });
 
     const data = await response.json();
-
-    console.log(data);
-
     if (!response.ok) {
       console.error(data);
       return {
@@ -690,7 +682,6 @@ export const createSubaccountAction = async (
         type: "Server error",
       };
     }
-    console.log(data);
     return {
       data: data,
       message: "Subaccount created successfully",

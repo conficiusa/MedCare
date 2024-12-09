@@ -74,7 +74,6 @@ const UserSchema = new Schema<IUser, Model<IUser>>(
       type: String,
       enum: ["Male", "Female"],
       required: function (this: IUser, value: string) {
-        console.log("value", value);
         return this.isNew ? false : true; // Required during onboarding
       },
     },

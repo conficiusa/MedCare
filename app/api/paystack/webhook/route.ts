@@ -43,7 +43,6 @@ export async function POST(req: Request): Promise<NextResponse> {
   const event = JSON.parse(body);
   if (event.event === "charge.success") {
     const data = event.data;
-    console.log("event", event);
 
     const updateappointment = await handleSuccessfulPayment(
       event?.data?.metadata?.appointment,

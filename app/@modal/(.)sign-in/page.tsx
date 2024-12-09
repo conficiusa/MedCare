@@ -22,7 +22,6 @@ export default function SignInPage() {
 
           // Handle the successful sign in event
           success: (data) => {
-            console.log(data);
             if (data) {
               if (data?.status === "success") {
                 return "Sign in successful";
@@ -38,7 +37,6 @@ export default function SignInPage() {
 
           // Handle the failed sign in event
           error: (error) => {
-            console.log(error);
             return error?.message;
           },
           description(data) {

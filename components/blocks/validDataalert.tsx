@@ -43,7 +43,6 @@ export function OnboardingAlert({
   ) => {
     try {
       const res = await DoctorOnboardStepSix(data);
-      console.log("res", res);
       if ("data" in res) {
         if (res?.statusCode === 200) {
           await update({

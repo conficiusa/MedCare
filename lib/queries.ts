@@ -253,7 +253,7 @@ export const fetchUserData = nextcache(
         status: "success",
       };
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return {
         error: "Server error occured",
         message: "Failed to fetch user data",

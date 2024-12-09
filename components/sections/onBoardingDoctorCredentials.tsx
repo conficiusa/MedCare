@@ -64,7 +64,6 @@ const DoctorOnboardingCredentials = ({
   ) => {
     try {
       const res = await DoctorOnboardStepThree(data);
-      console.log(res);
       if ("data" in res) {
         if (res?.statusCode === 200) {
           await update({
@@ -93,7 +92,7 @@ const DoctorOnboardingCredentials = ({
         });
       }
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       toast.error(error.message);
     }
   };

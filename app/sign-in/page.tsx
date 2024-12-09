@@ -22,7 +22,6 @@ export default function SignInPage() {
 
           // Handle the successful sign in event
           success: (data) => {
-            console.log(data);
             if (data) {
               if (data?.status === "success") {
                 return "Sign in successful";

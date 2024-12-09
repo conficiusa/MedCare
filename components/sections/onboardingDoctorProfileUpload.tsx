@@ -48,7 +48,6 @@ export default function DoctorImageUpload({
   ) => {
     try {
       const res = await DoctorOnboardStepFive(data);
-      console.log(res);
       if ("data" in res) {
         if (res?.statusCode === 200) {
           await update({
@@ -70,7 +69,7 @@ export default function DoctorImageUpload({
         throw new Error("An error occurred while uploading the image");
       }
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       throw new Error("An error occurred while uploading the image");
     }
   };
@@ -80,7 +79,6 @@ export default function DoctorImageUpload({
     formData.append("file", file);
     const response = await upload(formData);
     if ("data" in response) {
-      console.log(response);
       form.setValue("image", response?.data.url);
       form.handleSubmit(handleSubmit)();
     } else {
