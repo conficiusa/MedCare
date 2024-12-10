@@ -50,6 +50,7 @@ export function OnboardingAlert({
             user: {
               ...session.user,
               onboarding_level: res?.data?.onboarding_level,
+              role:"doctor"
               doctorInfo: {
                 ...session?.user?.doctorInfo,
                 onboarding_level: res?.data?.doctorInfo?.onboarding_level,
