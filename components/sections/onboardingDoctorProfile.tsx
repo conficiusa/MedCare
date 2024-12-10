@@ -61,6 +61,7 @@ const OnboardingDoctorProfile = ({
               dob: res?.data?.dob,
               languages: res?.data?.languages,
               phone: res?.data?.phone,
+              gender:res?.data?.gender,
               role: res?.data?.role,
               onboarding_level: res?.data?.onboarding_level,
               doctorInfo: {
