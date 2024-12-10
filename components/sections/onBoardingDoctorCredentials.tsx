@@ -58,7 +58,6 @@ const DoctorOnboardingCredentials = ({
       current_facility: user?.doctorInfo?.current_facility ?? "",
     },
   });
-
   const handleSubmit = async (
     data: z.output<typeof onDoctorBoardingSchema3>
   ) => {

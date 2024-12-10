@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
 import { auth } from "@/auth";
 import { NextRequest, NextResponse } from "next/server";
 
