@@ -4,7 +4,7 @@ import ServiceCards from "@/components/blocks/serviceCards";
 const Services = () => {
   return (
     <section className="">
-      <div className="grid xl:grid-cols-[500px_1fr] lg:grid-cols-[300px_1fr]  gap-8">
+      <div className="grid xl:grid-cols-[500px_1fr] lg:grid-cols-[300px_1fr]  gap-8 ">
         <div className="lg:flex hidden">
           <Image
             src={"/ServicePic.svg"}

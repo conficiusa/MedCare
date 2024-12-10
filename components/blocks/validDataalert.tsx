@@ -42,13 +42,14 @@ export function OnboardingAlert({
     data: z.output<typeof onDoctorBoardingSchema6>
   ) => {
     try {
-      const res = await DoctorOnboardStepSix(data);
+      const res = await DoctorOnboardStepSix(data, 7);
       if ("data" in res) {
         if (res?.statusCode === 200) {
           await update({
             ...session,
             user: {
               ...session.user,
+              onboarding_level: res?.data?.onboarding_level,
               doctorInfo: {
                 ...session?.user?.doctorInfo,
                 onboarding_level: res?.data?.doctorInfo?.onboarding_level,

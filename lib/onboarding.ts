@@ -243,7 +243,8 @@ export const DoctorOnboardStepFive = async (
   });
 };
 export const DoctorOnboardStepSix = async (
-  data: z.output<typeof onDoctorBoardingSchema6>
+  data: z.output<typeof onDoctorBoardingSchema6>,
+  level: number
 ) => {
   const authSession = await auth();
 
@@ -264,12 +265,13 @@ export const DoctorOnboardStepSix = async (
     address_2: user?.address_2,
     city: user?.city,
     region: user?.region,
+    gender: user?.gender,
     country: user?.country,
     phone: user?.phone,
     dob: user?.dob,
     languages: user?.languages,
     role: "doctor",
-    onboarding_level: 7,
+    onboarding_level: level,
     doctorInfo: {
       verification: data?.verification,
       bank: user?.doctorInfo?.bank,
@@ -284,7 +286,7 @@ export const DoctorOnboardStepSix = async (
       specialities: user?.doctorInfo?.specialities,
       bio: user?.doctorInfo?.bio,
       certifications: user?.doctorInfo?.certifications,
-      onboarding_level: 7,
+      onboarding_level: level,
     },
   });
 };

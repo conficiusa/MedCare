@@ -1,11 +1,17 @@
 "use client";
+import { TooltipBuilder } from "@/components/blocks/tooltipBuilder";
 import { Button } from "@/components/ui/button";
 import { verifyDoctorAccount } from "@/lib/actions";
-import { Clock } from "lucide-react";
+import { DoctorOnboardStepSix } from "@/lib/onboarding";
+import { onDoctorBoardingSchema6 } from "@/lib/schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Clock, Edit2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
 export default function VerificationPage() {
   const { data: authSession, update } = useSession();
@@ -16,6 +22,45 @@ export default function VerificationPage() {
       router.push("/sign-in");
     }
   }, [authSession, router]);
+  // TODO:  IN PRODUCTION, REMOVE THE TEST VERIFICATION BUTTON
+
+  const form = useForm<z.output<typeof onDoctorBoardingSchema6>>({
+    resolver: zodResolver(onDoctorBoardingSchema6),
+    defaultValues: {
+      verification: "not_started",
+    },
+  });
+
+  const handleSubmit = async (
+    data: z.output<typeof onDoctorBoardingSchema6>
+  ) => {
+    try {
+      const res = await DoctorOnboardStepSix(data, 6);
+      if ("data" in res) {
+        if (res?.statusCode === 200) {
+          await update({
+            ...authSession,
+            user: {
+              ...authSession?.user,
+              onboarding_level: res?.data?.onboarding_level,
+              doctorInfo: {
+                ...authSession?.user?.doctorInfo,
+                onboarding_level: res?.data?.doctorInfo?.onboarding_level,
+                verification: res?.data?.doctorInfo?.onboarding_level,
+              },
+            },
+          });
+          router.push("/onboarding/doctor");
+        }
+      } else {
+        toast.error("Your cannot update your profile at this moment");
+      }
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gray-100 dark:bg-background p-4">
       <div className="w-full max-w-md bg-background dark:bg-muted/40 rounded-3xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] p-8">
@@ -37,10 +82,21 @@ export default function VerificationPage() {
             communication will be through your registered email.
           </p>
 
-          <Button className="mt-4 rounded-full" variant={"outline"}>
-            Return to Homepage
-          </Button>
-
+          <div className="flex gap-2 items-end">
+            <Button className="mt-4 rounded-full" variant={"outline"}>
+              Return to Homepage
+            </Button>
+            <TooltipBuilder content="Update onboarding data">
+              <Button
+                size={"icon"}
+                variant={"outline"}
+                className="rounded-lg"
+                onClick={form.handleSubmit(handleSubmit)}
+              >
+                <Edit2 className="w-5 h-5" />
+              </Button>
+            </TooltipBuilder>
+          </div>
           <Button
             className="rounded-full"
             onClick={() =>
