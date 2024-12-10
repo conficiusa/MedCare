@@ -102,7 +102,7 @@ export function OnboardingAlert({
                     loading: "Setting up your accounts...",
                     success: (res) => {
                       if (res?.statusCode === 200) {
-                        router.push("/dashboard");
+                        router.push("/onboarding/doctor/awaiting-verification");
                         return "We will verify your information and get back to you.";
                       } else {
                         throw new Error("Failed to complete onboarding");
