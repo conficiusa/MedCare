@@ -190,9 +190,7 @@ const UpcomingAppointment = async ({ session }: { session: Session }) => {
               if (timeToStart <= 10 && timeToEnd >= 0) {
                 return (
                   <Button size="sm" className="mt-2 w-full md:order-1" asChild>
-                    <Link href={`/consultation/${appointment?.room?.name}`}>
-                      Join
-                    </Link>
+                    <Link href={`/consultation/${appointment?.id}`}>Join</Link>
                   </Button>
                 );
               } else if (timeToStart > 10) {

@@ -12,15 +12,20 @@ interface DoctorProfileProps {
 }
 const BookAppointment = async ({ params }: DoctorProfileProps) => {
   const data = await fetchDoctorData(params.id);
-  if (!data || !data.doctor) {
+  if (data?.statusCode === 404) {
     notFound();
   }
-  const { doctor, availability } = data;
-  return (
-    <Modal>
-      <ScheduleAppointment availability={availability} doctor={doctor} />
-    </Modal>
-  );
+  if (data?.status === "fail") {
+    throw new Error(data?.message, { cause: data?.message });
+  }
+  if ("data" in data) {
+    const { doctor, availability } = data?.data;
+    return (
+      <Modal>
+        <ScheduleAppointment availability={availability} doctor={doctor} />
+      </Modal>
+    );
+  }
 };
 
 export default BookAppointment;

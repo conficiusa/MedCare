@@ -69,7 +69,7 @@ export const fetchDoctorCardData = async (
 };
 
 //fetch doctor dynamic data
-export const fetchDoctorData = async (id: string) => {
+export const fetchDoctorData = async (id: string): Promise<ReturnType> => {
   try {
     const authsession = await auth();
     if (!authsession) {
@@ -80,7 +80,13 @@ export const fetchDoctorData = async (id: string) => {
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       console.warn(`Invalid Doctor ID: ${id}`);
-      return { doctor: null, availability: [] };
+      return {
+        error: "Invalid Doctor ID",
+        message: "Invalid Doctor ID",
+        status: "fail",
+        statusCode: 400,
+        type: "Bad Request",
+      };
     }
 
     let doctorQuery = User.findById(id);
@@ -94,7 +100,13 @@ export const fetchDoctorData = async (id: string) => {
       availabilityQuery.exec(),
     ]);
     if (!doctor) {
-      return null;
+      return {
+        error: "Doctor not found",
+        message: "Doctor not found",
+        status: "fail",
+        statusCode: 404,
+        type: "Not found",
+      };
     }
     const plainDoctor = doctor.toObject();
     const plainAvailability = availability.map((doc) => ({
@@ -103,12 +115,23 @@ export const fetchDoctorData = async (id: string) => {
       ...doc.toObject(),
     }));
     return {
-      doctor: plainDoctor as Doctor,
-      availability: plainAvailability as AvailabilityType[],
+      data: {
+        doctor: plainDoctor as Doctor,
+        availability: plainAvailability as AvailabilityType[],
+      },
+      statusCode: 200,
+      message: "Load success",
+      status: "success",
     };
   } catch (error: any) {
     console.error("Could not load Doctor", error.stack || error);
-    throw new Error("Error fetching doctor");
+    return {
+      error: "Could not load Doctor",
+      message: error?.message,
+      status: "fail",
+      statusCode: 500,
+      type: "Server Error",
+    };
   }
 };
 
@@ -175,7 +198,7 @@ export const findTimeSlotBySlotId = async (slotId: string) => {
   }
 };
 
-export const FetchAppointment = async (id: string) => {
+export const FetchAppointment = async (id: string): Promise<ReturnType> => {
   try {
     const authsession = await auth();
     if (!authsession) {
@@ -185,12 +208,30 @@ export const FetchAppointment = async (id: string) => {
     const appointment = await Appointment.findById(id);
 
     if (!appointment) {
-      return { message: "Appointment not found" };
+      return {
+        message: "Appointment not found",
+        error: "Appointment not found",
+        status: "fail",
+        type: "not found",
+        statusCode: 404,
+      };
     }
     const plainAppointment = appointment?.toObject();
-    return { data: plainAppointment as Partial<AppointmentType> };
+    return {
+      data: plainAppointment as Partial<AppointmentType>,
+      message: "appointments retrieved",
+      status: "success",
+      statusCode: 200,
+    };
   } catch (error: any) {
-    return { error };
+    console.error(error);
+    return {
+      error: error?.message || "Failed to retrieve data",
+      message: "Failed to retrieve data",
+      type: "Server Error",
+      status: "fail",
+      statusCode: 500,
+    };
   }
 };
 export const FetchAppointmentByRoomId = async (

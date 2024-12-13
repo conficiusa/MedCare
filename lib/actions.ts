@@ -7,6 +7,8 @@ import {
   differenceInMinutes,
   parseISO,
   isEqual,
+  startOfMinute,
+  subMinutes,
 } from "date-fns";
 import {
   availabilitySchema,
@@ -269,7 +271,7 @@ export const CreateAppointment = async (
 
     // This will be handled by the system admin when the get this log on the server since user cant do anything about that
     if (timeSlotBooking?.status === "fail") {
-      console.error("Appoinment created but slot still available");
+      console.error("Appoinment created but slot still available",appointment.toObject());
     }
 
     // Return the appointment
@@ -743,6 +745,19 @@ export const createAvailability = async (
     const startTime = parseISO(timeSlots[0]?.startTime as string);
     const endTime = parseISO(timeSlots[0]?.endTime as string);
 
+    const now = startOfMinute(new Date()); // Round down 'now' to the start of the current minute
+    const allowedPastTime = subMinutes(now, 1); // Allow times up to 1 minute in the past
+    const startOfSlot = startOfMinute(startTime); // Round down 'startTime' to the start of its minute
+
+    if (isBefore(startOfSlot, allowedPastTime)) {
+      return {
+        error: "Invalid start time",
+        message: "Start time cannot be in the past",
+        status: "fail",
+        statusCode: 400,
+        type: "ValidationError",
+      } as ErrorReturn;
+    }
     // Validate slot duration
     const slotDuration = differenceInMinutes(endTime, startTime);
     if (slotDuration < 15 || slotDuration > 60) {

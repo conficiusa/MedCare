@@ -13,29 +13,30 @@ import "@livekit/components-styles";
 
 import { useEffect, useState } from "react";
 import { Track } from "livekit-client";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter} from "next/navigation";
 import { generateRoomToken } from "@/lib/getTokens";
 import { Session } from "next-auth";
 import { ErrorReturn } from "@/lib/definitions";
 import Link from "next/link";
 
 export default function VideoCall({
-  room,
+  appointmentId,
   session,
 }: {
-  room: { name: string; sid: string; maxParticipants: number };
+  appointmentId: string;
   session: Session;
 }) {
   const [token, setToken] = useState("");
   const [error, setError] = useState<ErrorReturn | undefined>(undefined);
-
   const router = useRouter();
-  const pathname = usePathname();
 
   useEffect(() => {
     (async () => {
       try {
-        const data = await generateRoomToken(session?.user?.id as string, room);
+        const data = await generateRoomToken(
+          session?.user?.id as string,
+          appointmentId
+        );
         if ("data" in data) {
           setToken(data?.data?.token);
         } else {
@@ -46,7 +47,7 @@ export default function VideoCall({
         console.error(e);
       }
     })();
-  }, [pathname, router, session,room]);
+  }, [ router, session, appointmentId]);
 
   if (!token && !error) {
     return (
@@ -64,11 +65,6 @@ export default function VideoCall({
   }
 
   if (error) {
-    // useEffect(() => {
-    //   if (error) {
-    //     toast?.error(error?.message);
-    //   }
-    // }, [error, toast]);
     return (
       <div className="flex justify-center items-center h-[100dvh] flex-col max:sm:px-4">
         <h1>{error?.message}</h1>

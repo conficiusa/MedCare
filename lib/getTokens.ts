@@ -1,18 +1,46 @@
 "use server";
 import { auth } from "@/auth";
 import Appointment from "@/models/Appointment";
-import { AccessToken } from "livekit-server-sdk";
+import { AccessToken, RoomServiceClient } from "livekit-server-sdk";
 import { redirect } from "next/navigation";
 import { ReturnType } from "@/lib/definitions";
 import { differenceInSeconds } from "date-fns";
 import connectToDatabase from "./mongoose";
 
-const apiKey = process.env.LIVEKIT_API_KEY;
 const apiSecret = process.env.LIVEKIT_API_SECRET;
+const apiKey = process.env.LIVEKIT_API_KEY;
+const wsUrl = process.env.NEXT_PUBLIC_LIVEKIT_URL;
+const roomService = new RoomServiceClient(
+  wsUrl as string,
+  apiKey as string,
+  apiSecret as string
+);
 
+/**
+ * Generates a room token for a given identity and appointment ID.
+ *
+ * @param {string} identity - The identity of the user requesting the token.
+ * @param {string} appointmentId - The ID of the appointment for which the token is being generated.
+ * @returns {Promise<ReturnType>} - A promise that resolves to an object containing the token or an error message.
+ *
+ * @throws {Error} - Throws an error if there is an issue generating the token.
+ *
+ * The function performs the following steps:
+ * 1. Authenticates the session.
+ * 2. Checks if the session is valid; if not, redirects to the sign-in page.
+ * 3. Validates the appointment ID.
+ * 4. Checks if the identity matches the session user ID.
+ * 5. Connects to the database and retrieves the appointment by ID.
+ * 6. Validates the appointment and checks if it has expired.
+ * 7. Checks if the session user is authorized to access the appointment.
+ * 8. Creates a room with specific options.
+ * 9. Saves the room details to the appointment.
+ * 10. Generates an access token with the appropriate role (doctor or patient).
+ * 11. Returns the generated token or an error message.
+ */
 export const generateRoomToken = async (
   identity: string,
-  room: { sid: string; maxParticipants: number; name: string }
+  appointmentId: string
 ): Promise<ReturnType> => {
   const session = await auth();
 
@@ -20,7 +48,7 @@ export const generateRoomToken = async (
     redirect("/sign-in");
   }
 
-  if (!room?.sid || !room?.name) {
+  if (!appointmentId) {
     return {
       error: "Missing Fields",
       message: "Missing room configuration",
@@ -39,14 +67,11 @@ export const generateRoomToken = async (
         statusCode: 401,
       };
     }
-    connectToDatabase();
-    const confirmAppointment = await Appointment.findOne({
-      "room.sid": room?.sid,
-    });
-
+    await connectToDatabase();
+    const confirmAppointment = await Appointment.findById(appointmentId);
     if (!confirmAppointment) {
       return {
-        error: "Appointment not found",
+        error: "Failed to load appointment",
         message: "Appointment not found",
         type: "Not Found",
         status: "fail",
@@ -71,72 +96,61 @@ export const generateRoomToken = async (
     }
 
     if (
-      appointment?.room?.maxParticipants !== room?.maxParticipants ||
-      appointment?.room?.name !== room?.name ||
-      appointment?.room?.sid !== room?.sid
+      session.user?.id !== appointment?.doctor?.doctorId &&
+      session?.user?.id !== appointment?.patient?.patientId
     ) {
       return {
-        error: "Invalid room",
-        message: "Invalid room",
-        type: "Invalid Room",
+        error: "Unauthorized",
+        message: "Unauthorized",
+        type: "Unauthorized",
         status: "fail",
-        statusCode: 400,
+        statusCode: 401,
       };
     }
-    if (session.user?.role === "doctor") {
-      if (session.user?.id !== appointment?.doctor?.doctorId) {
-        return {
-          error: "Unauthorized",
-          message: "Unauthorized",
-          type: "Unauthorized",
-          status: "fail",
-          statusCode: 401,
-        };
-      }
-      const token = new AccessToken(apiKey, apiSecret, {
-        identity,
-        name: room?.name,
-      });
-      token.addGrant({
-        roomJoin: true,
-        room: room?.name,
-        canPublish: true,
-        canSubscribe: true,
-      });
+    const opts = {
+      name: Date.now().toString(),
+      emptyTimeout: 10 * 60, // 10 minutes
+      maxParticipants: 2,
+    };
+    const room = await roomService.createRoom(opts);
+
+    if (!room) {
       return {
-        data: { token: await token.toJwt() },
-        message: "Token generated",
-        status: "success",
-        statusCode: 200,
-      };
-    } else {
-      if (session.user?.id !== appointment?.patient?.patientId) {
-        return {
-          error: "Unauthorized",
-          message: "Unauthorized",
-          type: "Unauthorized",
-          status: "fail",
-          statusCode: 401,
-        };
-      }
-      const token = new AccessToken(apiKey, apiSecret, {
-        identity,
-        name: session?.user?.name?.split(" ")[0],
-        ttl,
-      });
-      token.addGrant({
-        roomJoin: true,
-        room: room?.name,
-        canPublish: true,
-        canSubscribe: true,
-      });
-      return {
-        data: { token: await token.toJwt() },
-        message: "Token generated",
-        status: "success",
-        statusCode: 200,
+        error: "Failed to create room",
+        status: "fail",
+        message: "Failed to create room. check your connection and try again",
+        statusCode: 500,
+        type: "Network error",
       };
     }
+    confirmAppointment.room = {
+      name: room.name,
+      sid: room?.sid,
+      maxParticipants: room?.maxParticipants,
+    };
+    await confirmAppointment.save();
+    const token = new AccessToken(apiKey, apiSecret, {
+      identity,
+      name: room?.name,
+      attributes: {
+        role:
+          session.user?.id === appointment?.doctor?.doctorId
+            ? "doctor"
+            : "patient",
+      },
+    });
+    token.addGrant({
+      roomJoin: true,
+      room: room?.name,
+      canPublish: true,
+      canSubscribe: true,
+    });
+    return {
+      data: { token: await token.toJwt() },
+      message: "Token generated",
+      status: "success",
+      statusCode: 200,
+    };
   } catch (error: any) {
     console.log(error);
     return {

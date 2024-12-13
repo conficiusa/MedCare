@@ -11,6 +11,7 @@ const tabs = [
   { value: "pending", label: "Pending" },
   { value: "completed", label: "Completed" },
   { value: "cancelled", label: "Cancelled" },
+  { value: "Drafts", label: "Drafts" },
 ];
 
 const AppointmentTabs = ({ session }: { session: Session }) => {
