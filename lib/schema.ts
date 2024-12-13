@@ -108,7 +108,7 @@ export const onDoctorBoardingSchema2 = z.object({
   city: z.string().min(1, "Please enter your city/town"),
   country: z.string().min(1, "Please enter your country"),
   address_1: z.string(),
-  address_2: z.string().optional().nullable(),
+  address_2: z.string().optional()
 });
 export const onDoctorBoardingSchema3 = z
   .object({
@@ -201,7 +201,7 @@ export const PatientOnboardingSchema2 = z.object({
   city: z.string().min(1, "Please enter your city/town"),
   country: z.string().min(1, "Please enter your country"),
   address_1: z.string(),
-  address_2: z.string().optional().nullable(),
+  address_2: z.string().optional() 
 });
 
 export const PatientOnboardingSchema3 = z.object({
