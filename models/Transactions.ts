@@ -23,7 +23,6 @@ const CheckoutSchema = new Schema<ITransaction>(
     },
     cardType: {
       type: String,
-      enum: ["visa ", "mastercard"],
       required: function (this: ITransaction) {
         return this.channel === "card";
       },
