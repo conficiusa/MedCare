@@ -108,7 +108,7 @@ export const generateRoomToken = async (
       };
     }
     const opts = {
-      name: Date.now().toString(),
+      name: appointmentId,
       emptyTimeout: 10 * 60, // 10 minutes
       maxParticipants: 2,
     };
