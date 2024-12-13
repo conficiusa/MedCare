@@ -6,30 +6,11 @@ import Transaction from "@/models/Transactions";
 import { RoomServiceClient } from "livekit-server-sdk";
 import { MongooseError } from "mongoose";
 
-const apiKey = process.env.LIVEKIT_API_KEY;
-const apiSecret = process.env.LIVEKIT_API_SECRET;
-const wsUrl = process.env.NEXT_PUBLIC_LIVEKIT_URL;
-const roomService = new RoomServiceClient(
-  wsUrl as string,
-  apiKey as string,
-  apiSecret as string
-);
 // Handle the successful payment event
 export async function handleSuccessfulPayment(
   appointmentId: string,
   data: any
 ): Promise<ReturnType> {
-  // missing keys error handling
-  if (!apiKey || !apiSecret || !wsUrl) {
-    return {
-      error: "Server misconfigured",
-      message: "Missing keys Configuration",
-      type: "Server Error",
-      status: "fail",
-      statusCode: 500,
-    };
-  }
-
   try {
     await connectToDatabase();
     // Construct the transaction data
@@ -64,32 +45,7 @@ export async function handleSuccessfulPayment(
         type: "Server Error",
       };
     }
-
-    // Create a room for the appointment
-
-    // room options
-    const opts = {
-      name: Date.now().toString(),
-      emptyTimeout: 10 * 60, // 10 minutes
-      maxParticipants: 2,
-    };
-
-    // Create the room
-    const room = await roomService.createRoom(opts);
-
-    //handle error if room is not created
-    if (!room) {
-      return {
-        error: "Room not created",
-        message: "We could not create your room",
-        status: "fail",
-        statusCode: 500,
-        type: "Server Error",
-      };
-    }
-
     // Update the appointment status
-
     //log room for debuging
     const appointment = await Appointment.findByIdAndUpdate(
       appointmentId,
@@ -97,11 +53,6 @@ export async function handleSuccessfulPayment(
         paid: true,
         reference: data.reference,
         transactionId: transaction._id,
-        room: {
-          name: room.name,
-          sid: room.sid,
-          maxParticipants: room?.maxParticipants,
-        },
       },
       {
         runValidators: true,
