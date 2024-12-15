@@ -1,7 +1,7 @@
 "use client";
 import { TimePicker } from "@/components/blocks/timepicker";
 import { Calendar } from "@/components/ui/calendar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Trash2, Edit2 } from "lucide-react";
 import {
@@ -125,7 +125,7 @@ export default function Schedule({
               <p className="uppercase text-xs text-muted-foreground px-2">
                 Select Time
               </p>
-              <div className="flex gap-5 mt-4 items-center mb-4 bg-muted h-fit p-6 rounded-lg">
+              <div className="flex gap-5 mt-4 items-center mb-4 bg-muted dark:bg-card h-fit p-6 rounded-lg">
                 <div className="grid gap-1">
                   <Label className="mb-1">Start Time</Label>
                   <TimePicker
@@ -170,6 +170,9 @@ export default function Schedule({
       <Card className="mt-14">
         <CardHeader>
           <CardTitle className="text-xl font-medium">Open slots</CardTitle>
+          <CardDescription>
+            These are the slots available for patients to book appointments
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {data?.status === "fail" ? (

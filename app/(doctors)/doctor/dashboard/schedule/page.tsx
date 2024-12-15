@@ -1,9 +1,13 @@
 import { auth } from "@/auth";
 import Schedule from "@/components/sections/doctorschedule";
 import { fetchDoctorAvailibility } from "@/lib/queries";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
+export const metadata: Metadata = {
+  title: "Manage Schedule",
+};
 const Page = async () => {
   const authSession = await auth();
   if (!authSession) {

@@ -8,8 +8,13 @@ import {
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import AppointmentTabs from "./appointmentTabs";
+import { Metadata } from "next";
+
 
 export type AppointmentStatus = "upcoming" | "pending" | "past" | "cancelled";
+export const metadata: Metadata = {
+  title: "Appointments",
+};
 export default async function Component() {
   const session = await auth();
   if (!session) {

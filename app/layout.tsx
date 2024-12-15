@@ -19,8 +19,15 @@ export const viewport: Viewport = {
   viewportFit: "contain",
 };
 
+const isProduction = process.env.NODE_ENV === "production";
 export const metadata: Metadata = {
-  title: "Medcare Hub",
+  metadataBase: isProduction
+    ? new URL("https://medcare-hub.vercel.app")
+    : new URL("http://localhost:3000"),
+  title: {
+    template: "%s | Medcare hub",
+    default: "Medcare hub",
+  },
   description:
     "Connect with highly skilled doctors at the comfort of your home",
   keywords: [

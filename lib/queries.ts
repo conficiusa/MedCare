@@ -27,46 +27,48 @@ interface QueryOptions {
 }
 
 // Fetch doctor card data
-export const fetchDoctorCardData = async (
-  options: QueryOptions
-): Promise<ReturnType> => {
-  await connectToDatabase();
-  const defaultFilter = { role: "doctor" };
-  let filter = { ...defaultFilter, ...options.filter };
-  filter = { ...filter, ...applyCaseInsensitiveRegex(filter) };
+export const fetchDoctorCardData = nextcache(
+  async (options: QueryOptions): Promise<ReturnType> => {
+    await connectToDatabase();
+    const defaultFilter = { role: "doctor" };
+    let filter = { ...defaultFilter, ...options.filter };
+    filter = { ...filter, ...applyCaseInsensitiveRegex(filter) };
 
-  // Build the aggregation pipeline using the utility function
-  const pipeline = buildDoctorAggregationPipeline(filter, options);
+    // Build the aggregation pipeline using the utility function
+    const pipeline = buildDoctorAggregationPipeline(filter, options);
 
-  // Execute the aggregation
-  const doctors = await User.aggregate(pipeline);
+    // Execute the aggregation
+    const doctors = await User.aggregate(pipeline);
 
-  // Manually apply the transformation
-  const transformedDoctors = doctors.map((doc) => {
-    const ret = { ...doc }; // Spread the document into a new object
-    ret.id = ret._id.toString();
-    delete ret._id;
-    delete ret.__v;
-    return ret;
-  });
+    // Manually apply the transformation
+    const transformedDoctors = doctors.map((doc) => {
+      const ret = { ...doc }; // Spread the document into a new object
+      ret.id = ret._id.toString();
+      delete ret._id;
+      delete ret.__v;
+      return ret;
+    });
 
-  // If no doctors are found, return a 404
-  if (transformedDoctors.length === 0) {
+    // If no doctors are found, return a 404
+    if (transformedDoctors.length === 0) {
+      return {
+        error: "No doctors match you query",
+        message: "Adjust your query if set. or check back later",
+        status: "fail",
+        statusCode: 404,
+        type: "Not found",
+      };
+    }
     return {
-      error: "No doctors match you query",
-      message: "Adjust your query if set. or check back later",
-      status: "fail",
-      statusCode: 404,
-      type: "Not found",
+      data: transformedDoctors as DoctorCard[],
+      statusCode: 200,
+      message: "Load success",
+      status: "success",
     };
-  }
-  return {
-    data: transformedDoctors as DoctorCard[],
-    statusCode: 200,
-    message: "Load success",
-    status: "success",
-  };
-};
+  },
+  ["doctor-card"],
+  { revalidate: 3600, tags: ["doctor-card"] }
+);
 
 //fetch doctor dynamic data
 export const fetchDoctorData = async (id: string): Promise<ReturnType> => {

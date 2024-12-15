@@ -7,7 +7,7 @@ import React from "react";
 
 const DoctorProfileAside = ({ doctor }: { doctor: Doctor }) => {
   return (
-    <aside className="lg:bg-muted/40 lg:px-14 px-8 lg:py-10 pt-4 lg:h-full lg:min-h-[calc(100dvh_-_4rem)]">
+    <aside className="lg:bg-muted/40 lg:px-14 px-8 lg:py-10 pt-4 lg:h-full lg:min-h-[calc(100dvh)]">
       <div className="mb-6">
         <Link className="flex items-center gap-2" href={"/find-a-doctor"}>
           <ArrowLeft strokeWidth={1.8} className="w-4 h-4" />

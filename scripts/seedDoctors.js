@@ -9,7 +9,7 @@ const userCollectionName = "users";
 const availabilityCollectionName = "availabilities";
 
 const sampleImageUrl =
-  "https://xgyzgqc7wzq7cyz6.public.blob.vercel-storage.com/profiles/sampleDoc-ZNAAkbr0wqXBoAKwJ3i8Mi32QIw40T.png";
+  "https://xgyzgqc7wzq7cyz6.public.blob.vercel-storage.com/1733850094847-doctormale-KeiKFnKcLFEaQ6fJjszq8txz0Dxz2m.jpg";
 const sampleImageTwoUrl =
   "https://xgyzgqc7wzq7cyz6.public.blob.vercel-storage.com/mock%20use%20(1)-TmsZBhLFrPxkF3V93pNPiux4UhESPh.jpg";
 
@@ -141,22 +141,55 @@ const generateBio = (name, specialization, experience, certifications) => {
   ];
 
   const approach = [
-    `A blend of empathy and expertise defines Dr. ${name}'s approach, making each patient feel understood and valued.,
-    Patients often commend Dr. ${name} for their comforting demeanor and sharp diagnostic abilities.,
-    With a keen eye for detail and a warm bedside manner, Dr. ${name} provides a unique blend of care and accuracy.`,
+    `A blend of empathy and expertise defines Dr. ${name}'s approach, making each patient feel understood and valued.`,
+    `Patients often commend Dr. ${name} for their comforting demeanor and sharp diagnostic abilities.`,
+    `With a keen eye for detail and a warm bedside manner, Dr. ${name} provides a unique blend of care and accuracy.`,
+    `Dr. ${name} is known for their patient-centric approach, ensuring that each individual receives personalized care.`,
+    `Combining modern techniques with traditional values, Dr. ${name} offers a holistic approach to treatment.`,
   ];
 
   const passion = [
-    ` Outside the clinic, Dr. ${name} is an avid advocate for community health awareness and often hosts workshops to educate the public.,
-    An advocate for holistic wellness, Dr. ${name} believes in empowering patients with knowledge for better long-term health.,
-    Passionate about advancing medical practices, Dr. ${name} frequently participates in conferences to share insights with peers.`,
+    `Outside the clinic, Dr. ${name} is an avid advocate for community health awareness and often hosts workshops to educate the public.`,
+    `An advocate for holistic wellness, Dr. ${name} believes in empowering patients with knowledge for better long-term health.`,
+    `Passionate about advancing medical practices, Dr. ${name} frequently participates in conferences to share insights with peers.`,
+    `Dr. ${name} is dedicated to continuous learning and often engages in research to stay at the forefront of medical advancements.`,
+    `Committed to giving back, Dr. ${name} volunteers at local health camps and supports various health initiatives.`,
   ];
 
   const personalTouch = [
-    `When not seeing patients, Dr. ${name} enjoys spending time with family, cooking new recipes, and reading about advances in ${specialization.toLowerCase()}.,
-    In personal life, Dr. ${name} loves hiking and finds solace in nature, which inspires a calm approach in their medical practice.,
-    Outside the medical realm, Dr. ${name} is a fan of classical music and often volunteers for local health events.`,
+    `When not seeing patients, Dr. ${name} enjoys spending time with family, cooking new recipes, and reading about advances in ${specialization.toLowerCase()}.`,
+    `In personal life, Dr. ${name} loves hiking and finds solace in nature, which inspires a calm approach in their medical practice.`,
+    `Outside the medical realm, Dr. ${name} is a fan of classical music and often volunteers for local health events.`,
+    `Dr. ${name} enjoys painting and finds it a great way to relax and express creativity.`,
+    `In their free time, Dr. ${name} loves traveling and exploring different cultures, which enriches their understanding of diverse patient backgrounds.`,
   ];
+  const experienceDetails = [
+    `Dr. ${name} has been practicing for over ${experience}, during which they have successfully treated numerous complex cases in ${specialization.toLowerCase()}.`,
+    `With a career spanning ${experience}, Dr. ${name} has gained extensive experience in ${specialization.toLowerCase()}, making them a trusted name in the field.`,
+    `Over the past ${experience}, Dr. ${name} has honed their skills in ${specialization.toLowerCase()}, earning a reputation for excellence and dedication.`,
+  ];
+
+  const patientFeedback = [
+    `Patients appreciate Dr. ${name}'s thorough approach and ability to explain complex medical conditions in an understandable manner.`,
+    `Dr. ${name} is known for their compassionate care and ability to make patients feel at ease during consultations.`,
+    `Many patients have praised Dr. ${name} for their attentiveness and willingness to go the extra mile to ensure the best possible outcomes.`,
+  ];
+
+  const communityInvolvement = [
+    `Dr. ${name} is actively involved in community health initiatives, often organizing free health camps and awareness programs.`,
+    `In addition to their clinical practice, Dr. ${name} volunteers at local shelters, providing medical care to underserved populations.`,
+    `Dr. ${name} frequently collaborates with non-profit organizations to improve healthcare access and education in the community.`,
+  ];
+
+  return `${introduction[Math.floor(Math.random() * introduction.length)]} ${
+    achievements[Math.floor(Math.random() * achievements.length)]
+  } ${approach[Math.floor(Math.random() * approach.length)]} ${
+    passion[Math.floor(Math.random() * passion.length)]
+  } ${personalTouch[Math.floor(Math.random() * personalTouch.length)]} ${
+    experienceDetails[Math.floor(Math.random() * experienceDetails.length)]
+  } ${patientFeedback[Math.floor(Math.random() * patientFeedback.length)]} ${
+    communityInvolvement[Math.floor(Math.random() * communityInvolvement.length)]
+  }`;
 
   return `${introduction[Math.floor(Math.random() * introduction.length)]} ${
     achievements[Math.floor(Math.random() * achievements.length)]

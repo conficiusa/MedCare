@@ -6,14 +6,14 @@ import {
   LiveKitRoom,
   ParticipantTile,
   RoomAudioRenderer,
+  useParticipants,
   useTracks,
 } from "@livekit/components-react";
-
 import "@livekit/components-styles";
 
 import { useEffect, useState } from "react";
 import { Track } from "livekit-client";
-import { useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import { generateRoomToken } from "@/lib/getTokens";
 import { Session } from "next-auth";
 import { ErrorReturn } from "@/lib/definitions";
@@ -47,7 +47,7 @@ export default function VideoCall({
         console.error(e);
       }
     })();
-  }, [ router, session, appointmentId]);
+  }, [router, session, appointmentId]);
 
   if (!token && !error) {
     return (
@@ -99,6 +99,7 @@ export default function VideoCall({
 }
 
 function MyVideoConference() {
+  const participant = useParticipants();
   // `useTracks` returns all camera and screen share tracks. If a user
   // joins without a published camera track, a placeholder track is returned.
   const tracks = useTracks(
@@ -111,7 +112,7 @@ function MyVideoConference() {
   return (
     <GridLayout
       tracks={tracks}
-      style={{ height: "calc(100vh - var(--lk-control-bar-height))" }}
+      style={{ height: "calc(100vh - var(--lk-control-bar-height) - 6rem)" }}
     >
       {/* The GridLayout accepts zero or one child. The child is used
       as a template to render all passed in tracks. */}

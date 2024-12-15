@@ -127,6 +127,7 @@ const UpcomingAppointment = async ({ session }: { session: Session }) => {
                   </AvatarFallback>
                 </Avatar>
               </div>
+              dd
             </div>
 
             {/* {appointment.requestedTime && (
