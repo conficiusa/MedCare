@@ -1,9 +1,36 @@
 export const buildDoctorAggregationPipeline = (
   filter: Record<string, any>,
-  options: { sort?: Record<string, 1 | -1>; limit?: number; page?: number }
+  options: { sort?: Record<string, 1 | -1>; limit?: number; page?: number },
+  searchQuery?: string,
+  showAll?: boolean // Add showAll parameter
 ) => {
-  const pipeline: any[] = [
-    { $match: filter }, // Apply the initial filter
+  const pipeline: any[] = [];
+
+  // Add $search stage if searchQuery exists
+   if (searchQuery) {
+     pipeline.push({
+       $search: {
+         index: "default", // Replace with your search index name
+         text: {
+           query: searchQuery,
+           path: [
+             "doctorInfo.specialities",
+             "doctorInfo.certifications",
+             "name",
+             "city",
+             "languages",
+           ], // Searches all fields, or specify fields like ['name', 'specialty']
+         },
+       },
+     });
+   }
+
+
+  // Always apply the basic filter
+  pipeline.push({ $match: filter });
+
+  // Lookup and unwind availabilities
+  pipeline.push(
     {
       $lookup: {
         from: "availabilities", // Collection name for availabilities
@@ -12,31 +39,41 @@ export const buildDoctorAggregationPipeline = (
         as: "availability",
       },
     },
-    { $unwind: "$availability" }, // Unwind the availability array
-    {
+    { $unwind: { path: "$availability", preserveNullAndEmptyArrays: true } } // Preserve doctors without availabilities
+  );
+
+  // Conditionally filter doctors based on availability if showAll is false
+  if (!showAll) {
+    pipeline.push({
       $match: {
-        "availability.date": { $gte: new Date() }, // Only future dates
-        "availability.timeSlots": { $exists: true, $ne: [] }, // Non-empty time slots
+        $or: [
+          { "availability.date": { $gte: new Date() } }, // Future dates
+          { "availability.timeSlots": { $exists: true, $ne: [] } }, // Non-empty time slots
+        ],
       },
+    });
+  }
+
+  // Group the results
+  pipeline.push({
+    $group: {
+      _id: "$_id",
+      name: { $first: "$name" },
+      image: { $first: "$image" },
+      doctorInfo: { $first: "$doctorInfo" },
+      availability: { $push: "$availability" },
     },
-    {
-      $group: {
-        _id: "$_id", // Regroup by doctor ID
-        name: { $first: "$name" },
-        image: { $first: "$image" },
-        doctorInfo: { $first: "$doctorInfo" },
-        availability: { $push: "$availability" },
-      },
+  });
+
+  // Project the desired fields
+  pipeline.push({
+    $project: {
+      name: 1,
+      image: 1,
+      doctorInfo: 1,
+      availability: 1,
     },
-    {
-      $project: {
-        name: 1,
-        image: 1,
-        doctorInfo: 1,
-        availability: 1, // Include grouped availability if needed
-      },
-    },
-  ];
+  });
 
   // Apply sorting if provided
   if (options.sort) {

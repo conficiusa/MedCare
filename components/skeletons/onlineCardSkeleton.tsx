@@ -26,7 +26,7 @@ function OnlineCardSkeleton() {
 }
 export default function CardOnlineSkeleton() {
   return (
-    <>
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-6">
       <OnlineCardSkeleton />
       <OnlineCardSkeleton />
       <OnlineCardSkeleton />
@@ -35,6 +35,6 @@ export default function CardOnlineSkeleton() {
       <OnlineCardSkeleton />
       <OnlineCardSkeleton />
       <OnlineCardSkeleton />
-    </>
+    </div>
   );
 }

@@ -2,6 +2,7 @@
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -10,9 +11,11 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { Session } from "next-auth";
 
 interface SidebarProps {
   children: React.ReactNode;
+  session: Session | null;
 }
 interface SidebarLink {
   href: string;
@@ -42,7 +45,7 @@ const SidebarLink: SidebarLink[] = [
   },
 ];
 
-const Sidebar = ({ children }: SidebarProps) => {
+const Sidebar = ({ children, session }: SidebarProps) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -51,6 +54,9 @@ const Sidebar = ({ children }: SidebarProps) => {
       <SheetContent side="left">
         <SheetHeader>
           <SheetTitle>MedCare Hub</SheetTitle>
+          <SheetDescription className="sr-only">
+            Main side bar for medcare
+          </SheetDescription>
         </SheetHeader>
         <div className="overflow-auto">
           <nav className="flex flex-col divide-y-[1px] text-sm mt-8">
@@ -71,7 +77,7 @@ const Sidebar = ({ children }: SidebarProps) => {
               onClick={() => setOpen(false)}
             >
               Refer a friend{" "}
-              <sup className="bg-teal-100 text-primary p-[0.2rem] text-xs rounded">
+              <sup className="bg-green-100 dark:bg-green-950 text-primary p-[0.2rem] text-xs rounded">
                 10% off
               </sup>
             </Link>
@@ -99,18 +105,19 @@ const Sidebar = ({ children }: SidebarProps) => {
               FAQ
             </Link>
           </nav>
-          <div className="hidden max-sm:flex mt-10 flex-col gap-2">
-            <Link href={"/sign-in"} className="w-full">
-              <Button
-                className="w-full"
-                variant={"outline"}
-                size="sm"
-                onClick={() => setOpen(false)}
-              >
-                Join or Sign In
-              </Button>
-            </Link>
-          </div>
+          {!session && (
+            <div className="hidden max-sm:flex mt-10 flex-col gap-2">
+              <Link href={"/sign-in"} className="w-full">
+                <Button
+                  className="w-full"
+                  size="sm"
+                  onClick={() => setOpen(false)}
+                >
+                  Join or Sign In
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
       </SheetContent>
     </Sheet>

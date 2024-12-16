@@ -17,7 +17,7 @@ const Navbar = async () => {
       <nav className="flex w-full justify-between items-center">
         <div className="flex items-center gap-3  max-sm:w-full">
           <div>
-            <Sidebar>
+            <Sidebar session={session}>
               <Button size={"icon"} variant="ghost">
                 <Menu className="w-5 h-5" />
               </Button>

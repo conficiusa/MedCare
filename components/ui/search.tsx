@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface SearchInputProps {
   label: string;
@@ -15,7 +15,19 @@ const SearchInput = ({
   containerClassName,
   placeholder,
 }: SearchInputProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
+
+  function handleSearch(term: string) {
+    const params = new URLSearchParams(searchParams);
+    if (term) {
+      params.set("query", term);
+    } else {
+      params.delete("query");
+    }
+    replace(`${pathname}?${params.toString()}`);
+  }
 
   return (
     <div className={cn("relative", containerClassName)}>
@@ -28,6 +40,10 @@ const SearchInput = ({
         id="search"
         placeholder={placeholder}
         autoFocus={false}
+        onChange={(e) => {
+          handleSearch(e.target.value);
+        }}
+        defaultValue={searchParams.get("query")?.toString()}
       />
       <Button size="icon" className="absolute right-0 top-0 w-14">
         <Search />

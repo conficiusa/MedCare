@@ -8,6 +8,7 @@ import CardOnlineSkeleton from "@/components/skeletons/onlineCardSkeleton";
 import Datacards from "./components/datacards";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import AvailableToggle from "@/components/blocks/availableToggle";
 
 const specialities: string[] = [
   "Cardiology",
@@ -23,9 +24,13 @@ const specialities: string[] = [
   "Urology",
   "Infectious Diseases",
 ];
-const FindDoctor = async () => {
-
-  
+const FindDoctor = async (props: {
+  searchParams?: {
+    query?: string;
+    page?: string;
+    show_all?: string;
+  };
+}) => {
   const session = await auth();
   if (!session) {
     redirect("/sign-in");
@@ -36,13 +41,16 @@ const FindDoctor = async () => {
       <div className="p-10 max-sm:px-4 max-sm:py-6">
         <p className="text-sm mb-2">
           Find a healthcare professional based on the type of service, symptom
-          or specialty
+          or speciality
         </p>
-        <SearchInput
-          label="search doctor"
-          containerClassName="md:w-3/5"
-          placeholder="example: symptom - flu, cold; specialty - dermatology, mental health, primary care"
-        />
+        <div className="flex ">
+          <SearchInput
+            label="search doctor"
+            containerClassName="md:w-3/5"
+            placeholder="example: symptom - flu, cold; specialty - dermatology, mental health, primary care"
+          />
+          <AvailableToggle />
+        </div>
         <Tabs defaultValue="online" className="mt-4">
           <TabsList className="bg-transparent">
             <TabsTrigger
@@ -59,11 +67,9 @@ const FindDoctor = async () => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="online" className="py-8">
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-6">
-              <Suspense fallback={<CardOnlineSkeleton />}>
-                <Datacards />
-              </Suspense>
-            </div>
+            <Suspense fallback={<CardOnlineSkeleton />}>
+              <Datacards searchParams={props.searchParams} />
+            </Suspense>
           </TabsContent>
           <TabsContent value="in-person">
             <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-6">
