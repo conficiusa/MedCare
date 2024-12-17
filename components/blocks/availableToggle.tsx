@@ -1,10 +1,14 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { TooltipProvider } from "../ui/tooltip";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { CalendarCheck, CalendarOff } from "lucide-react";
-import { TooltipBuilder } from "./tooltipBuilder";
+import { CalendarCheck, ListFilter, Stethoscope } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const AvailableToggle = () => {
   const [showavailable, setShowAvailable] = useState(true);
@@ -26,13 +30,29 @@ const AvailableToggle = () => {
     replace(`${pathname}?${params.toString()}`);
   }, [showavailable, replace, searchParams, pathname]);
   return (
-    <TooltipBuilder
-      content={showavailable ? "Show all" : "Show  doctors with open slots"}
-    >
-      <Button size={"icon"} variant={"outline"} onClick={handleToggle}>
-        {showavailable ? <CalendarOff /> : <CalendarCheck />}
-      </Button>
-    </TooltipBuilder>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button size={"icon"} variant={"outline"}>
+          <ListFilter />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuCheckboxItem
+          checked={showavailable === true}
+          onCheckedChange={handleToggle}
+        >
+          <CalendarCheck className="text-muted-foreground mr-2 w-4 h-4" />
+          Only available doctors
+        </DropdownMenuCheckboxItem>
+        <DropdownMenuCheckboxItem
+          checked={showavailable === false}
+          onCheckedChange={handleToggle}
+        >
+          <Stethoscope className="text-muted-foreground mr-2 w-4 h-4" />
+          All doctors
+        </DropdownMenuCheckboxItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 

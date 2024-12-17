@@ -39,8 +39,6 @@ export const fetchDoctorCardData = async (
 
   // Build the aggregation pipeline using the utility function
   const pipeline = buildDoctorAggregationPipeline(filter, options, queryterm, showall);
-  console.log("q", queryterm);
-  console.log("pipeline", pipeline);
 
   // Execute the aggregation
   const doctors = await User.aggregate(pipeline);

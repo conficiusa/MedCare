@@ -9,21 +9,8 @@ import Datacards from "./components/datacards";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import AvailableToggle from "@/components/blocks/availableToggle";
+import { specializations } from "@/lib/data";
 
-const specialities: string[] = [
-  "Cardiology",
-  "Dental",
-  "Dermatology",
-  "General Medicine",
-  "Gynaecology",
-  "Mental Health",
-  "Nutrition and Diets",
-  "Neurology",
-  "Opthamology",
-  "Pediatrics",
-  "Urology",
-  "Infectious Diseases",
-];
 const FindDoctor = async (props: {
   searchParams?: {
     query?: string;
@@ -43,10 +30,10 @@ const FindDoctor = async (props: {
           Find a healthcare professional based on the type of service, symptom
           or speciality
         </p>
-        <div className="flex ">
+        <div className="flex gap-6">
           <SearchInput
             label="search doctor"
-            containerClassName="md:w-3/5"
+            containerClassName="md:w-3/5 "
             placeholder="example: symptom - flu, cold; specialty - dermatology, mental health, primary care"
           />
           <AvailableToggle />
@@ -104,13 +91,14 @@ const FindDoctor = async (props: {
             </TabsList>
             <TabsContent value="specialities">
               <div className="flex items-center space-between gap-3 max-w-4xl flex-wrap">
-                {specialities.map((item, index) => (
+                {specializations.map((item, index) => (
                   <Button
                     key={index}
                     variant="default"
                     className="flex items-center gap-2"
                   >
-                    {item} <ArrowRight className="w-4 h-4" strokeWidth={1.8} />
+                    {item?.label}{" "}
+                    <ArrowRight className="w-4 h-4" strokeWidth={1.8} />
                   </Button>
                 ))}
               </div>
