@@ -131,7 +131,7 @@ const DoctorOnboardingCredentials = ({
             </FormBuilder>
             <FormBuilder
               name="experience"
-              label="How long have you been a licensed Practitioner"
+              label="How long have you been a licensed Practitioner (Years)"
               message
             >
               <Input placeholder="experience level" type="number" />

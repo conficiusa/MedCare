@@ -31,7 +31,7 @@ const DoctorOnboardingSideNav = ({
         <div className="absolute left-[16px] top-1 bottom-1 w-px bg-muted"></div>
         <div className="space-y-10">
           {steps.map((step) => (
-            <div key={step} className="flex items-start relative z-10">
+            <div key={step} className={cn("flex items-start relative z-10",step !== currentStep &&"max-md:hidden")}>
               <motion.div
                 className={`rounded-full bg-muted p-2 ${
                   currentStep === step

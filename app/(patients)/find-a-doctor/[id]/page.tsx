@@ -21,7 +21,7 @@ type Props = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 export async function generateMetadata(
-  { params, searchParams }: Props,
+  { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   // read route params
@@ -42,6 +42,8 @@ export async function generateMetadata(
     title: `Dr. ${doctor?.name.split(" ")[0]}`,
     description: doctor?.doctorInfo?.bio,
     openGraph: {
+      title: `Dr. ${doctor?.name.split(" ")[0]}`,
+      description: doctor?.doctorInfo?.bio,
       images: [doctor?.image, ...previousImages],
     },
   };

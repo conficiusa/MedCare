@@ -1,7 +1,13 @@
 "use client";
 import { TimePicker } from "@/components/blocks/timepicker";
 import { Calendar } from "@/components/ui/calendar";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Trash2, Edit2 } from "lucide-react";
 import {
@@ -83,7 +89,8 @@ export default function Schedule({
 
   return (
     <div className="container">
-      <h3 className="text-xl font-semibold mb-6">Schedule Management</h3>
+      <h3 className="text-xl font-semibold mb-3">Schedule Management</h3>
+      <p className="font-normal text-lg my-5">Open a slot</p>
       <div
         className={cn(
           "grid grid-cols-1 gap-6",
