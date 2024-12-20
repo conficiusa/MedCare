@@ -22,7 +22,7 @@ const ConsultationPreview = async () => {
     return <div>{data.message}</div>;
   }
   return (
-    <section className="sm:bg-muted/30 min-h-[500px] my-16 rounded-sm ">
+    <section className="sm:bg-muted/30 min-h-[500px] py-16 rounded-sm container">
       <div className="sm:p-10">
         <h4 className="font-semibold mb-6">
           Speak to a Healthcare Professional Today

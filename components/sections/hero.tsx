@@ -8,7 +8,7 @@ const Hero = () => {
     <section
       id="#"
       role="banner"
-      className="grid lg:grid-cols-[500px_1fr] min-h-[calc(100dvh_-_4rem)] lg:py-14  max-lg:grid-rows-[0.6fr_1fr]"
+      className="grid lg:grid-cols-[500px_1fr] min-h-[calc(100dvh_-_4rem)] lg:py-14  max-lg:grid-rows-[0.6fr_1fr] container"
     >
       <div className="lg:py-8 pb-4 pt-8">
         <div className="flex justify-center flex-col h-full gap-4 max-lg:items-center max-lg:text-center">

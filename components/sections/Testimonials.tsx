@@ -3,9 +3,9 @@ import TestimonialCard from "../blocks/testimononialCard";
 
 const Testimonials = () => {
   return (
-    <section className="grid md:grid-cols-[auto_1fr] mb-20 md:gap-24 gap-5">
+    <section className="grid md:grid-cols-[auto_1fr] mb-20 md:gap-24 gap-5 container pt-10">
       <div>
-        <h2 className="text-xl font-medium max-md:text-center">
+        <h2 className="text-xl font-light max-md:text-center">
           Patient <br className="hidden md:block" /> Praises
         </h2>
       </div>

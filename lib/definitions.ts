@@ -31,7 +31,7 @@ export interface ITransaction extends Document {
   amount: number;
   currency: string;
   receiptNumber: string;
-  cardType: "visa "  | "mastercard";
+  cardType: "visa " | "mastercard";
   IpAddress: string;
   paidAt: string;
   status: "pending" | "completed" | "failed";
@@ -243,6 +243,7 @@ export interface Appointment {
   slotId: string;
 }
 export interface ServiceCard {
+  url: string;
   title: string;
   icon: React.ReactNode;
   description: string;

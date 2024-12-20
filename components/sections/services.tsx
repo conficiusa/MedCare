@@ -3,19 +3,19 @@ import ServiceCards from "@/components/blocks/serviceCards";
 
 const Services = () => {
   return (
-    <section className="">
-      <div className="grid xl:grid-cols-[500px_1fr] lg:grid-cols-[300px_1fr]  gap-8 ">
-        <div className="lg:flex hidden">
+    <section className="container bg-gray-100 dark:bg-background">
+      <div className="grid xl:grid-cols-[auto_1fr] lg:grid-cols-[300px_1fr]  gap-8 ">
+        <div className="lg:flex hidden ">
           <Image
-            src={"/ServicePic.svg"}
+            src={"/Service.png"}
             alt="a doctor"
-            width={500}
-            height={500}
-            className="object-fit -scale-x-100"
+            width={450}
+            height={1000}
+            className="object-contain -scale-x-100 aspect-[2000/1333]"
           />
         </div>
-        <div>
-          <h3 className="text-2xl font-semibold mb-6 max-lg:text-center">
+        <div className="space-y-4 py-8">
+          <h3 className="text-2xl font-light max-lg:text-center">
             Our Services
           </h3>
           <ServiceCards />

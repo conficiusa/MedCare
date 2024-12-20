@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 const ReferFriend = () => {
   return (
-    <section className="mb-10">
+    <section className="mb-10 container">
       <div className="bg-muted min-h-[280px] rounded-sm flex justify-center items-center flex-col py-5">
         <div className="flex flex-col justify-center items-center sm:px-20 px-8 max-sm:text-center">
           <Image
