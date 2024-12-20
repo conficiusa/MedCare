@@ -1,6 +1,5 @@
 import {
   CircleDot,
-  MessageCircle,
   MessageSquareDot,
   Stethoscope,
   Video,
