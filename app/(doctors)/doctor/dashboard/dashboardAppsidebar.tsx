@@ -14,7 +14,9 @@ import { DoctorSidebarMain } from "./mainNav";
 
 // This is sample data.
 
-export function DoctorDashboardSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function DoctorDashboardSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar
       collapsible="icon"

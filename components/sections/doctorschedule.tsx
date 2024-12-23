@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trash2, Edit2 } from "lucide-react";
+import { Trash2} from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -106,9 +106,22 @@ export default function Schedule({
             <Calendar
               mode="single"
               selected={selectedDate}
-              onSelect={setSelectedDate}
+              onSelect={(date) => {
+                if (date) {
+                  const normalizedDate = new Date(
+                    Date.UTC(
+                      date.getFullYear(),
+                      date.getMonth(),
+                      date.getDate()
+                    )
+                  );
+                  setSelectedDate(normalizedDate);
+                }
+              }}
               className="rounded-md border w-full"
-              disabled={(date) => date < new Date()}
+              disabled={(date) =>
+                date < new Date(new Date().setHours(0, 0, 0, 0))
+              }
               classNames={{
                 months:
                   "flex w-full flex-col sm:flex-row space-y-6 sm:space-x-4 sm:space-y-0 flex-1",
@@ -160,11 +173,12 @@ export default function Schedule({
                     loading: "creating slot...",
                     success: (data) => {
                       if (data?.status === "success") {
-                        return data?.message;
+                        return "Success";
                       }
                       throw new Error(data?.message);
                     },
-                    error: (error) => error?.message,
+                    error: "Error creating slot",
+                    description: (data) => data?.message,
                   })
                 }
               >

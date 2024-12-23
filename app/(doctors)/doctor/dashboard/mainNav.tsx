@@ -26,6 +26,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
 
 interface itemsTypes {
   title: string;
@@ -140,9 +141,9 @@ export function DoctorSidebarMain() {
                         asChild
                         className="text-xs text-muted-foreground"
                       >
-                        <a href={subItem.url}>
+                        <Link href={subItem.url}>
                           <span>{subItem.title}</span>
-                        </a>
+                        </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}

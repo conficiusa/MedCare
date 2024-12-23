@@ -55,7 +55,10 @@ export default async function DoctorUserDp() {
           <DropdownMenuGroup>
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <Link href="/doctor/dashboard/appointments">
-              <DropdownMenuItem>Dashboard</DropdownMenuItem>
+              <DropdownMenuItem>Appointments</DropdownMenuItem>
+            </Link>
+            <Link href="/doctor/dashboard/schedule">
+              <DropdownMenuItem>Manage Schedule</DropdownMenuItem>
             </Link>
             <DropdownMenuItem>Make a complain</DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>

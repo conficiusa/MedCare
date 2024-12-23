@@ -13,8 +13,6 @@ const Datacards = async ({ searchParams }: { searchParams?: propTypes }) => {
   const currentPage = Number(searchParams?.page) || 1;
   const showall = Boolean(searchParams?.show_all) || false;
 
-  console.log("searchP", searchParams);
-
   const queryOptions = {
     filter: {
       "doctorInfo.verification": "approved",

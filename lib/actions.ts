@@ -63,6 +63,7 @@ export async function emailAuth(
     await signIn("nodemailer", {
       ...parsed.data,
       callbackUrl,
+      redirectTo: callbackUrl ?? "/",
     });
 
     return {
@@ -72,7 +73,7 @@ export async function emailAuth(
       data: {},
     } as SuccessReturn;
   } catch (error: any) {
-    console.error(error);
+    console.error(error.message);
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
@@ -81,7 +82,7 @@ export async function emailAuth(
             type: "Credentials Error",
             status: "fail",
             statusCode: 401,
-            error: error,
+            error: error.message,
           };
         case "CallbackRouteError":
           return {
@@ -90,7 +91,7 @@ export async function emailAuth(
             type: "Callback Error",
             status: "fail",
             statusCode: 400,
-            error: error,
+            error: error.message,
           };
         default:
           return {
@@ -117,8 +118,8 @@ export const googleSignIn = async (
 ): Promise<ReturnType> => {
   try {
     await signIn("google", {
-      callbackUrl: redirect ?? "/find-a-doctor",
-      redirectTo: redirect ?? "/find-a-doctor",
+      callbackUrl: redirect ?? "/",
+      redirectTo: redirect ?? "/",
     });
 
     return {
@@ -271,7 +272,10 @@ export const CreateAppointment = async (
 
     // This will be handled by the system admin when the get this log on the server since user cant do anything about that
     if (timeSlotBooking?.status === "fail") {
-      console.error("Appoinment created but slot still available",appointment.toObject());
+      console.error(
+        "Appoinment created but slot still available",
+        appointment.toObject()
+      );
     }
 
     // Return the appointment
@@ -808,7 +812,7 @@ export const createAvailability = async (
       revalidateTag("availability");
       return {
         status: "success",
-        message: "Availability updated successfully",
+        message: "Slot created successfully",
         statusCode: 200,
         data: existingAvailability.toObject(),
       } as SuccessReturn;
@@ -819,7 +823,7 @@ export const createAvailability = async (
       revalidateTag("availability");
       return {
         status: "success",
-        message: "Availability created successfully",
+        message: "Slot created successfully",
         statusCode: 201,
         data: newAvailability.toObject(),
       } as SuccessReturn;
@@ -840,7 +844,7 @@ export const deleteSlot = async (slotId: string): Promise<ReturnType> => {
   if (!authSession) {
     return {
       error: "Not Authenticated",
-      message: "You must be logged in to create availability",
+      message: "You must be logged in to delete slot",
       status: "fail",
       statusCode: 401,
       type: "Authentication Error",

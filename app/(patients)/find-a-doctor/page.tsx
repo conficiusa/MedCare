@@ -10,6 +10,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import AvailableToggle from "@/components/blocks/availableToggle";
 import { specializations } from "@/lib/data";
+import ButtonList from "@/components/blocks/button-list";
 
 const FindDoctor = async (props: {
   searchParams?: {
@@ -91,16 +92,7 @@ const FindDoctor = async (props: {
             </TabsList>
             <TabsContent value="specialities">
               <div className="flex items-center space-between gap-3 max-w-4xl flex-wrap">
-                {specializations.map((item, index) => (
-                  <Button
-                    key={index}
-                    variant="default"
-                    className="flex items-center gap-2"
-                  >
-                    {item?.label}{" "}
-                    <ArrowRight className="w-4 h-4" strokeWidth={1.8} />
-                  </Button>
-                ))}
+                <ButtonList specializations={specializations} />
               </div>
             </TabsContent>
             <TabsContent value="in-person">
