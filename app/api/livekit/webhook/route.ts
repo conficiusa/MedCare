@@ -23,6 +23,7 @@ export async function POST(req: Request): Promise<NextResponse> {
       req.headers.get("authorization") as string
     );
     const res = await roomService.listParticipants(event?.room?.name ?? "");
+    console.log("participants", res);
     console.log("event", event);
     return NextResponse.json(
       { message: "Webhook received", event },
