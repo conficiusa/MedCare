@@ -1,8 +1,9 @@
+'use client';
 import { Session } from "next-auth";
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 
-const SOCKET_SERVER_URL = "http://localhost:3000"; // Replace with your server URL
+const SOCKET_SERVER_URL = "https://medcare-hub.vercel.app"; // Replace with your server URL
 
 const State = ({ session }: { session: Session }) => {
   const [state, setState] = useState(null);
