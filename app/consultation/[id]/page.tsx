@@ -3,6 +3,7 @@ import VideoCall from "./video";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import State from "./state";
 
 interface Room {
   sid: string;
@@ -22,7 +23,12 @@ const Consultation = async ({ params }: Bookingprops) => {
     redirect("/sign-in");
   }
 
-  return <VideoCall appointmentId={params?.id} session={session} />;
+  return (
+    <>
+      <State session={session} />
+      <VideoCall appointmentId={params?.id} session={session} />
+    </>
+  );
 };
 
 export default Consultation;

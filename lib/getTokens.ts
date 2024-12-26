@@ -137,6 +137,8 @@ export const generateRoomToken = async (
           session.user?.id === appointment?.doctor?.doctorId
             ? "doctor"
             : "patient",
+        appointmentId,
+        user_id: session.user?.id,
       },
     });
     token.addGrant({
