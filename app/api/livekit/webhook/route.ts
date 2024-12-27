@@ -1,4 +1,3 @@
-import { consultationActor } from "@/lib/stateMachines";
 import { WebhookReceiver } from "livekit-server-sdk";
 import { NextResponse } from "next/server";
 
