@@ -8,6 +8,7 @@ import { ThemeToggler } from "@/components/blocks/themeToggler";
 import { cn } from "@/lib/utils";
 import Logo from "./logo";
 import DoctorUserDp from "./doctorUserDp";
+import { gugi } from "@/lib/fonts";
 
 const Navbar = async () => {
   const session = await auth();
@@ -26,7 +27,8 @@ const Navbar = async () => {
           <Link href="/">
             <h1
               className={cn(
-                "text-md  lg:text-xl font-bold flex items-center gap-1 "
+                "text-md  lg:text-xl font-bold flex items-center gap-1 ",
+                gugi.className
               )}
             >
               MedCare Hub <Logo className="w-8 h-8" />

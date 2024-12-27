@@ -1,6 +1,6 @@
 import { assign, createActor, setup } from "xstate";
 
-const consultationMachine = setup({
+ export const consultationMachine = setup({
   types: {
     events: {} as
       | { type: "PARTICIPANT_LEFT"; disconnectReason: number }
@@ -54,10 +54,3 @@ const consultationMachine = setup({
     },
   },
 });
-
-export const consultationActor = createActor(consultationMachine);
-
-consultationActor.subscribe((state) => {
-  console.log(state);
-});
-consultationActor.start();

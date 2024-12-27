@@ -1,37 +1,37 @@
-'use client';
-import { Session } from "next-auth";
-import React, { useEffect, useState } from "react";
-import io from "socket.io-client";
+"use client";
+import { useState, useEffect } from "react";
+import * as Ably from "ably";
+import { useActor, useMachine } from "@xstate/react";
+import { consultationMachine } from "@/lib/stateMachines";
 
-const SOCKET_SERVER_URL = "https://medcare-hub.vercel.app"; // Replace with your server URL
+export default function ParticipantState({ clientId }: { clientId: string }) {
+  // Initialize the state machine actor
+  const [state, send] = useMachine(consultationMachine);
 
-const State = ({ session }: { session: Session }) => {
-  const [state, setState] = useState(null);
-
+  // Connect to Ably
   useEffect(() => {
-    // Initialize Socket.IO client with user ID
-    const socket = io(SOCKET_SERVER_URL, {
-      query: { userId: session.user.id },
+    const client = new Ably.Realtime({
+      key: process.env.NEXT_PUBLIC_ABLY_API_KEY!,
+      clientId: clientId,
     });
 
-    // Listen for the 'state_update' event
-    socket.on("state_update", (newState) => {
-      console.log("State update received:", newState);
-      setState(newState);
+    const channel = client.channels.get(`state-updates-${clientId}`);
+
+    // Listen for events and trigger state machine transitions
+    channel.subscribe("state-update", (message) => {
+      const { event } = message.data;
+
+      if (event === "participant.left") {
+        send({ type: "PARTICIPANT_LEFT", disconnectReason: 1 }); // Send event to XState
+      }
     });
 
-    // Clean up the socket connection when the component unmounts
     return () => {
-      socket.disconnect();
+      channel.unsubscribe();
+      client.close();
     };
-  }, [session]);
+  }, [clientId, send]);
 
-  return (
-    <div>
-      <h1>State Update</h1>
-      <pre>{JSON.stringify(state, null, 2)}</pre>
-    </div>
-  );
-};
-
-export default State;
+  // Render UI based on the current state
+  return <div>{JSON.stringify(state.output)}</div>;
+}

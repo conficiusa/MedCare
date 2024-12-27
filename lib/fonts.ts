@@ -1,4 +1,4 @@
-import {  Inter, Lusitana } from "next/font/google";
+import {  Gugi, Inter, Lusitana } from "next/font/google";
 
 export const inter = Inter({ subsets: ["latin"] });
 export const lusitana = Lusitana({
@@ -10,8 +10,8 @@ export const lusitana = Lusitana({
 //   subsets: ["vietnamese"],
 // });
 
-// export const gugi = Gugi({
-//   weight: ["400"],
-//   subsets: ["latin"],
-// });
+export const gugi = Gugi({
+  weight: ["400"],
+  subsets: ["latin"],
+});
 
