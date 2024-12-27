@@ -1,7 +1,7 @@
 "use client";
-import { useState, useEffect } from "react";
+import {  useEffect } from "react";
 import * as Ably from "ably";
-import { useActor, useMachine } from "@xstate/react";
+import {useMachine } from "@xstate/react";
 import { consultationMachine } from "@/lib/stateMachines";
 
 export default function ParticipantState({ clientId }: { clientId: string }) {
