@@ -69,7 +69,7 @@ export default function Schedule({
       updatedEndTime.setMinutes(endTime.getMinutes());
       setEndTime(updatedEndTime);
     }
-  }, [selectedDate, endTime, startTime]);
+  }, [selectedDate]);
 
   const addSlot = async () => {
     const availability: DeepPartial<AvailabilityType> = {
