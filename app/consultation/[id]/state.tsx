@@ -13,6 +13,7 @@ export default function ParticipantState({ clientId }: { clientId: string }) {
     const client = new Ably.Realtime({
       key: process.env.NEXT_PUBLIC_ABLY_API_KEY!,
       clientId: clientId,
+      
     });
 
     const channel = client.channels.get(`state-updates-${clientId}`);

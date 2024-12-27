@@ -28,7 +28,7 @@ const AvailableToggle = () => {
       params.delete("show_all");
     }
     replace(`${pathname}?${params.toString()}`);
-  }, [showavailable, replace, searchParams, pathname]);
+  }, [ replace, searchParams, pathname]);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

@@ -17,6 +17,7 @@ export function AnimateInView({
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const currentRef = ref.current;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -29,13 +30,13 @@ export function AnimateInView({
       }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);
@@ -43,9 +44,8 @@ export function AnimateInView({
   return (
     <div
       ref={ref}
-      className={`${className} transition-all duration-700 ${
-        isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
-      }`}
+      className={`${className} ${isVisible ? "visible" : ""}`}
+      style={style}
     >
       {children}
     </div>

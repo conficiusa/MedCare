@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trash2} from "lucide-react";
+import { Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -69,7 +69,7 @@ export default function Schedule({
       updatedEndTime.setMinutes(endTime.getMinutes());
       setEndTime(updatedEndTime);
     }
-  }, [selectedDate]);
+  }, [selectedDate, endTime, startTime]);
 
   const addSlot = async () => {
     const availability: DeepPartial<AvailabilityType> = {

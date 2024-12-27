@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import Ably from "ably";
 
-const ably = new Ably.Realtime(process.env.ABLY_API_KEY!);
+const ably = new Ably.Realtime(process.env.ABLY_KEY as string);
 
 export async function POST(req: Request) {
   const body = await req.json();
