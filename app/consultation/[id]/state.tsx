@@ -20,5 +20,26 @@ export default function ParticipantState({ clientId }: { clientId: string }) {
   console.log(event);
   console.log(channel);
   // Render UI based on the current state
-  return <div>{JSON.stringify(state)}</div>;
+  return (
+    <div>
+      {JSON.stringify(state)}{" "}
+      <button
+        onClick={async () =>
+          await fetch("api/ably/publish", {
+            method: "POST",
+            body: JSON.stringify({
+              participantId: clientId,
+              disconnectReason: 1,
+              event: "participant_left",
+            }),
+            headers: { "Content-Type": "application/json" },
+          }).catch((error) => {
+            console.error("Failed to publish to Ably:", error.message);
+          })
+        }
+      >
+        triger
+      </button>
+    </div>
+  );
 }
