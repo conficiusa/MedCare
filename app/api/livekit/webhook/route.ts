@@ -14,8 +14,9 @@ export async function POST(req: Request): Promise<NextResponse> {
     }
     const event = await receiver.receive(await req.text(), authHeader);
     console.log("event", event);
+    const ablyPublishUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/ably/publish`;
     if (event.event === "participant_left") {
-      await fetch("/api/ably/publish", {
+      await fetch(ablyPublishUrl, {
         method: "POST",
         body: JSON.stringify({
           participantId: event.participant?.attributes.user_id,
