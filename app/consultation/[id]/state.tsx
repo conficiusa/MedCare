@@ -25,7 +25,7 @@ export default function ParticipantState({ clientId }: { clientId: string }) {
       {JSON.stringify(state)}{" "}
       <button
         onClick={async () =>
-          await fetch("api/ably/publish", {
+          await fetch("/api/ably/publish", {
             method: "POST",
             body: JSON.stringify({
               participantId: clientId,
