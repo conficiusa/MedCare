@@ -15,16 +15,16 @@ export async function POST(req: Request): Promise<NextResponse> {
     const event = await receiver.receive(await req.text(), authHeader);
     console.log("event", event);
     if (event.event === "participant_left") {
-      await fetch("/api/ably/broadcast", {
+      await fetch("/api/ably/publish", {
         method: "POST",
         body: JSON.stringify({
-          clientId: event.participant?.attributes.user_id, // Target client
-          data: {
-            participantId: event.participant?.attributes.user_id,
-            disconnectReason: event.participant?.disconnectReason,
-          },
+          participantId: event.participant?.attributes.user_id,
+          disconnectReason: event.participant?.disconnectReason,
+          event: "participant_left",
         }),
         headers: { "Content-Type": "application/json" },
+      }).catch((error) => {
+        console.error("Failed to publish to Ably:", error.message);
       });
     }
     return NextResponse.json(

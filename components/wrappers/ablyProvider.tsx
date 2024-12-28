@@ -1,7 +1,7 @@
-import * as Ably from "ably";
-
+"use client";
 import React, { ReactNode } from "react";
-import { AblyProvider } from "ably/react";
+import { AblyProvider, ChannelProvider } from "ably/react";
+import { Realtime } from "ably";
 
 const AblyRealtimeProvider = ({
   children,
@@ -10,12 +10,18 @@ const AblyRealtimeProvider = ({
   children: ReactNode;
   clientId: string;
 }) => {
-  const client = new Ably.Realtime({
-    key: process.env.NEXT_PUBLIC_ABLY_KEY,
-    clientId,
+  const client = new Realtime({
+    key: process.env.NEXT_PUBLIC_ABLY_KEY as string,
+    autoConnect: typeof window !== "undefined",
+    clientId: clientId,
   });
-
-  return <AblyProvider client={client}>{children}</AblyProvider>;
+  return (
+    <AblyProvider client={client}>
+      <ChannelProvider channelName={`consultation-${clientId}`}>
+        {children}
+      </ChannelProvider>
+    </AblyProvider>
+  );
 };
 
 export default AblyRealtimeProvider;

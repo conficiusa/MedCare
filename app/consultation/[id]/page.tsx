@@ -1,9 +1,7 @@
-import { FetchAppointmentByRoomId } from "@/lib/queries";
 import VideoCall from "./video";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import Link from "next/link";
-import State from "./state";
+import ParticipantState from "./state";
 
 interface Room {
   sid: string;
@@ -25,7 +23,7 @@ const Consultation = async ({ params }: Bookingprops) => {
 
   return (
     <>
-      <State clientId={session?.user?.id as string} />
+      <ParticipantState clientId={session?.user?.id as string} />
       <VideoCall appointmentId={params?.id} session={session} />
     </>
   );

@@ -1,38 +1,24 @@
 "use client";
-import {  useEffect } from "react";
-import * as Ably from "ably";
-import {useMachine } from "@xstate/react";
+import { useState } from "react";
 import { consultationMachine } from "@/lib/stateMachines";
+import { useChannel } from "ably/react";
+import { useActorRef, useSelector } from "@xstate/react";
 
+interface event {
+  type?: string;
+  disconnectReason?: number;
+}
 export default function ParticipantState({ clientId }: { clientId: string }) {
-  // Initialize the state machine actor
-  const [state, send] = useMachine(consultationMachine);
+  const [event, setEvent] = useState<event>({});
 
-  // Connect to Ably
-  useEffect(() => {
-    const client = new Ably.Realtime({
-      key: process.env.NEXT_PUBLIC_ABLY_API_KEY!,
-      clientId: clientId,
-      
-    });
+  const consultRef = useActorRef(consultationMachine);
+  const state = useSelector(consultRef, (state) => state.value);
 
-    const channel = client.channels.get(`state-updates-${clientId}`);
-
-    // Listen for events and trigger state machine transitions
-    channel.subscribe("state-update", (message) => {
-      const { event } = message.data;
-
-      if (event === "participant.left") {
-        send({ type: "PARTICIPANT_LEFT", disconnectReason: 1 }); // Send event to XState
-      }
-    });
-
-    return () => {
-      channel.unsubscribe();
-      client.close();
-    };
-  }, [clientId, send]);
-
+  const { channel } = useChannel(`consultation-${clientId}`, (message) => {
+    setEvent(message.data);
+  });
+  console.log(event);
+  console.log(channel);
   // Render UI based on the current state
-  return <div>{JSON.stringify(state.output)}</div>;
+  return <div>{JSON.stringify(state)}</div>;
 }
