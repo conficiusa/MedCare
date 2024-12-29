@@ -13,12 +13,10 @@ export default function ParticipantState({ clientId }: { clientId: string }) {
 
   const consultRef = useActorRef(consultationMachine);
   const state = useSelector(consultRef, (state) => state.value);
-
-  const { channel } = useChannel(`consultation-${clientId}`, (message) => {
+  useChannel(`consultation-${clientId}`, (message) => {
     setEvent(message.data);
   });
   console.log(event);
-  console.log(channel);
   // Render UI based on the current state
   return (
     <div>

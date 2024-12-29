@@ -21,13 +21,19 @@ export const POST = async (req: Request) => {
     const client = new Realtime({
       key: process.env.ABLY_KEY,
       clientId: session.user.id,
+      autoConnect: true, // Ensure autoConnect is enabled
+    });
+
+    // Add error handling for the client
+    client.connection.on("failed", (err) => {
+      console.error("Ably connection failed:", err);
     });
 
     // Publish message to the user's unique channel
     const channel = client.channels.get(`consultation-${participantId}`);
     if (event === "participant_left") {
       await channel.publish("state-update", {
-        event: "participant.left",
+        event,
         disconnectReason,
       });
     }
