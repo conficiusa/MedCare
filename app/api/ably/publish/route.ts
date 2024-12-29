@@ -4,38 +4,12 @@ import { Realtime } from "ably";
 // Webhook listener for POST requests
 export const POST = async (req: Request) => {
   try {
-    const session = await auth();
-    if (!session || !session.user) {
-      return Response.json(
-        { success: false, error: "Not authenticated" },
-        { status: 401 }
-      );
-    }
-    // Parse incoming webhook event
     const body = await req.json();
-
-    console.log("body:", body);
     const { event, participantId, disconnectReason } = body;
 
-    // Initialize Ably client
-    const client = new Realtime({
-      key: process.env.ABLY_KEY,
-      clientId: session.user.id,
-      autoConnect: true, // Ensure autoConnect is enabled
-    });
-
-    // Add error handling for the client
-    client.connection.on("failed", (err) => {
-      console.error("Ably connection failed:", err);
-    });
-
-    // Publish message to the user's unique channel
-    const channel = client.channels.get(`consultation-${participantId}`);
     if (event === "participant_left") {
-      await channel.publish("state-update", {
-        event,
-        disconnectReason,
-      });
+      // Publish state-update event to Ably
+      await BroadcastEvent(participantId, event, disconnectReason);
     }
 
     // Return success response
@@ -50,4 +24,21 @@ export const POST = async (req: Request) => {
       { status: 500 }
     );
   }
+};
+
+const BroadcastEvent = async (
+  participantId: string,
+  event: string,
+  disconnectReason: number
+) => {
+  const client = new Realtime({
+    key: process.env.ABLY_KEY,
+    clientId: participantId,
+  });
+  await client.connection.once("connected");
+  const channel = client.channels.get(`consultation-${participantId}`);
+  await channel.publish("state-update", {
+    event,
+    disconnectReason,
+  });
 };
