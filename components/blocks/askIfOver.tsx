@@ -23,13 +23,13 @@ const ConsultationStatusDialog = ({
         <AlertDialogHeader>
           <AlertDialogTitle>Confirm consultation status</AlertDialogTitle>
           <AlertDialogDescription className="sr-only">
-            We noticed that you've been disconnected . Please confirm if you're
-            still in the consultation and trying to reconnect
+            We noticed that you&apos;ve been disconnected . Please confirm if
+            you&apos;re still in the consultation and trying to reconnect
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="text-sm text-muted-foreground">
-          We noticed that you've been disconnected . Please confirm if you're
-          still in the consultation and trying to reconnect
+          We noticed that you&apos;ve been disconnected . Please confirm if
+          you&apos;re still in the consultation and trying to reconnect
         </div>
         <AlertDialogFooter>
           <AlertDialogAction className="primary">
