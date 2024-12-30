@@ -8,7 +8,7 @@ export const POST = async (req: Request) => {
 
     if (event === "participant_left") {
       // Publish state-update event to Ably
-      await BroadcastEvent(participantId, event, disconnectReason);
+      await BroadcastEvent(participantId, disconnectReason);
     }
 
     // Return success response
@@ -27,13 +27,12 @@ export const POST = async (req: Request) => {
 
 const BroadcastEvent = async (
   participantId: string,
-  event: string,
   disconnectReason: number
 ) => {
   const client = new Rest(process.env.ABLY_KEY ?? "");
   const channel = client.channels.get(`consultation-${participantId}`);
   await channel.publish("state-update", {
-    event,
+    event: "PARTICIPANT_LEFT",
     disconnectReason,
   });
 };

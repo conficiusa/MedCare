@@ -12,9 +12,13 @@ export async function POST(req: Request): Promise<NextResponse> {
     if (!authHeader) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+
+    // Parse webhook event
     const event = await receiver.receive(await req.text(), authHeader);
     console.log("event", event);
-    const ablyPublishUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/ably/publish`;
+
+    // Publish to Ably
+    const ablyPublishUrl = `${process.env.NEXT_PUBLIC_HOSTNAME}/api/ably/publish`;
     if (event.event === "participant_left") {
       await fetch(ablyPublishUrl, {
         method: "POST",
