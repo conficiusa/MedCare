@@ -896,48 +896,56 @@ export const deleteSlot = async (slotId: string): Promise<ReturnType> => {
   }
 };
 
-export const SocketConnect = async ({
-  event,
-  participantId,
-  disconnectReason,
-}: {
-  event: string;
-  participantId: string;
-  disconnectReason: number;
-}) => {
+const markAppointmentComplete = async (
+  appointmentId: string
+): Promise<ReturnType> => {
   try {
-    if (event === "participant_left") {
-      // Publish state-update event to Ably
-      await BroadcastEvent(participantId, event, disconnectReason);
+    const authSession = await auth();
+    if (!authSession) {
+      return {
+        error: "Not Authenticated",
+        message: "You must be logged in to mark an appointment as complete",
+        status: "fail",
+        statusCode: 401,
+        type: "Authentication Error",
+      } as ErrorReturn;
     }
-
-    // Return success response
-    return Response.json({
-      success: true,
-      message: "state-update event published",
-    });
-  } catch (error) {
-    console.error("Error processing webhook:", error);
-    return Response.json(
-      { success: false, error: "Failed to process webhook" },
-      { status: 500 }
-    );
+    if (!appointmentId) {
+      return {
+        error: "Missing appointment ID",
+        message: "Appointment ID is required",
+        status: "fail",
+        statusCode: 400,
+        type: "Bad Request",
+      } as ErrorReturn;
+    }
+    const appointment = await Appointment.findById(appointmentId);
+    if (!appointment) {
+      return {
+        error: "Appointment not found",
+        message: "The appointment you are trying to mark does not exist",
+        status: "fail",
+        statusCode: 404,
+        type: "Not Found",
+      } as ErrorReturn;
+    }
+    appointment.status = "completed";
+    appointment.completedAt = new Date();
+    appointment.CompletedBy = authSession.user.id ?? "system";
+    await appointment.save();
+    return {
+      status: "success",
+      message: "Appointment marked as completed",
+      statusCode: 200,
+    } as SuccessReturn;
+  } catch (error: any) {
+    console.error(error);
+    return {
+      error: error?.message,
+      message: "An unexpected error occurred",
+      status: "fail",
+      statusCode: 500,
+      type: "Server Error",
+    } as ErrorReturn;
   }
-};
-
-const BroadcastEvent = async (
-  participantId: string,
-  event: string,
-  disconnectReason: number
-) => {
-  const client = new Realtime({
-    key: process.env.ABLY_KEY,
-    clientId: participantId,
-  });
-  await client.connection.once("connected");
-  const channel = client.channels.get(`consultation-${participantId}`);
-  await channel.publish("state-update", {
-    event,
-    disconnectReason,
-  });
 };

@@ -221,7 +221,7 @@ export const FetchAppointment = async (id: string): Promise<ReturnType> => {
     const plainAppointment = appointment?.toObject();
     return {
       data: plainAppointment as Partial<AppointmentType>,
-      message: "appointments retrieved",
+      message: "appointment retrieved",
       status: "success",
       statusCode: 200,
     };

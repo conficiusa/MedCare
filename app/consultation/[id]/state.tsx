@@ -1,8 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { consultationMachine } from "@/lib/stateMachines";
 import { useActorRef, useSelector } from "@xstate/react";
 import { useChannel } from "ably/react";
+import ConsultationStatusDialog from "@/components/blocks/askIfOver";
 
 interface event {
   type?: string;
@@ -12,6 +13,7 @@ export default function ParticipantState({ clientId }: { clientId: string }) {
   const consultRef = useActorRef(consultationMachine);
   const state = useSelector(consultRef, (state) => state.value);
   const [event, updateEvent] = useState<event>({});
+  
   useChannel(`consultation-${clientId}`, (event) => {
     updateEvent(event?.data);
     consultRef.send({
@@ -42,6 +44,9 @@ export default function ParticipantState({ clientId }: { clientId: string }) {
       >
         triger
       </button>
+      {state === "askIfOver" && (
+        <ConsultationStatusDialog consultRefActor={consultRef} />
+      )}
     </div>
   );
 }
