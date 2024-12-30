@@ -1,5 +1,4 @@
-import { auth } from "@/auth";
-import { Realtime } from "ably";
+import { Rest } from "ably";
 
 // Webhook listener for POST requests
 export const POST = async (req: Request) => {
@@ -31,11 +30,7 @@ const BroadcastEvent = async (
   event: string,
   disconnectReason: number
 ) => {
-  const client = new Realtime({
-    key: process.env.ABLY_KEY,
-    clientId: participantId,
-  });
-  await client.connection.once("connected");
+  const client = new Rest(process.env.ABLY_KEY ?? "");
   const channel = client.channels.get(`consultation-${participantId}`);
   await channel.publish("state-update", {
     event,

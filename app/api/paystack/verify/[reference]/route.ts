@@ -12,8 +12,7 @@ export async function GET(
     return NextResponse.json("User session has expired");
   }
   const { reference } = params; // Dynamic route parameter for reference
-  const url = new URL(request.url);
-  const rate = url.searchParams.get("rate"); // Query parameter for rate
+  const rate = request.nextUrl.searchParams.get("rate"); // Query parameter for rate
 
   const response = await fetch(
     `https://api.paystack.co/transaction/verify/${reference}`,

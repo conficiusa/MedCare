@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import Ably from "ably";
 
-const rest = new Ably.Rest(process.env.ABLY_KEY ?? "");
 export async function GET(
   req: NextRequest,
   { params }: { params: { clientId: string } }
 ) {
+  const rest = new Ably.Rest(process.env.NEXT_PUBLIC_ABLY_CLIENT_KEY ?? "");
   const { clientId } = params;
   if (!clientId) {
     console.error("failed to generate token, client id ,missing");

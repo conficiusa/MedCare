@@ -38,6 +38,7 @@ import { isRedirectError } from "next/dist/client/components/redirect";
 import Availability from "@/models/Availability";
 import Appointment from "@/models/Appointment";
 import { sendEmail } from "@/app/api/utils/email";
+import { Realtime } from "ably";
 
 export async function emailAuth(
   email: z.output<typeof SignInSchema>,
@@ -893,4 +894,50 @@ export const deleteSlot = async (slotId: string): Promise<ReturnType> => {
       type: "Server Error",
     } as ErrorReturn;
   }
+};
+
+export const SocketConnect = async ({
+  event,
+  participantId,
+  disconnectReason,
+}: {
+  event: string;
+  participantId: string;
+  disconnectReason: number;
+}) => {
+  try {
+    if (event === "participant_left") {
+      // Publish state-update event to Ably
+      await BroadcastEvent(participantId, event, disconnectReason);
+    }
+
+    // Return success response
+    return Response.json({
+      success: true,
+      message: "state-update event published",
+    });
+  } catch (error) {
+    console.error("Error processing webhook:", error);
+    return Response.json(
+      { success: false, error: "Failed to process webhook" },
+      { status: 500 }
+    );
+  }
+};
+
+const BroadcastEvent = async (
+  participantId: string,
+  event: string,
+  disconnectReason: number
+) => {
+  const client = new Realtime({
+    key: process.env.ABLY_KEY,
+    clientId: participantId,
+  });
+  await client.connection.once("connected");
+  const channel = client.channels.get(`consultation-${participantId}`);
+  await channel.publish("state-update", {
+    event,
+    disconnectReason,
+  });
 };

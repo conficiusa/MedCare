@@ -3,52 +3,34 @@ import { useEffect, useState } from "react";
 import { consultationMachine } from "@/lib/stateMachines";
 import { useActorRef, useSelector } from "@xstate/react";
 import { RealtimeChannel, RealtimeClient, Realtime, Message } from "ably";
+import { useAbly, usePresence, usePresenceListener } from "ably/react";
 
 interface event {
   type?: string;
   disconnectReason?: number;
 }
 export default function ParticipantState({ clientId }: { clientId: string }) {
-  const [event, setEvent] = useState<event>({});
-  const [channel, setChannel] = useState<RealtimeChannel | null>(null);
   const consultRef = useActorRef(consultationMachine);
   const state = useSelector(consultRef, (state) => state.value);
+  const ably = useAbly();
+  usePresence(`consultation-${clientId}`);
+  const { presenceData } = usePresenceListener(`consultation-${clientId}`);
 
-  useEffect(() => {
-    let ablyClient: RealtimeClient;
+  const presenceList = presenceData.map((member, index) => {
+    const isItMe = member.clientId === ably.auth.clientId ? "(me)" : "";
 
-    const init = async () => {
-      ablyClient = new Realtime({
-        authUrl: `/api/ably/auth/${clientId}`,
-        clientId,
-      });
-      await ablyClient.connection.once("connected");
-      const chatChannel = ablyClient.channels.get(`consultation-${clientId}`);
-      setChannel(chatChannel);
-      await chatChannel.subscribe("state-update", (message: Message) => {
-        console.log("message", message);
-      });
-    };
-    init();
+    return (
+      <li key={index}>
+        <span>{member.clientId}</span>
+        <span>{isItMe}</span>
+      </li>
+    );
+  });
 
-    return () => {
-      if (channel) {
-        channel.unsubscribe();
-      }
-      if (ablyClient) {
-        ablyClient.close();
-      }
-    };
-  }, []);
-
-  console.log(
-    channel?.subscribe("state-update", (message: Message) => {
-      console.log("message", message);
-    })
-  );
   return (
     <div>
-      {JSON.stringify(state)}{" "}
+      <ul>{presenceList}</ul>
+      {JSON.stringify(state)}
       <button
         onClick={async () =>
           await fetch("/api/ably/publish", {

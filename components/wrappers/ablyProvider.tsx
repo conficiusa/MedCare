@@ -11,9 +11,7 @@ const AblyRealtimeProvider = ({
   clientId: string;
 }) => {
   const client = new Realtime({
-    key: process.env.NEXT_PUBLIC_ABLY_KEY as string,
-    autoConnect: typeof window !== "undefined",
-    clientId: clientId,
+    authUrl: `${process.env.NEXT_PUBLIC_HOSTNAME}/api/ably/auth/${clientId}`,
   });
   return (
     <AblyProvider client={client}>
