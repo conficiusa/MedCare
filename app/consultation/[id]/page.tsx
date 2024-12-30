@@ -23,7 +23,10 @@ const Consultation = async ({ params }: Bookingprops) => {
 
   return (
     <>
-      <ParticipantState clientId={session?.user?.id as string} />
+      <ParticipantState
+        clientId={session?.user?.id as string}
+        appointmentId={params?.id}
+      />
       <VideoCall appointmentId={params?.id} session={session} />
     </>
   );

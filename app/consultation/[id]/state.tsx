@@ -4,16 +4,24 @@ import { consultationMachine } from "@/lib/stateMachines";
 import { useActorRef, useSelector } from "@xstate/react";
 import { useChannel } from "ably/react";
 import ConsultationStatusDialog from "@/components/blocks/askIfOver";
+import { useRouter } from "next/navigation";
 
 interface event {
   type?: string;
   disconnectReason?: number;
 }
-export default function ParticipantState({ clientId }: { clientId: string }) {
+export default function ParticipantState({
+  clientId,
+  appointmentId,
+}: {
+  clientId: string;
+  appointmentId: string;
+}) {
   const consultRef = useActorRef(consultationMachine);
   const state = useSelector(consultRef, (state) => state.value);
   const [event, updateEvent] = useState<event>({});
-  
+  const router = useRouter();
+
   useChannel(`consultation-${clientId}`, (event) => {
     updateEvent(event?.data);
     consultRef.send({
@@ -23,7 +31,11 @@ export default function ParticipantState({ clientId }: { clientId: string }) {
   });
 
   console.log("event", event);
-
+  useEffect(() => {
+    if (state === "showDialogs") {
+      router.push(`${appointmentId}/review`);
+    }
+  }, [state, router]);
   return (
     <div>
       {state}
@@ -33,7 +45,7 @@ export default function ParticipantState({ clientId }: { clientId: string }) {
             method: "POST",
             body: JSON.stringify({
               participantId: clientId,
-              disconnectReason: 3,
+              disconnectReason: 1,
               event: "participant_left",
             }),
             headers: { "Content-Type": "application/json" },

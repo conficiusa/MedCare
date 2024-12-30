@@ -1,8 +1,5 @@
 import Paymentdoctorcard from "@/components/blocks/paymentdoctorcard";
-import {
-  FetchAppointment,
-  fetchUserData,
-} from "@/lib/queries";
+import { FetchAppointment, fetchUserData } from "@/lib/queries";
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
