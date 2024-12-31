@@ -82,8 +82,16 @@ export const generateRoomToken = async (
         statusCode: 404,
       };
     }
+    if (confirmAppointment?.status === "completed") {
+      return {
+        error: "This consultation session has been completed",
+        message: "This consultation session has been completed",
+        type: "Stale",
+        status: "fail",
+        statusCode: 400,
+      };
+    }
     const appointment = confirmAppointment?.toObject();
-
     const ttl = differenceInSeconds(
       new Date(appointment?.timeSlot?.endTime),
       new Date()
