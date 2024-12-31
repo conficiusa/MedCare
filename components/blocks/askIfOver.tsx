@@ -9,13 +9,16 @@ import {
   AlertDialogAction,
   AlertDialogFooter,
 } from "@/components/ui/alert-dialog";
+import { markAppointmentComplete } from "@/lib/actions";
 
 // Custom hook to manage dialog state and timeout
 
 const ConsultationStatusDialog = ({
   consultRefActor,
+  appointmentId,
 }: {
   consultRefActor: any;
+  appointmentId: string;
 }) => {
   return (
     <AlertDialog open>
@@ -32,7 +35,17 @@ const ConsultationStatusDialog = ({
           you&apos;re still in the consultation and trying to reconnect
         </div>
         <AlertDialogFooter>
-          <AlertDialogAction className="primary">
+          <AlertDialogAction
+            className="primary"
+            onClick={async () => {
+              const res = await markAppointmentComplete(appointmentId);
+              if ("data" in res) {
+                consultRefActor.send({ type: "CONSULTATION_OVER" });
+                return;
+              }
+              consultRefActor.send({ type: "NOT_OVER" });
+            }}
+          >
             End Consultation
           </AlertDialogAction>
           <AlertDialogCancel

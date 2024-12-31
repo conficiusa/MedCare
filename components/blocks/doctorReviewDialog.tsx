@@ -3,11 +3,12 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Rating } from "@smastrom/react-rating";
+import { ItemStyles, Rating, ThinStar } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
 import { Appointment, ReviewType } from "@/lib/definitions";
 import { addReview } from "@/lib/actions";
 import { toast } from "sonner";
+import { useTheme } from "next-themes";
 
 interface DoctorReviewDialogProps {
   appointment: Partial<Appointment>;
@@ -44,6 +45,14 @@ const DoctorReviewDialog: React.FC<DoctorReviewDialogProps> = ({
   const [rating, setRating] = useState<number>(0);
   const [review, setReview] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const theme = useTheme();
+
+  const customStar: ItemStyles = {
+    itemShapes: ThinStar,
+    activeFillColor: "#fae206",
+    inactiveFillColor:
+      theme?.resolvedTheme === "dark" ? "#2d3748" : "hsla(240 6.8% 85.9%)",
+  };
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -78,7 +87,7 @@ const DoctorReviewDialog: React.FC<DoctorReviewDialogProps> = ({
   return (
     <div className="grid gap-4 p-4">
       <div className="flex flex-col space-y-1.5 text-center ">
-        <h3 className="text-lg font-semibold leading-none tracking-tight">
+        <h3 className="text-xl font-semibold leading-none tracking-tight">
           Leave a review
         </h3>
         <p className="text-sm text-muted-foreground">
@@ -88,11 +97,15 @@ const DoctorReviewDialog: React.FC<DoctorReviewDialogProps> = ({
         </p>
       </div>
       <div className="flex flex-col items-center justify-cpenter space-y-2">
+        <h4 className="text-lg font-semibold leading-none tracking-tight">
+          Rate your experience
+        </h4>
         <div className="flex items-center justify-center space-x-1">
           <Rating
             style={{ maxWidth: 180 }}
             value={rating}
             onChange={setRating}
+            itemStyles={customStar}
           />
         </div>
         <span className="text-muted-foreground transition-all duration-300">

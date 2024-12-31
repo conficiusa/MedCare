@@ -19,26 +19,23 @@ export default function ParticipantState({
 }) {
   const consultRef = useActorRef(consultationMachine);
   const state = useSelector(consultRef, (state) => state.value);
-  const [event, updateEvent] = useState<event>({});
   const router = useRouter();
 
   useChannel(`consultation-${clientId}`, (event) => {
-    updateEvent(event?.data);
     consultRef.send({
       type: "PARTICIPANT_LEFT",
       disconnectReason: event?.data?.disconnectReason,
     });
   });
 
-  
   useEffect(() => {
     if (state === "showDialogs") {
-      router.refresh()
-      router.push(`/consultation//review/${appointmentId}`);
+      router.refresh();
+      router.push(`/consultation/review/${appointmentId}`);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state,appointmentId]);
+  }, [state, appointmentId]);
   return (
     <div>
       {state}
@@ -48,7 +45,7 @@ export default function ParticipantState({
             method: "POST",
             body: JSON.stringify({
               participantId: clientId,
-              disconnectReason: 1,
+              disconnectReason: 2,
               event: "participant_left",
             }),
             headers: { "Content-Type": "application/json" },
@@ -61,7 +58,10 @@ export default function ParticipantState({
         triger
       </button>
       {state === "askIfOver" && (
-        <ConsultationStatusDialog consultRefActor={consultRef} />
+        <ConsultationStatusDialog
+          consultRefActor={consultRef}
+          appointmentId={appointmentId}
+        />
       )}
     </div>
   );
