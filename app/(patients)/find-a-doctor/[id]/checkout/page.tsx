@@ -28,7 +28,7 @@ const Booking = async ({ params, searchParams }: Bookingprops) => {
     FetchAppointment(searchParams?.appointment),
   ]);
   if (data?.status === "fail" || appointment?.status === "fail") {
-    throw new Error("something went wrong");
+    
   }
   if ("data" in data && "data" in appointment) {
     const { data: doctor } = data;

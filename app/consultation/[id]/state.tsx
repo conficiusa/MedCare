@@ -38,25 +38,6 @@ export default function ParticipantState({
   }, [state, appointmentId]);
   return (
     <div>
-      {state}
-      <button
-        onClick={async () =>
-          await fetch("/api/ably/publish", {
-            method: "POST",
-            body: JSON.stringify({
-              participantId: clientId,
-              disconnectReason: 2,
-              event: "participant_left",
-            }),
-            headers: { "Content-Type": "application/json" },
-          }).catch((error) => {
-            console.error("Failed to publish to Ably:", error.message);
-          })
-        }
-        className="bg-blue-500 text-white p-2 rounded-md"
-      >
-        triger
-      </button>
       {state === "askIfOver" && (
         <ConsultationStatusDialog
           consultRefActor={consultRef}

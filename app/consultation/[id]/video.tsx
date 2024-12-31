@@ -66,9 +66,9 @@ export default function VideoCall({
 
   if (error) {
     return (
-      <div className="flex justify-center items-center h-[100dvh] flex-col max:sm:px-4">
+      <div className="flex justify-center items-center h-[100dvh] flex-col max-sm:px-4">
         <h1>{error?.message}</h1>
-        <p className="text-sm">
+        <p className="text-sm text-center text-muted-foreground">
           If you have a valid appointment yet the error persists, kindly{" "}
           <Link className="text-primary" href={"/contact"}>
             Contact us

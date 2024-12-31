@@ -146,6 +146,7 @@ export const generateRoomToken = async (
     const token = new AccessToken(apiKey, apiSecret, {
       identity,
       name: room?.name,
+      ttl: "1h",
       attributes: {
         role:
           session.user?.id === appointment?.doctor?.doctorId
