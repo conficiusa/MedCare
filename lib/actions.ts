@@ -207,7 +207,7 @@ export const CreateAppointment = async (
     // Find the doctor
     const doctor = await User.findById(
       appointmentData?.doctor?.doctorId
-    ).select(["name", "image"]);
+    ).select(["name", "image","email"]);
 
     // Check if the doctor exists and handle the error
     if (!doctor) {
