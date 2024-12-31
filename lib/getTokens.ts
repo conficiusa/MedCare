@@ -1,7 +1,11 @@
 "use server";
 import { auth } from "@/auth";
 import Appointment from "@/models/Appointment";
-import { AccessToken, RoomServiceClient } from "livekit-server-sdk";
+import {
+  AccessToken,
+  CreateOptions,
+  RoomServiceClient,
+} from "livekit-server-sdk";
 import { redirect } from "next/navigation";
 import { ReturnType } from "@/lib/definitions";
 import { differenceInSeconds } from "date-fns";
@@ -107,10 +111,12 @@ export const generateRoomToken = async (
         statusCode: 401,
       };
     }
-    const opts = {
+    const opts: CreateOptions = {
       name: appointmentId,
-      emptyTimeout: 10 * 60, // 10 minutes
+      emptyTimeout: 2 * 60, // 2 minutes
       maxParticipants: 2,
+      metadata: appointmentId,
+      departureTimeout: 2 * 60, // 2 minutes
     };
     const room = await roomService.createRoom(opts);
 

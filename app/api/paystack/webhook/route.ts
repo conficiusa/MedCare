@@ -65,13 +65,12 @@ export async function POST(req: Request): Promise<NextResponse> {
           <p style="font-size: 16px;">The Telemedicine Platform Team</p>
         </div>
       `;
-      Promise.all([
-        sendEmail(
-          event?.data?.metadata?.patient_email,
-          "Appointment Confirmation",
-          emailToPatient
-        ),
-        sendEmail(
+      await sendEmail(
+        event?.data?.metadata?.patient_email,
+        "Appointment Confirmation",
+        emailToPatient
+      ),
+        await sendEmail(
           event?.data?.metadata?.doctor_email,
           "Appointment Confirmation",
           doctorAppointmentEmail(
@@ -80,14 +79,7 @@ export async function POST(req: Request): Promise<NextResponse> {
             moment(appointment?.date).format("dddd, MMMM Do YYYY"),
             moment(appointment?.date).format("hh:mm A")
           )
-        ),
-      ])
-        .then((results) => {
-          console.log("Emails sent successfully:", results);
-        })
-        .catch((error) => {
-          console.error("Error sending emails:", error);
-        });
+        );
       return NextResponse.json(
         {
           message: "Appointment confirmed",
@@ -98,22 +90,6 @@ export async function POST(req: Request): Promise<NextResponse> {
         { status: 200 }
       );
     } else {
-      // const email = `
-      //   <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; background-color: #f4f7f6;">
-      //     <h2 style="color: #4CAF50;">Appointment  not confirmed</h2>
-      //     <p style="font-size: 16px;">Dear ${event?.data?.metadata?.patient_name},</p>
-      //     <p style="font-size: 16px;">Your appointment could not be confirmed.</p>
-      //     <p style="font-size: 16px;">If you have have made a sucessful payment for this appointment kindly reply this email with you receipt number.</p>
-      //     <p style="font-size: 16px;">Best regards,</p>
-      //     <p style="font-size: 16px;">Medcare Hub</p>
-      //   </div>
-      // `;
-
-      // await sendEmail(
-      //   "addawebadua@gmail.com",
-      //   "Could not confirm appointment",
-      //   email
-      // );
       return NextResponse.json(
         {
           error: updateappointment?.error,
@@ -139,7 +115,7 @@ export async function POST(req: Request): Promise<NextResponse> {
 
     await sendEmail(
       event?.data?.metadata?.patient_email,
-      "Could not confirm appointment",
+      "Appointment Confirmation Failed",
       email
     );
 

@@ -183,3 +183,80 @@ export const doctorAppointmentEmail = (
 </body>
 </html>`;
 };
+
+
+export interface EmailTemplateParams {
+  patientName?: string;
+  doctorName: string;
+  reviewLink?: string;
+  reportIssueLink: string;
+  supportEmail: string;
+}
+
+export function generateThankYouEmail(params: EmailTemplateParams): string {
+  const { patientName, doctorName, reviewLink, reportIssueLink, supportEmail } =
+    params;
+
+  if (patientName) {
+    return `
+      <html>
+      <body style="font-family: Arial, sans-serif; line-height: 1.6;">
+        <h2>Thank You for Choosing MedCare, ${patientName}!</h2>
+        <p>
+          We hope your experience with Dr. ${doctorName} was excellent. Your feedback is important to us and helps ensure
+          we provide the best care possible.
+        </p>
+        <p>
+          Please take a moment to review your doctor by clicking the link below:
+        </p>
+        <p>
+          <a href="${reviewLink}" style="color: #007BFF; text-decoration: none;">Leave a Review</a>
+        </p>
+        <p>
+          If you faced any issues or have concerns, please let us know immediately by clicking below or contacting us at
+          <a href="mailto:${supportEmail}" style="color: #007BFF; text-decoration: none;">${supportEmail}</a>.
+        </p>
+        <p>
+          <a href="${reportIssueLink}" style="color: #FF0000; text-decoration: none;">Report an Issue</a>
+        </p>
+        <p>
+          Thank you for trusting MedCare with your health. We look forward to serving you again!
+        </p>
+        <p>
+          Best Regards,<br />
+          The MedCare Team
+        </p>
+      </body>
+      </html>
+    `;
+  }
+
+  return `
+    <html>
+    <body style="font-family: Arial, sans-serif; line-height: 1.6;">
+      <h2>Thank You for Your Commitment, Dr. ${doctorName}!</h2>
+      <p>
+        We appreciate your dedication to providing exceptional care. This is a friendly reminder to complete your consultation report for your recent session.
+      </p>
+      <p>
+        Additionally, if you feel the patient might benefit, you have the option to grant them a free or discounted follow-up session.
+      </p>
+      <p>
+        If you encounter any issues or need assistance, please report them immediately by clicking below or contacting us at
+        <a href="mailto:${supportEmail}" style="color: #007BFF; text-decoration: none;">${supportEmail}</a>.
+      </p>
+      <p>
+        <a href="${reportIssueLink}" style="color: #FF0000; text-decoration: none;">Report an Issue</a>
+      </p>
+      <p>
+        Thank you for your hard work and dedication to MedCare.
+      </p>
+      <p>
+        Best Regards,<br />
+        The MedCare Team
+      </p>
+    </body>
+    </html>
+  `;
+}
+

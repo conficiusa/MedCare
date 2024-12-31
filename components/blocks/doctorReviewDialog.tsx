@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ItemStyles, Rating, ThinStar } from "@smastrom/react-rating";
+import { ItemStyles, Rating, StickerStar} from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
 import { Appointment, ReviewType } from "@/lib/definitions";
 import { addReview } from "@/lib/actions";
@@ -48,7 +48,7 @@ const DoctorReviewDialog: React.FC<DoctorReviewDialogProps> = ({
   const theme = useTheme();
 
   const customStar: ItemStyles = {
-    itemShapes: ThinStar,
+    itemShapes: StickerStar,
     activeFillColor: "#fae206",
     inactiveFillColor:
       theme?.resolvedTheme === "dark" ? "#2d3748" : "hsla(240 6.8% 85.9%)",

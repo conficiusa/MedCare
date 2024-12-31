@@ -75,11 +75,13 @@ export interface IAppointment extends Document {
     doctorId: ObjectId;
     name: string;
     image: string;
+    email: string;
   };
   patient: {
     patientId: ObjectId;
-    name?: string;
-    image?: string;
+    name: string;
+    image: string;
+    email: string;
   };
   transactionId: ObjectId;
   reference: string;
@@ -223,12 +225,14 @@ export interface Appointment {
     doctorId: string;
     name?: string;
     image?: string;
+    email?: string;
   };
   reference: string;
   patient: {
     patientId: string;
     name: string;
     image: string;
+    email: string;
   };
   // transactionId: string;
   date: string;

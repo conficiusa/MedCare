@@ -40,7 +40,6 @@ import { isRedirectError } from "next/dist/client/components/redirect";
 import Availability from "@/models/Availability";
 import Appointment from "@/models/Appointment";
 import { sendEmail } from "@/app/api/utils/email";
-import { Realtime } from "ably";
 import Review from "@/models/Reviews";
 import mongoose from "mongoose";
 
@@ -228,11 +227,13 @@ export const CreateAppointment = async (
         name: doctor?.name,
         image: doctor?.image,
         doctorId: appointmentData?.doctor?.doctorId,
+        email: doctor?.email,
       },
       patient: {
         image: authsession?.user?.image,
         name: authsession?.user?.name,
         patientId: authsession?.user?.id,
+        email: authsession?.user?.email
       },
 
       // Set the appointment as unpaid
@@ -904,16 +905,6 @@ export const markAppointmentComplete = async (
   appointmentId: string
 ): Promise<ReturnType> => {
   try {
-    const authSession = await auth();
-    if (!authSession) {
-      return {
-        error: "Not Authenticated",
-        message: "You must be logged in to mark an appointment as complete",
-        status: "fail",
-        statusCode: 401,
-        type: "Authentication Error",
-      } as ErrorReturn;
-    }
     if (!appointmentId) {
       return {
         error: "Missing appointment ID",
@@ -935,12 +926,12 @@ export const markAppointmentComplete = async (
     }
     appointment.status = "completed";
     appointment.completedAt = new Date();
-    appointment.CompletedBy = authSession.user.id ?? "system";
     await appointment.save();
     return {
       status: "success",
       message: "Appointment marked as completed",
       statusCode: 200,
+      data: appointment.toObject(),
     } as SuccessReturn;
   } catch (error: any) {
     console.error(error);
@@ -981,7 +972,7 @@ export const addReview = async (data: Partial<ReviewType>) => {
 
     const review = new Review(data);
     await review.save();
-    await updateDoctorRating(data.doctorId ?? "")
+    await updateDoctorRating(data.doctorId ?? "");
     return {
       status: "success",
       message: "Your review has been recorded",

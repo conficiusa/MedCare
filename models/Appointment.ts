@@ -14,11 +14,13 @@ const AppointmentSchema = new Schema<IAppointment>(
       doctorId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
       name: { type: String, required: true },
       image: { type: String },
+      email: { type: String, required: true },
     },
     patient: {
       patientId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
       name: { type: String, required: true },
       image: { type: String },
+      email: { type: String, required: true },
     },
     timeSlot: {
       endTime: { type: String, required: true },

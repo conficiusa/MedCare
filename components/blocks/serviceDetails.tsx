@@ -89,6 +89,7 @@ const ServiceDetails = ({
       const appointmentData: Partial<Appointment> = {
         doctor: {
           doctorId: doctor?.id,
+          
         },
         date: date?.toISOString(),
         mode: "online",

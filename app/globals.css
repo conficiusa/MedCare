@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+.rr--box:focus-visible .rr--svg {
+  outline: none !important;
+}
+
+.rr--focus-reset {
+  outline: none !important;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -110,6 +118,7 @@ input[type="number"]::-webkit-outer-spin-button {
   display: inline-block;
   position: relative;
 }
+
 .loader::after,
 .loader::before {
   content: "";
@@ -123,6 +132,7 @@ input[type="number"]::-webkit-outer-spin-button {
   top: 0;
   animation: animloader 2s linear infinite;
 }
+
 .dark .loader::after,
 .dark .loader::before {
   content: "";
@@ -136,6 +146,7 @@ input[type="number"]::-webkit-outer-spin-button {
   top: 0;
   animation: animloader 2s linear infinite;
 }
+
 .loader::after {
   animation-delay: 1s;
 }
@@ -145,6 +156,7 @@ input[type="number"]::-webkit-outer-spin-button {
     transform: scale(0);
     opacity: 1;
   }
+
   100% {
     transform: scale(1);
     opacity: 0;
