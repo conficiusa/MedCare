@@ -13,6 +13,7 @@ import {
 import {
   availabilitySchema,
   IAppointmentSchema,
+  reviewSchema,
   SignInSchema,
   subaccountDataSchema,
 } from "@/lib/schema";
@@ -29,6 +30,7 @@ import {
   IUser,
   Patient,
   ReturnType,
+  ReviewType,
   subaccountData,
   SuccessReturn,
 } from "@/lib//definitions";
@@ -39,6 +41,8 @@ import Availability from "@/models/Availability";
 import Appointment from "@/models/Appointment";
 import { sendEmail } from "@/app/api/utils/email";
 import { Realtime } from "ably";
+import Review from "@/models/Reviews";
+import mongoose from "mongoose";
 
 export async function emailAuth(
   email: z.output<typeof SignInSchema>,
@@ -896,7 +900,7 @@ export const deleteSlot = async (slotId: string): Promise<ReturnType> => {
   }
 };
 
-const markAppointmentComplete = async (
+export const markAppointmentComplete = async (
   appointmentId: string
 ): Promise<ReturnType> => {
   try {
@@ -947,5 +951,66 @@ const markAppointmentComplete = async (
       statusCode: 500,
       type: "Server Error",
     } as ErrorReturn;
+  }
+};
+
+export const addReview = async (data: Partial<ReviewType>) => {
+  const authSession = await auth();
+  if (!authSession) {
+    return {
+      error: "Not Authenticated",
+      message: "You must be logged in to add a review",
+      status: "fail",
+      statusCode: 401,
+      type: "Authentication Error",
+    } as ErrorReturn;
+  }
+
+  try {
+    await connectToDatabase();
+    const parsedData = reviewSchema.safeParse(data);
+    if (!parsedData.success) {
+      return {
+        error: parsedData.error.flatten().fieldErrors,
+        message: "Invalid data",
+        status: "fail",
+        statusCode: 400,
+        type: "ValidationError",
+      } as ErrorReturn;
+    }
+
+    const review = new Review(data);
+    await review.save();
+    await updateDoctorRating(data.doctorId ?? "")
+    return {
+      status: "success",
+      message: "Your review has been recorded",
+      statusCode: 201,
+      data: review.toObject(),
+    } as SuccessReturn;
+  } catch (error: any) {
+    console.error(error);
+    return {
+      error: error?.message,
+      message: "An unexpected error occurred",
+      status: "fail",
+      statusCode: 500,
+      type: "Server Error",
+    } as ErrorReturn;
+  }
+};
+const updateDoctorRating = async (doctorId: string) => {
+  const result = await Review.aggregate([
+    { $match: { doctorId: new mongoose.Types.ObjectId(doctorId) } },
+    {
+      $group: { _id: null, avgRating: { $avg: "$rating" }, count: { $sum: 1 } },
+    },
+  ]);
+
+  if (result.length > 0) {
+    await User.findByIdAndUpdate(doctorId, {
+      "doctorInfo.rating": result[0].avgRating.toFixed(1),
+      // "doctorInfo.reviewCount": result[0].count,
+    });
   }
 };

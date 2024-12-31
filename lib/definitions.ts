@@ -22,6 +22,15 @@ export interface IUser extends Document {
   doctorInfo?: IDoctorInfo; // Optional for patients
 }
 
+export interface IReview extends Document {
+  userId: ObjectId;
+  doctorId: ObjectId;
+  rating: number;
+  review: string;
+  comment: string;
+  createdAt: Date;
+}
+
 export interface ITransaction extends Document {
   appointmentId?: ObjectId;
   reference: string;
@@ -410,4 +419,12 @@ export interface VerificationResponse {
     plan_object: any;
     subaccount: any;
   };
+}
+export interface ReviewType {
+  id: string;
+  userId: string;
+  doctorId: string;
+  rating: number;
+  comment: string;
+  createdAt: Date;
 }

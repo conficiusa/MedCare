@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Rating } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
-import { Appointment } from "@/lib/definitions";
+import { Appointment, ReviewType } from "@/lib/definitions";
+import { addReview } from "@/lib/actions";
+import { toast } from "sonner";
 
 interface DoctorReviewDialogProps {
   appointment: Partial<Appointment>;
@@ -41,6 +43,38 @@ const DoctorReviewDialog: React.FC<DoctorReviewDialogProps> = ({
 }) => {
   const [rating, setRating] = useState<number>(0);
   const [review, setReview] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      if (!rating || rating === 0) {
+        toast.error("Please select a rating");
+        return;
+      }
+      const data: Partial<ReviewType> = {
+        comment: review,
+        rating,
+        doctorId: appointment?.doctor?.doctorId,
+        userId: appointment?.patient?.patientId,
+      };
+      const res = await addReview(data);
+      if ("data" in res) {
+        toast.success("Sucess", { description: res?.message });
+        setLoading(false);
+        return;
+      }
+      toast.error("Error", { description: res.message });
+      setLoading(false);
+      return;
+    } catch (error: any) {
+      setLoading(false);
+      toast.error("Failed to submit");
+      console.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="grid gap-4 p-4">
       <div className="flex flex-col space-y-1.5 text-center ">
@@ -48,8 +82,9 @@ const DoctorReviewDialog: React.FC<DoctorReviewDialogProps> = ({
           Leave a review
         </h3>
         <p className="text-sm text-muted-foreground">
-          Please share your experience with Dr. {appointment?.doctor?.name?.split(" ")[0]}. Your feedback
-          helps other patients make informed decisions.
+          Please share your experience with Dr.{" "}
+          {appointment?.doctor?.name?.split(" ")[0]}. Your feedback helps other
+          patients make informed decisions.
         </p>
       </div>
       <div className="flex flex-col items-center justify-cpenter space-y-2">
@@ -70,7 +105,7 @@ const DoctorReviewDialog: React.FC<DoctorReviewDialogProps> = ({
         onChange={(e) => setReview(e.target.value)}
         rows={4}
       />
-      <Button>
+      <Button onClick={() => handleSubmit()} disabled={loading}>
         <span>Submit</span>
       </Button>
     </div>

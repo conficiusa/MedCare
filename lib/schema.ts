@@ -108,7 +108,7 @@ export const onDoctorBoardingSchema2 = z.object({
   city: z.string().min(1, "Please enter your city/town"),
   country: z.string().min(1, "Please enter your country"),
   address_1: z.string(),
-  address_2: z.string().optional()
+  address_2: z.string().optional(),
 });
 export const onDoctorBoardingSchema3 = z
   .object({
@@ -201,7 +201,7 @@ export const PatientOnboardingSchema2 = z.object({
   city: z.string().min(1, "Please enter your city/town"),
   country: z.string().min(1, "Please enter your country"),
   address_1: z.string(),
-  address_2: z.string().optional() 
+  address_2: z.string().optional(),
 });
 
 export const PatientOnboardingSchema3 = z.object({
@@ -285,4 +285,11 @@ export const availabilitySchema = z.object({
   timeSlots: z
     .array(timeSlotSchema)
     .min(1, "At least one time slot is required."),
+});
+
+export const reviewSchema = z.object({
+  userId: z.string().min(1, "User ID is required."),
+  doctorId: z.string().min(1, "Doctor ID is required."),
+  rating: z.number().int().min(1).max(5),
+  comment: z.string().optional(),
 });

@@ -35,7 +35,8 @@ export default function ParticipantState({
     if (state === "showDialogs") {
       router.push(`${appointmentId}/review`);
     }
-  }, [state, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state, appointmentId]);
   return (
     <div>
       {state}

@@ -69,6 +69,8 @@ export default function Schedule({
       updatedEndTime.setMinutes(endTime.getMinutes());
       setEndTime(updatedEndTime);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate]);
 
   const addSlot = async () => {
