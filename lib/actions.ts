@@ -233,7 +233,7 @@ export const CreateAppointment = async (
         image: authsession?.user?.image,
         name: authsession?.user?.name,
         patientId: authsession?.user?.id,
-        email: authsession?.user?.email
+        email: authsession?.user?.email,
       },
 
       // Set the appointment as unpaid
@@ -296,7 +296,7 @@ export const CreateAppointment = async (
   } catch (error: MongooseError | any) {
     console.error(error);
     return {
-      error: error,
+      error: error?.message,
       message: "An unexpected error occurred",
       status: "fail",
       statusCode: 500,

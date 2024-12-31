@@ -223,11 +223,13 @@ export const IAppointmentSchema = z
       doctorId: z.string().min(1, "Doctor's User id is required."),
       name: z.string().min(1, "Doctor's full name is required."),
       image: z.string().optional(),
+      email: z.string().email("Doctor's email is required."),
     }),
     patient: z.object({
       patientId: z.string().min(1, "Patient's User id is required."),
       name: z.string().min(1, "Patient's full name is required."),
       image: z.string().optional(),
+      email: z.string().email("Patient's email is required."),
     }),
     date: z.string().min(1, "Date is required."),
     timeSlot: z.object({
