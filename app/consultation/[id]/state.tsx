@@ -34,7 +34,7 @@ export default function ParticipantState({
   useEffect(() => {
     if (state === "showDialogs") {
       router.refresh()
-      router.push(`${appointmentId}/review`);
+      router.push(`/consultation/${appointmentId}/review`);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -56,6 +56,7 @@ export default function ParticipantState({
             console.error("Failed to publish to Ably:", error.message);
           })
         }
+        className="bg-blue-500 text-white p-2 rounded-md"
       >
         triger
       </button>

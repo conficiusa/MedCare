@@ -104,7 +104,7 @@ export async function emailAuth(
             type: "Unexpected Error",
             status: "fail",
             statusCode: 500,
-            error: error,
+            error: error.message,
           };
       }
     }
