@@ -30,7 +30,7 @@ export default function ParticipantState({
     });
   });
 
-  console.log("event", event);
+  
   useEffect(() => {
     if (state === "showDialogs") {
       router.refresh()
