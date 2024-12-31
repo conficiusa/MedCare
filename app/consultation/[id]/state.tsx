@@ -30,7 +30,15 @@ export default function ParticipantState({
     });
   });
 
-  
+  console.log("event", event);
+  useEffect(() => {
+    if (state === "showDialogs") {
+      router.refresh()
+      router.push(`${appointmentId}/review`);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state,appointmentId]);
   return (
     <div>
       {state}
