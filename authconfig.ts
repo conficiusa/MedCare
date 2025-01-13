@@ -55,6 +55,7 @@ export const authConfig: NextAuthConfig = {
         doctorVerification === "verifying" &&
         currentPath !== "/onboarding/doctor/awaiting-verification"
       ) {
+        console.log(currentPath)
         return Response.redirect(
           new URL("/onboarding/doctor/awaiting-verification", request.nextUrl)
         );

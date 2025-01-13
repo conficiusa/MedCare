@@ -106,6 +106,11 @@ export default function VerificationPage() {
                   loading: "Verifying account..",
                   success: async (data) => {
                     if (data.status === "success") {
+                      await fetch(
+                        `https://text-embedding-5smw.onrender.com/api/v1/embeddings/doctor/${authSession?.user?.id}`,
+                        { method: "PATCH" }
+                      );
+
                       await update({
                         ...authSession,
                         user: {

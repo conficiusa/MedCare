@@ -9,6 +9,7 @@ import AuthProvider from "@/components/wrappers/sessionProvider";
 // import { Analytics } from "@vercel/analytics/react";
 import Providers from "@/components/wrappers/providers";
 import { ThemeProvider } from "@/lib/theme-provider";
+  import { pipeline } from "@huggingface/transformers";
 import TanstackProvider from "@/components/wrappers/tanstackProvider";
 
 export const viewport: Viewport = {
@@ -68,13 +69,14 @@ export const metadata: Metadata = {
     google: "Qex2I5k01ZN8QezjCTqKq9xe_1HlSi-T_jrm66DCqQI",
   },
 };
-export default function RootLayout({
+export default async function RootLayout({
   children,
   modal,
 }: Readonly<{
   children: React.ReactNode;
   modal: React.ReactNode;
 }>) {
+
   return (
     <html lang="en" suppressHydrationWarning>
       <AuthProvider>

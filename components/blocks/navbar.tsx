@@ -35,6 +35,7 @@ const Navbar = async () => {
             </h1>
           </Link>
         </div>
+
         <div className="flex sm:hidden items-center gap-5">
           {session ? (
             <div>

@@ -39,6 +39,7 @@ const AppointmentTabs = ({ session }: { session: Session }) => {
         <Suspense fallback={<AppointmentsSkeleton />}>
           <UpcomingAppointment session={session} />
         </Suspense>
+        
       </TabsContent>
       <TabsContent value="pending">
         <Suspense fallback={<AppointmentsSkeleton />}>

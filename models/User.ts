@@ -1,5 +1,4 @@
 import { Model, model, models, Schema } from "mongoose";
-import bcrypt from "bcrypt";
 import { IUser } from "@/lib/definitions";
 import { DoctorInfoSchema } from "@/models/Doctor";
 import { PatientInfoSchema } from "./Patient";

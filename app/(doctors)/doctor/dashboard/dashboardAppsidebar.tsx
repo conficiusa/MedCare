@@ -11,22 +11,34 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { DoctorSidebarMain } from "./mainNav";
+import { useSession } from "next-auth/react";
 
 // This is sample data.
 
 export function DoctorDashboardSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const { data } = useSession();
   return (
     <Sidebar
       collapsible="icon"
       variant="inset"
       {...props}
-      className="pt-[75px] bg-muted dark:bg-muted/40ma"
+      className="pt-[75px] bg-muted dark:bg-muted/40"
     >
       <SidebarContent>
         <DoctorSidebarMain />
       </SidebarContent>
+      <button
+        onClick={() =>
+          fetch(
+            `http://ec2-13-51-207-214.eu-north-1.compute.amazonaws.com/api/v1/embeddings/doctor/create/${data?.user?.id}`,
+            { method: "PATCH" }
+          )
+        }
+      >
+        click
+      </button>
       <SidebarFooter>
         <NavUser />
       </SidebarFooter>

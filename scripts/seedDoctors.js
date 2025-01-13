@@ -188,14 +188,10 @@ const generateBio = (name, specialization, experience, certifications) => {
   } ${personalTouch[Math.floor(Math.random() * personalTouch.length)]} ${
     experienceDetails[Math.floor(Math.random() * experienceDetails.length)]
   } ${patientFeedback[Math.floor(Math.random() * patientFeedback.length)]} ${
-    communityInvolvement[Math.floor(Math.random() * communityInvolvement.length)]
+    communityInvolvement[
+      Math.floor(Math.random() * communityInvolvement.length)
+    ]
   }`;
-
-  return `${introduction[Math.floor(Math.random() * introduction.length)]} ${
-    achievements[Math.floor(Math.random() * achievements.length)]
-  } ${approach[Math.floor(Math.random() * approach.length)]} ${
-    passion[Math.floor(Math.random() * passion.length)]
-  } ${personalTouch[Math.floor(Math.random() * personalTouch.length)]}`;
 };
 
 const generateAvailability = (doctorId) => {
@@ -243,6 +239,9 @@ const usersData = names.map((name, index) => {
     image: index % 2 === 0 ? sampleImageUrl : sampleImageTwoUrl,
     gender: index % 2 === 0 ? "Male" : "Female",
     phone: `+233555000${Math.floor(100 + index)}`,
+    onboarding_level: 7,
+    address_1: `House No. ${Math.floor(100 + index)}`,
+    address_2: `Street Name ${index % 2 === 0 ? "East" : "West"}`,
     createdAt: new Date(),
     updatedAt: new Date(),
     doctorInfo: {
@@ -251,7 +250,10 @@ const usersData = names.map((name, index) => {
       rate: 100 + index * 10,
       rating: Math.round((Math.random() * (5 - 1) + 1) * 10) / 10,
       certifications: [certification1, certification2],
-      bio: `Dr. ${name} specializes in ${specialization1} and has demonstrated excellence in their field. Patients commend Dr. ${name} for their dedication, expertise, and ability to build lasting patient relationships. They are certified in ${certification1} and ${certification2}, continually advancing healthcare excellence.`,
+      bio: generateBio(name, specialization1, `${5 + index}`, [
+        certification1,
+        certification2,
+      ]),
       license_number: `LIC-${Math.floor(1000 + index * 3)}`,
       account_name: `${name.split(" ")[0]} ${name.split(" ")[1]}`,
       account_number: `${Math.floor(12345678 + index * 101)}`,

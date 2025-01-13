@@ -46,7 +46,7 @@ export async function POST(req: Request): Promise<NextResponse> {
           patientName: appointment?.patient?.name as string,
           reportIssueLink: `${process.env.NEXT_PUBLIC_HOSTNAME}/report-issue`,
           reviewLink: `${process.env.NEXT_PUBLIC_HOSTNAME}/consultation/review/${appointment?.id}`,
-          supportEmail:"addawebadua@gmail.com",
+          supportEmail: "addawebadua@gmail.com",
         } satisfies EmailTemplateParams;
 
         const doctorParams = {
@@ -55,7 +55,7 @@ export async function POST(req: Request): Promise<NextResponse> {
           supportEmail: process.env.SUPPORT_EMAIL as string,
           reportIssueLink: `${process.env.NEXT_PUBLIC_HOSTNAME}/report-issue`,
         } satisfies EmailTemplateParams;
-        
+
         const thankyou = generateThankYouEmail(params);
         await sendEmail(
           appointment?.patient?.email as string,
@@ -64,7 +64,7 @@ export async function POST(req: Request): Promise<NextResponse> {
         );
         await sendEmail(
           appointment?.doctor?.email as string,
-          "Rate your consultation",
+          "Consultation report",
           generateThankYouEmail(doctorParams)
         );
       }

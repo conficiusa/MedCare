@@ -67,7 +67,7 @@ const DoctorProfile = async ({ params }: DoctorProfileProps) => {
           </Suspense>
           <div className="max-lg:px-8">
             <Tabs defaultValue="about" className="mt-4">
-              <TabsList className="bg-transparent md:w-2/3 justify-between grid grid-cols-3 gap-4">
+              <TabsList className="bg-transparent md:w-2/3 justify-between flex">
                 <TabsTrigger
                   value="about"
                   className="data-[state=active]:bg-transparent  data-[state=active]:text-primary data-[state=active]:border-b-2 border-primary rounded-none transition-none data-[state=active]:shadow-none"
