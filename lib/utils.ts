@@ -83,3 +83,11 @@ export const VerifyPaystackPayment = async (
     throw new Error("Payment verification failed");
   }
 };
+
+export const getFilteredValues = (
+  field: string[] | undefined,
+  availableOptions: { value: string; label: string }[]
+) => {
+  if (!field || field.length === 0) return [];
+  return availableOptions.filter((option) => field.includes(option.value));
+};

@@ -25,7 +25,7 @@ export default async function AccountTypeSelection() {
       <Card className="w-full max-w-md dark:bg-muted/30 bg-background">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
-            Sign up as:
+            Continue as a
           </CardTitle>
           <CardDescription className="text-center">
             Choose the type of account you want to create

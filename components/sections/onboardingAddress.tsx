@@ -46,7 +46,6 @@ const OnboardingPatientAddress = ({
     },
   });
 
-
   const handleSubmit = async (
     data: z.output<typeof PatientOnboardingSchema2>
   ) => {
@@ -54,16 +53,12 @@ const OnboardingPatientAddress = ({
       const res = await PatientOnboardStepTwo(data);
       if ("data" in res) {
         if (res?.statusCode === 200) {
+          const { data } = res;
           await update({
             ...session,
             user: {
               ...session.user,
-              address_2: res?.data?.address_2,
-              address_1: res?.data?.address_1,
-              city: res?.data?.city,
-              country: res?.data?.country,
-              region: res?.data?.region,
-              onboarding_level: res?.data?.onboarding_level,
+              ...data,
             },
           });
           const currentIndex = steps.indexOf(currentStep);

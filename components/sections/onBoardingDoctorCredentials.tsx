@@ -7,7 +7,7 @@ import { z } from "zod";
 import { onDoctorBoardingSchema3 } from "@/lib/schema";
 import { FormBuilder } from "@/components/blocks/formBuilder";
 import MultiSelector from "@/components/blocks/multipleSelector";
-import { certifications, conditions, specializations } from "@/lib/data";
+import { certifications, specializations } from "@/lib/data";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ import { DoctorOnboardStepThree } from "@/lib/onboarding";
 import { Doctor } from "@/lib/definitions";
 import { UpdateSession } from "next-auth/react";
 import { Session } from "next-auth";
+import { getFilteredValues } from "@/lib/utils";
 
 const DoctorOnboardingCredentials = ({
   currentStep,
@@ -34,30 +35,26 @@ const DoctorOnboardingCredentials = ({
   user: Doctor;
   update: UpdateSession;
   session: Session;
-}) => {
-  const form = useForm<z.output<typeof onDoctorBoardingSchema3>>({
-    resolver: zodResolver(onDoctorBoardingSchema3),
-    defaultValues: {
-      bio: user?.doctorInfo?.bio ?? "",
-      certifications:
-        user?.doctorInfo?.certifications?.length &&
-        user?.doctorInfo?.certifications?.length > 0
-          ? certifications.filter((cert) =>
-              user?.doctorInfo?.certifications?.includes(cert.value)
-            )
-          : [],
-      experience: Number(user?.doctorInfo?.experience) ?? undefined,
-      license_number: user?.doctorInfo?.license_number ?? "",
-      specialities:
-        user?.doctorInfo?.specialities?.length &&
-        user?.doctorInfo?.specialities?.length > 0
-          ? specializations.filter((spec) =>
-              user?.doctorInfo?.specialities?.includes(spec.value)
-            )
-          : [],
-      current_facility: user?.doctorInfo?.current_facility ?? "",
-    },
-  });
+  }) => {
+  
+ const form = useForm<z.output<typeof onDoctorBoardingSchema3>>({
+   resolver: zodResolver(onDoctorBoardingSchema3),
+   defaultValues: {
+     bio: user?.doctorInfo?.bio ?? "",
+     certifications: getFilteredValues(
+       user?.doctorInfo?.certifications,
+       certifications
+     ),
+     experience: Number(user?.doctorInfo?.experience) ?? undefined,
+     license_number: user?.doctorInfo?.license_number ?? "",
+     specialities: getFilteredValues(
+       user?.doctorInfo?.specialities,
+       specializations
+     ),
+     current_facility: user?.doctorInfo?.current_facility ?? "",
+   },
+ });
+  
   const handleSubmit = async (
     data: z.output<typeof onDoctorBoardingSchema3>
   ) => {
@@ -65,21 +62,14 @@ const DoctorOnboardingCredentials = ({
       const res = await DoctorOnboardStepThree(data);
       if ("data" in res) {
         if (res?.statusCode === 200) {
+          const { data } = res;
+          const { onboarding_level, doctorInfo } = data;
           await update({
             ...session,
             user: {
               ...session.user,
-              onboarding_level: res?.data?.onboarding_level,
-              doctorInfo: {
-                ...session?.user?.doctorInfo,
-                onboarding_level: res?.data?.doctorInfo?.onboarding_level,
-                bio: res?.data?.doctorInfo.bio,
-                specialities: res?.data?.doctorInfo.specialities,
-                certifications: res?.data?.doctorInfo.certifications,
-                license_number: res?.data?.doctorInfo.license_number,
-                current_facility: res?.data?.doctorInfo.current_facility,
-                experience: res?.data?.doctorInfo.experience,
-              },
+              onboarding_level,
+              doctorInfo,
             },
           });
           const currentIndex = steps.indexOf(currentStep);

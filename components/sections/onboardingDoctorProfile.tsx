@@ -40,9 +40,9 @@ const OnboardingDoctorProfile = ({
   const form = useForm<z.output<typeof onDoctorBoardingSchema1>>({
     resolver: zodResolver(onDoctorBoardingSchema1),
     defaultValues: {
-      dob: undefined,
+      dob: user?.dob ? new Date(user?.dob) : undefined,
       role: "doctor",
-      gender: "",
+      gender: user?.gender ?? "",
       languages: [],
       phone: "",
     },
@@ -54,20 +54,12 @@ const OnboardingDoctorProfile = ({
       const res = await DoctorOnboardStepOne(data);
       if ("data" in res) {
         if (res?.statusCode === 200) {
+          const { data } = res;
           await update({
             ...session,
             user: {
               ...session.user,
-              dob: res?.data?.dob,
-              languages: res?.data?.languages,
-              phone: res?.data?.phone,
-              gender: res?.data?.gender,
-              role: res?.data?.role,
-              onboarding_level: res?.data?.onboarding_level,
-              doctorInfo: {
-                ...session?.user?.doctorInfo,
-                onboarding_level: res?.data?.doctorInfo?.onboarding_level,
-              },
+              ...data,
             },
           });
           const currentIndex = steps.indexOf(currentStep);

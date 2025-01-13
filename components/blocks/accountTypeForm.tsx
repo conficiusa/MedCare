@@ -11,14 +11,7 @@ import { cn } from "@/lib/utils";
 const AccountTypeForm = () => {
   const [accountType, setAccountType] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-
   const router = useRouter();
-
-  useEffect(() => {
-    router.prefetch("/onboarding/patient");
-    router.prefetch("/onboarding/doctor");
-  }, [router]);
-
   const handleContinue = () => {
     startTransition(() => {
       router.push(`/onboarding/${accountType}`);
@@ -66,10 +59,10 @@ const AccountTypeForm = () => {
           >
             <div className="flex items-center space-x-2">
               <StethoscopeIcon className="w-6 h-6 text-primary" />
-              <span className="font-medium">Doctor Account</span>
+              <span className="font-medium">Clinician</span>
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
-              For healthcare providers
+              Apply to be a medcare hub clinician
             </p>
           </div>
         </Label>

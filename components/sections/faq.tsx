@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const Faq = () => {
   return (
-    <section className="">
+    <section className="container">
       <div className="grid sm:grid-cols-[auto_1fr] lg:gap-32">
         <div className="sm:px-10 max-sm:py-4">
           <h3 className="text-2xl font-semibold">
