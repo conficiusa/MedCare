@@ -7,9 +7,8 @@ import { onDoctorBoardingSchema4 } from "@/lib/schema";
 import { FormBuilder } from "@/components/blocks/formBuilder";
 import { Button } from "@/components/ui/button";
 import { Step } from "@/components/blocks/onboardingDoctor";
-import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
-import { MessageSquare, Smartphone, Video, Wallet } from "lucide-react";
+import { Smartphone, Wallet } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useEffect, useState } from "react";
 import AnimationWrapper from "@/components/wrappers/animationWrapper";
@@ -44,12 +43,6 @@ const DoctorOnboardingServiceDetails = ({
   update: UpdateSession;
   session: Session;
 }) => {
-
-  const [selectedMethods, setSelectedMethods] = useState<ConsultationMethod[]>(
-    user?.doctorInfo?.media && user?.doctorInfo?.media?.length > 0
-      ? (user?.doctorInfo?.media as ConsultationMethod[])
-      : []
-  );
   const [selectedPayMethod, setSelectedPayMethod] = useState<PaymentMethod>(
     (user?.doctorInfo?.payment_channel as PaymentMethod) ?? "mobile_money"
   );
@@ -60,7 +53,6 @@ const DoctorOnboardingServiceDetails = ({
       account_name: user?.doctorInfo?.account_name ?? "",
       account_number: user?.doctorInfo?.account_number ?? "",
       bank: user?.doctorInfo?.bank ?? "",
-      media: user?.doctorInfo?.media.length > 0 ? user?.doctorInfo?.media : [],
       payment_channel: user?.doctorInfo?.payment_channel,
       rate: user?.doctorInfo?.rate ?? 0,
     },
@@ -72,26 +64,11 @@ const DoctorOnboardingServiceDetails = ({
   } = useFetchBanks(
     selectedPayMethod === "mobile_money" ? "mobile_money" : "ghipss"
   );
-
-  const toggleMethod = (method: ConsultationMethod) => {
-    setSelectedMethods((prev) =>
-      prev.includes(method)
-        ? prev.filter((m) => m !== method)
-        : [...prev, method]
-    );
-  };
-
   useEffect(() => {
     if (selectedPayMethod) {
       form.setValue("payment_channel", selectedPayMethod);
     }
   }, [form, selectedPayMethod]);
-
-  useEffect(() => {
-    if (selectedMethods) {
-      form.setValue("media", selectedMethods);
-    }
-  }, [selectedMethods, form]);
 
   useEffect(() => {
     if (selectedPayMethod) {
@@ -154,46 +131,6 @@ const DoctorOnboardingServiceDetails = ({
             className="grid gap-8"
             onSubmit={form.handleSubmit(handleSubmit)}
           >
-            <div className="space-y-4">
-              <Label>Choose your suitable consultation methods</Label>
-              <div className="flex gap-10">
-                <div className="relative flex items-start">
-                  <Checkbox
-                    id="chat"
-                    checked={selectedMethods.includes("chat")}
-                    onCheckedChange={() => toggleMethod("chat")}
-                    className="mr-2 mt-1"
-                  />
-                  <Label
-                    htmlFor="chat"
-                    className="flex aspect-video flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer flex-grow"
-                  >
-                    <MessageSquare className="mb-3 h-6 w-6" />
-                    <span className="text-sm font-medium">
-                      Chat Consultation
-                    </span>
-                  </Label>
-                </div>
-                <div className="relative flex items-start">
-                  <Checkbox
-                    id="video"
-                    checked={selectedMethods.includes("video")}
-                    onCheckedChange={() => toggleMethod("video")}
-                    className="mr-2 mt-1"
-                  />
-                  <Label
-                    htmlFor="video"
-                    className="flex aspect-video flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer flex-grow"
-                  >
-                    <Video className="mb-3 h-6 w-6" />
-                    <span className="text-sm font-medium ">
-                      Video Consultation
-                    </span>
-                  </Label>
-                </div>
-              </div>
-            </div>
-
             <div className="space-y-4">
               <Label>How would you like to get paid?</Label>
               <RadioGroup

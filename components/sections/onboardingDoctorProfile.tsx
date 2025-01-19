@@ -22,6 +22,7 @@ import { UpdateSession } from "next-auth/react";
 import { Session } from "next-auth";
 import { formatPhoneNumber } from "react-phone-number-input";
 
+
 const OnboardingDoctorProfile = ({
   steps,
   setCurrentStep,
@@ -47,6 +48,7 @@ const OnboardingDoctorProfile = ({
       phone: "",
     },
   });
+// Output: Carrier information or message
   const handleSubmit = async (
     data: z.output<typeof onDoctorBoardingSchema1>
   ) => {

@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { inter } from "@/lib/fonts";
+// import { inter } from "@/lib/fonts";
 import Navbar from "@/components/blocks/navbar";
 import Footer from "@/components/blocks/footer";
 import { Toaster } from "@/components/ui/sonner";
@@ -9,7 +9,6 @@ import AuthProvider from "@/components/wrappers/sessionProvider";
 // import { Analytics } from "@vercel/analytics/react";
 import Providers from "@/components/wrappers/providers";
 import { ThemeProvider } from "@/lib/theme-provider";
-  import { pipeline } from "@huggingface/transformers";
 import TanstackProvider from "@/components/wrappers/tanstackProvider";
 
 export const viewport: Viewport = {
@@ -82,7 +81,9 @@ export default async function RootLayout({
       <AuthProvider>
         <Providers>
           <TanstackProvider>
-            <body className={cn("antialiased w-full", inter.className)}>
+
+            {/* // TODO: add back  inter font */}
+            <body className={cn("antialiased w-full")}>
               <ThemeProvider
                 attribute="class"
                 defaultTheme="system"

@@ -39,18 +39,7 @@ export const DoctorInfoSchema = new Schema<IDoctorInfo>(
         message: "Bank is required",
       },
     },
-    media: {
-      type: [String],
-      validate: {
-        validator: function (value: string[]) {
-          if (this.onboarding_level >= 5) {
-            return value != null && value.length > 0;
-          }
-          return true;
-        },
-        message: "Media is required",
-      },
-    },
+
     verification: {
       type: String,
       enum: ["not_started", "verifying", "approved", "failed"],
@@ -60,6 +49,30 @@ export const DoctorInfoSchema = new Schema<IDoctorInfo>(
     onboarding_level: {
       type: Number,
       default: 0,
+    },
+    medical_school: {
+      type: String,
+      validate: {
+        validator: function (value: string) {
+          if (this.onboarding_level >= 4) {
+            return value != null && value.trim().length > 0;
+          }
+          return true;
+        },
+        message: "Medical school is required",
+      },
+    },
+    cv: {
+      type: String,
+      validate: {
+        validator: function (value: string) {
+          if (this.onboarding_level >= 4) {
+            return value != null && value.trim().length > 0;
+          }
+          return true;
+        },
+        message: "CV or resume is required",
+      },
     },
     specialities: [String],
     current_facility: String,

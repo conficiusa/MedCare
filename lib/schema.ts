@@ -1,5 +1,5 @@
-import { string, z } from "zod";
-import { isValidPhoneNumber } from "react-phone-number-input";
+
+import { z } from "zod";
 
 const multiSelectSchema = z.object({
   label: z.string(),
@@ -37,7 +37,7 @@ export const PatientOnboardingSchema = z.object({
     .min(1, "Please select a language")
     .max(4, "You can only select up to 4 languages"),
   gender: z.string().min(1, "Please enter your gender"),
-  phone: z.string(),
+  phone: z.string().min(1, "Invalid phone number"),
   image: z
     .string()
     .nullable()
@@ -87,7 +87,7 @@ export const onDoctorBoardingSchema1 = z.object({
     .min(1, "Please select a language")
     .max(4, "You can only select up to 4 languages"),
   gender: z.string().min(1, "Please enter your gender"),
-  phone: z.string(),
+  phone: z.string().min(1, "Invalid phone number"),
   dob: z
     .date({
       required_error: "Please enter your date of birth",
@@ -119,12 +119,18 @@ export const onDoctorBoardingSchema3 = z
       invalid_type_error: "Experience must be a number",
     }),
     current_facility: z.string().min(1, "Please enter your current facility "),
+    medical_school: z.string().min(1, "Please enter your medical school"),
+    cv:z.unknown().transform(value => {
+    return value as FileList
+  }).refine((files) => files.length && files[0]?.size <= 4 * 1024 * 1024, {
+        message: "The file must be less than 4MB",
+      }),
     certifications: z
       .array(multiSelectSchema)
       .max(4, "You can only select up to 4 certifications"),
     specialities: z
       .array(multiSelectSchema)
-      .max(4, "You can only select up to 4 specialities"),
+      .max(2, "You can only select up to 2 specialities"),
   })
   .refine(
     (data) => {
@@ -139,7 +145,6 @@ export const onDoctorBoardingSchema3 = z
     }
   );
 export const onDoctorBoardingSchema4 = z.object({
-  media: z.array(string()).min(1, "Please select at least one medium"),
   rate: z.coerce
     .number({
       required_error: "Experience level is required",
@@ -180,7 +185,7 @@ export const PatientOnboardingSchema1 = z.object({
     .min(1, "Please select a language")
     .max(4, "You can only select up to 4 languages"),
   gender: z.string().min(1, "Please enter your gender"),
-  phone: z.string(),
+  phone: z.string().min(1, "Invalid phone number"),
   dob: z
     .date({
       required_error: "Please enter your date of birth",
@@ -268,7 +273,7 @@ export const subaccountDataSchema = z.object({
 
   primary_contact_name: z.string().min(1, "primary contact name required"),
 
-  primary_contact_phone: z.string().min(1, "primary contact phone required"),
+  primary_contact_phone: z.string().min(1, "Invalid phone number"),
 });
 
 const timeSlotSchema = z.object({

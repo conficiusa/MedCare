@@ -61,7 +61,8 @@ export interface IDoctorInfo extends Document {
   bank: string;
   payment_channel: string;
   onboarding_level: number;
-  media: string[];
+  medical_school: string;
+  cv: string;
   verification: "not_started" | "verifying" | "approved" | "failed";
 }
 
@@ -167,7 +168,8 @@ export interface DoctorInfo {
   payment_channel: string;
   onboarding_level: number;
   verification: "not_started" | "verifying" | "approved" | "failed";
-  media: string[];
+  medical_school: string;
+  cv: string;
 }
 
 export interface DoctorCard {

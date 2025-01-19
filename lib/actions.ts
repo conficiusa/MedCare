@@ -1,6 +1,6 @@
 "use server";
 import { auth, signIn } from "@/auth";
-import { AuthError } from "next-auth";
+import { AuthError, Session } from "next-auth";
 import {
   isBefore,
   isAfter,
@@ -42,6 +42,26 @@ import Appointment from "@/models/Appointment";
 import { sendEmail } from "@/app/api/utils/email";
 import Review from "@/models/Reviews";
 import mongoose from "mongoose";
+
+export const Authenticate = async (
+  session: Session | null
+): Promise<ReturnType> => {
+  if (!session) {
+    return {
+      error: "Not Authenticated",
+      message: "You must be logged in to create an appointment",
+      status: "fail",
+      statusCode: 401,
+      type: "Authentication Error",
+    } as ErrorReturn;
+  }
+  return {
+    data: session,
+    message: "Authenticated",
+    status: "success",
+    statusCode: 200,
+  } as SuccessReturn;
+};
 
 export async function emailAuth(
   email: z.output<typeof SignInSchema>,
@@ -207,7 +227,7 @@ export const CreateAppointment = async (
     // Find the doctor
     const doctor = await User.findById(
       appointmentData?.doctor?.doctorId
-    ).select(["name", "image","email"]);
+    ).select(["name", "image", "email"]);
 
     // Check if the doctor exists and handle the error
     if (!doctor) {
@@ -311,7 +331,7 @@ export async function upload(formData: FormData): Promise<ReturnType> {
   if (!authSession) {
     return {
       error: "Not Authenticated",
-      message: "You must be logged in to upload an image",
+      message: "You must be logged in to upload a file",
       status: "fail",
       statusCode: 401,
       type: "Authentication Error",
@@ -433,6 +453,10 @@ export const handleDoctorOnboarding = async (
       ...fieldMap,
       onboarding_level: step,
     };
+
+    if (updateData?.doctorInfo?.cv) {
+      console.log("update", updateData?.doctorInfo?.cv);
+    }
     const updatedDoctor = await User.findByIdAndUpdate(
       authSession.user.id,
       updateData,

@@ -1,4 +1,4 @@
-import { lusitana } from "@/lib/fonts";
+// import { lusitana } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
@@ -16,7 +16,9 @@ const TestimonialCard = () => {
           width={80}
           height={50}
         />
-        <p className={cn("text-sm", lusitana.className)}>
+
+        {/* //TODO : add back lusitana font */}
+        <p className={cn("text-sm")}>
           “The ability to consult with a doctor from the comfort of my home has
           saved me so much time and stress. The process is seamless, the doctors
           are attentive, and I feel well taken care of.”
