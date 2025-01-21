@@ -9,6 +9,7 @@ export const useFetchBanks = (type: string) => {
     refetchOnWindowFocus: false,
     enabled: !!type,
     staleTime: Infinity,
+    
     select: (data) => data?.data?.data,
   });
 };

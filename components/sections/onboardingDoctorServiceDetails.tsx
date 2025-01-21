@@ -7,10 +7,8 @@ import { onDoctorBoardingSchema4 } from "@/lib/schema";
 import { FormBuilder } from "@/components/blocks/formBuilder";
 import { Button } from "@/components/ui/button";
 import { Step } from "@/components/blocks/onboardingDoctor";
-import { Label } from "../ui/label";
-import { Smartphone, Wallet } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import AnimationWrapper from "@/components/wrappers/animationWrapper";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
@@ -19,15 +17,22 @@ import { useFetchBanks } from "@/lib/server";
 import { Skeleton } from "../ui/skeleton";
 import PopoverSelect from "../blocks/popoverselect";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "../ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { DoctorOnboardStepFour } from "@/lib/onboarding";
 import { toast } from "sonner";
 import { Doctor } from "@/lib/definitions";
 import { UpdateSession } from "next-auth/react";
 import { Session } from "next-auth";
+import { PriceInput } from "../blocks/priceselector";
+import Loader from "../blocks/loader";
 
-type PaymentMethod = "bank" | "mobile_money";
-type ConsultationMethod = "chat" | "video";
 const DoctorOnboardingServiceDetails = ({
   currentStep,
   setCurrentStep,
@@ -43,41 +48,46 @@ const DoctorOnboardingServiceDetails = ({
   update: UpdateSession;
   session: Session;
 }) => {
-  const [selectedPayMethod, setSelectedPayMethod] = useState<PaymentMethod>(
-    (user?.doctorInfo?.payment_channel as PaymentMethod) ?? "mobile_money"
-  );
-
   const form = useForm<z.output<typeof onDoctorBoardingSchema4>>({
     resolver: zodResolver(onDoctorBoardingSchema4),
     defaultValues: {
       account_name: user?.doctorInfo?.account_name ?? "",
       account_number: user?.doctorInfo?.account_number ?? "",
       bank: user?.doctorInfo?.bank ?? "",
-      payment_channel: user?.doctorInfo?.payment_channel,
+      payment_channel:
+        (user?.doctorInfo?.payment_channel as "mobile_money" | "ghipss") ??
+        "mobile_money",
       rate: user?.doctorInfo?.rate ?? 0,
     },
   });
+  const channel = useMemo(() => {
+    return form.watch("payment_channel");
+  }, [form.watch("payment_channel")]);
+  const provider = useMemo(() => {
+    return form.watch("bank");
+  }, [form.watch("bank")]);
   const {
     data: banks,
     isLoading,
     isError,
-  } = useFetchBanks(
-    selectedPayMethod === "mobile_money" ? "mobile_money" : "ghipss"
-  );
+  } = useFetchBanks(channel === "mobile_money" ? "mobile_money" : "ghipss");
   useEffect(() => {
-    if (selectedPayMethod) {
-      form.setValue("payment_channel", selectedPayMethod);
-    }
-  }, [form, selectedPayMethod]);
-
-  useEffect(() => {
-    if (selectedPayMethod) {
-      form.setValue("payment_channel", selectedPayMethod);
-      form.setValue("bank", "");
+    if (channel) {
       form.setValue("account_name", "");
       form.setValue("account_number", "");
+      form.setValue("bank", "");
     }
-  }, [selectedPayMethod, form]);
+  }, [channel, form]);
+  useEffect(() => {
+    const validate = async () => {
+      if (provider) {
+        if (form.watch("account_number")) {
+          await form.trigger("account_number");
+        }
+      }
+    };
+    validate();
+  }, [provider, form]);
 
   const handleSubmit = async (
     data: z.output<typeof onDoctorBoardingSchema4>
@@ -113,6 +123,12 @@ const DoctorOnboardingServiceDetails = ({
     }
   };
 
+  if (isLoading)
+    return (
+      <div className="w-full h-[400px] flex items-center justify-center">
+        <Loader />
+      </div>
+    );
   return (
     <motion.div
       key="step2"
@@ -132,44 +148,39 @@ const DoctorOnboardingServiceDetails = ({
             onSubmit={form.handleSubmit(handleSubmit)}
           >
             <div className="space-y-4">
-              <Label>How would you like to get paid?</Label>
-              <RadioGroup
-                value={selectedPayMethod}
-                onValueChange={(value) =>
-                  setSelectedPayMethod(value as PaymentMethod)
-                }
-                className="flex gap-10 pl-6"
-              >
-                <div className="relative">
-                  <RadioGroupItem
-                    value="mobile_money"
-                    id="mobile_money"
-                    className="peer sr-only"
-                  />
-                  <Label
-                    htmlFor="mobile_money"
-                    className="flex flex-col aspect-video items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all duration-200 ease-in-out"
-                  >
-                    <Smartphone className="mb-3 h-6 w-5 text-primary" />
-                    <span className="">Mobile Money</span>
-                  </Label>
-                </div>
-                <div className="relative">
-                  <RadioGroupItem
-                    value="bank"
-                    id="bank"
-                    className="peer sr-only"
-                  />
-                  <Label
-                    htmlFor="bank"
-                    className="flex aspect-video flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all duration-200 ease-in-out"
-                  >
-                    <Wallet className="mb-3 h-6 w-5 text-primary" />
-                    <span className="">Bank Transfer</span>
-                  </Label>
-                </div>
-              </RadioGroup>
-              {selectedPayMethod === "mobile_money" ? (
+              <FormField
+                control={form.control}
+                name="payment_channel"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel>Receive Payments via:</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-col space-y-1"
+                      >
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="mobile_money" id="mobile" />
+                          </FormControl>
+                          <FormLabel className="font-normal" htmlFor="mobile">
+                            Mobile Money
+                          </FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="ghipss" />
+                          </FormControl>
+                          <FormLabel className="font-normal">Bank</FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {channel === "mobile_money" ? (
                 isLoading ? (
                   <div className="w-full grid gap-4">
                     <Skeleton className="w-full h-10" />
@@ -191,6 +202,7 @@ const DoctorOnboardingServiceDetails = ({
                       <FormBuilder
                         name="account_number"
                         label="Enter your mobile money number"
+                        message
                       >
                         <PhoneInput
                           type="text"
@@ -248,16 +260,7 @@ const DoctorOnboardingServiceDetails = ({
               )}
             </div>
 
-            <div>
-              <FormBuilder
-                name="rate"
-                label="Rate per consultation (GHS)"
-                description={"This is how much you bill per consultation"}
-              >
-                <Input type="number" className="w-48" />
-              </FormBuilder>
-            </div>
-
+            <PriceInput form={form} />
             <Button
               className="w-full mt-4"
               type="submit"

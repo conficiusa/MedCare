@@ -1,5 +1,5 @@
-
 import { z } from "zod";
+import { validatePhoneNumber } from "./carrierValidate";
 
 const multiSelectSchema = z.object({
   label: z.string(),
@@ -120,11 +120,6 @@ export const onDoctorBoardingSchema3 = z
     }),
     current_facility: z.string().min(1, "Please enter your current facility "),
     medical_school: z.string().min(1, "Please enter your medical school"),
-    cv:z.unknown().transform(value => {
-    return value as FileList
-  }).refine((files) => files.length && files[0]?.size <= 4 * 1024 * 1024, {
-        message: "The file must be less than 4MB",
-      }),
     certifications: z
       .array(multiSelectSchema)
       .max(4, "You can only select up to 4 certifications"),
@@ -144,20 +139,36 @@ export const onDoctorBoardingSchema3 = z
       path: ["experience"],
     }
   );
-export const onDoctorBoardingSchema4 = z.object({
-  rate: z.coerce
-    .number({
-      required_error: "Experience level is required",
-      invalid_type_error: "Experience must be a number",
-    })
-    .refine((value) => value > 0, {
-      message: "Rate must be greater than 0",
-    }),
-  bank: z.string().min(1, "Please Select a provider "),
-  payment_channel: z.string().min(1, "Please select your payment channel "),
-  account_number: z.string().min(1, "Please enter account number"),
-  account_name: z.string().min(1, "Please enter the name on the account"),
-});
+
+export const onDoctorBoardingSchema4 = z
+  .object({
+    rate: z.coerce
+      .number({
+        required_error: "Consultation rate is required",
+        invalid_type_error: "Rate must be a number",
+      })
+      .refine((value) => value > 0, {
+        message: "Rate must be greater than 0",
+      }),
+    bank: z.string().min(1, "Please Select a provider "),
+    payment_channel: z.enum(["mobile_money", "ghipss"]),
+    account_number: z.string().min(1, "Please enter account number"),
+    account_name: z.string().min(1, "Please enter the name on the account"),
+  })
+  .refine(
+    (data) => {
+      const mobile_money_codes = ["29", "28", "66"];
+      const carriers = ["AirtelTigo", "MTN", "Vodafone"];
+      const carrierIndex = mobile_money_codes.indexOf(data?.bank);
+      if (!mobile_money_codes.includes(data?.bank)) return true;
+      return validatePhoneNumber(carriers[carrierIndex], data?.account_number);
+    },
+    {
+      path: ["account_number"],
+      message:
+        "*Enter a valid number, Phone number should match selected Provider",
+    }
+  );
 export const onDoctorBoardingSchema5 = z.object({
   image: z.string().min(1, "Failed to get image url"),
 });

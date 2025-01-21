@@ -454,9 +454,6 @@ export const handleDoctorOnboarding = async (
       onboarding_level: step,
     };
 
-    if (updateData?.doctorInfo?.cv) {
-      console.log("update", updateData?.doctorInfo?.cv);
-    }
     const updatedDoctor = await User.findByIdAndUpdate(
       authSession.user.id,
       updateData,

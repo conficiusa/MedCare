@@ -62,18 +62,6 @@ export const DoctorInfoSchema = new Schema<IDoctorInfo>(
         message: "Medical school is required",
       },
     },
-    cv: {
-      type: String,
-      validate: {
-        validator: function (value: string) {
-          if (this.onboarding_level >= 4) {
-            return value != null && value.trim().length > 0;
-          }
-          return true;
-        },
-        message: "CV or resume is required",
-      },
-    },
     specialities: [String],
     current_facility: String,
     experience: {

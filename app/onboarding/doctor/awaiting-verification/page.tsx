@@ -133,7 +133,8 @@ export default function VerificationPage() {
                     if (data?.status === "success") {
                       return "Your profile will now be available for appointments. Welcome to medcare hub";
                     }
-                    return "You account could not be verified at this moment. try again later ";
+                    console.log(data)
+                    return "Your account could not be verified at this moment. try again later ";
                   },
                 }
               )

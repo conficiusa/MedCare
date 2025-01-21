@@ -13,15 +13,14 @@ import { languages } from "@/lib/data";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Step } from "@/components/blocks/onboardingDoctor";
-import { cn } from "@/lib/utils";
+import { cn, getFilteredValues } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "../ui/form";
 import { DoctorOnboardStepOne } from "@/lib/onboarding";
 import { Doctor } from "@/lib/definitions";
 import { UpdateSession } from "next-auth/react";
 import { Session } from "next-auth";
-import { formatPhoneNumber } from "react-phone-number-input";
-
+import { formatPhoneNumber, parsePhoneNumber } from "react-phone-number-input";
 
 const OnboardingDoctorProfile = ({
   steps,
@@ -44,11 +43,11 @@ const OnboardingDoctorProfile = ({
       dob: user?.dob ? new Date(user?.dob) : undefined,
       role: "doctor",
       gender: user?.gender ?? "",
-      languages: [],
-      phone: "",
+      languages: getFilteredValues(user?.languages, languages),
+      phone: parsePhoneNumber(user?.phone)?.number ?? ("" as any),
     },
   });
-// Output: Carrier information or message
+  // Output: Carrier information or message
   const handleSubmit = async (
     data: z.output<typeof onDoctorBoardingSchema1>
   ) => {
@@ -77,20 +76,6 @@ const OnboardingDoctorProfile = ({
       toast.error(error.message);
     }
   };
-
-  React.useEffect(() => {
-    if (user) {
-      form.setValue("dob", user?.dob ? new Date(user?.dob) : undefined);
-      form.setValue("gender", user?.gender);
-      form.setValue(
-        "languages",
-        user.languages?.length > 0
-          ? languages.filter((lang) => user?.languages?.includes(lang.value))
-          : []
-      );
-      form.setValue("phone", formatPhoneNumber(user?.phone));
-    }
-  }, [user, form]);
 
   return (
     <div className="w-full">
@@ -135,8 +120,6 @@ const OnboardingDoctorProfile = ({
                 placeholder="Phone number"
                 className="duration-300"
                 defaultCountry="GH"
-                initialValueFormat="national"
-                international={false}
               />
             </FormBuilder>
             <DatePickerForm
