@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /dashboard
+Disallow: /doctor/dashboard
+Disallow: /onboarding/awaiting-verification
+
+Allow: /
+Allow: /find-a-doctor/
+Allow:/sign-in
