@@ -102,7 +102,6 @@ const DoctorOnboardingServiceDetails = ({
               ...session.user,
               doctorInfo: {
                 ...session?.user?.doctorInfo,
-                media: res?.data?.doctorInfo.media,
                 rate: res?.data?.doctorInfo.rate,
                 onboarding_level: res?.data?.doctorInfo.onboarding_level,
               },

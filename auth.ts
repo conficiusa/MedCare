@@ -33,7 +33,6 @@ declare module "next-auth" {
       specialities: string[] | undefined;
       bio: string | undefined;
       certifications: string[] | undefined;
-      media: string[] | undefined;
       rating: number | undefined;
       verification?: "not_started" | "verifying" | "approved" | "failed";
     };
@@ -62,7 +61,6 @@ declare module "next-auth" {
         specialities: string[] | undefined;
         bio: string | undefined;
         certifications: string[] | undefined;
-        media: string[] | undefined;
         rating: number | undefined;
         verification?: "not_started" | "verifying" | "approved" | "failed";
       };
@@ -91,7 +89,6 @@ declare module "next-auth/jwt" {
       specialities: string[] | undefined;
       bio: string | undefined;
       certifications: string[] | undefined;
-      media: string[] | undefined;
       rating: number | undefined;
       verification?: "not_started" | "verifying" | "approved" | "failed";
     };

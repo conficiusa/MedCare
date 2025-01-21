@@ -56,18 +56,7 @@ const DocCardOnline = async ({
                   </span>
                 </p>
               </div>
-              <div className="-mt-2 flex items-center gap-2 text-muted-foreground">
-                {doctor?.doctorInfo?.media?.includes("chat") && (
-                  <TooltipBuilder content="Available for realtime chat ">
-                    <MessageSquareDot className="w-5 h-5" strokeWidth={1.3} />
-                  </TooltipBuilder>
-                )}
-                {doctor?.doctorInfo?.media?.includes("video") && (
-                  <TooltipBuilder content="Available for video consultation">
-                    <Video className="w-5 h-5" strokeWidth={1.3} />
-                  </TooltipBuilder>
-                )}
-              </div>
+           
               {doctor?.doctorInfo?.rating && (
                 <div className="flex items-center gap-2 text-sm">
                   <Ratings value={doctor?.doctorInfo?.rating} />
