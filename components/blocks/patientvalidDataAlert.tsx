@@ -24,7 +24,6 @@ import { Form } from "../ui/form";
 import { sendEmailAction } from "@/lib/actions";
 import { PatientOnboardStepFour } from "@/lib/onboardingPatientactions";
 import { patientOnboardemail } from "@/lib/emails";
-import { SendWelcomeEmail } from "@/lib/jobs";
 
 export function PatientOnboardingAlert({
   update,
