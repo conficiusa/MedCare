@@ -579,7 +579,7 @@ export const sendEmailAction = async (
 ) => {
   try {
     const result = await client.publishJSON({
-      url: `https://medcarehub.vercel.app/api/${url}`,
+      url: `https://medcarehub.vercel.app/api/p${url}`,
       body: { recipient, subject, body },
     });
     console.log("email queued");
