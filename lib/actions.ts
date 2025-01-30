@@ -44,6 +44,7 @@ import Review from "@/models/Reviews";
 import mongoose from "mongoose";
 import { SendWelcomeEmail } from "./jobs";
 import { patientOnboardemail } from "./emails";
+import { Client } from "@upstash/qstash";
 
 export const Authenticate = async (
   session: Session | null
@@ -569,18 +570,24 @@ export const handlePatientOnboarding = async (
   }
 };
 
+const client = new Client({ token: process.env.QSTASH_TOKEN! });
 export const sendEmailAction = async (
+  url: string,
   recipient: string,
   subject: string,
   body: string
 ) => {
   try {
-    await SendWelcomeEmail.dispatch({ body, recipient, subject });
+    const result = await client.publishJSON({
+      url: `https://medcarehub.vercel.app/${url}`,
+      body: { recipient, subject, body },
+    });
+    console.log("email queued");
     return {
-      message: "Email sent",
+      message: "Email queued for delivery",
       status: "success",
       statusCode: 200,
-      data: {},
+      data: result?.messageId,
     } as SuccessReturn;
   } catch (error: any) {
     console.error(error);
