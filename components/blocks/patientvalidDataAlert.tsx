@@ -55,15 +55,15 @@ export function PatientOnboardingAlert({
               onboarding_level: res?.data?.onboarding_level,
             },
           });
-          toast.success("Welcome to Medcare-Hub", {
+          toast.success("Welcome to Medcare Hub", {
             description:
               "Enjoy expert healthcare from the comfort of your home",
           });
-          await sendEmailAction(
-            patientOnboardemail(session?.user?.name as string),
-            session.user.email as string,
-            "Welcome to Medcare-Hub"
-          );
+          await SendWelcomeEmail.dispatch({
+            recipient: session?.user?.email as string,
+            body: patientOnboardemail(session?.user?.name as string),
+            subject: "Welcome to medcare hub",
+          });
           router.push("/find-a-doctor");
         }
       } else {
