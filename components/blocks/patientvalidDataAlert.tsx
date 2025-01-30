@@ -59,11 +59,11 @@ export function PatientOnboardingAlert({
             description:
               "Enjoy expert healthcare from the comfort of your home",
           });
-          await SendWelcomeEmail.dispatch({
-            body: patientOnboardemail(session?.user?.name as string),
-            recipient: session.user.email as string,
-            subject: "Welcome to Medcare-Hub",
-          });
+          await sendEmailAction(
+            patientOnboardemail(session?.user?.name as string),
+            session.user.email as string,
+            "Welcome to Medcare-Hub"
+          );
           router.push("/find-a-doctor");
         }
       } else {

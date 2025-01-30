@@ -42,6 +42,8 @@ import Appointment from "@/models/Appointment";
 import { sendEmail } from "@/app/api/utils/email";
 import Review from "@/models/Reviews";
 import mongoose from "mongoose";
+import { SendWelcomeEmail } from "./jobs";
+import { patientOnboardemail } from "./emails";
 
 export const Authenticate = async (
   session: Session | null
@@ -568,12 +570,12 @@ export const handlePatientOnboarding = async (
 };
 
 export const sendEmailAction = async (
-  email: string,
+  recipient: string,
   subject: string,
-  message: string
-): Promise<ReturnType> => {
+  body: string
+) => {
   try {
-    await sendEmail(email, subject, message);
+    await SendWelcomeEmail.dispatch({ body, recipient, subject });
     return {
       message: "Email sent",
       status: "success",
