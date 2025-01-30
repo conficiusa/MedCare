@@ -7,7 +7,7 @@ const Services = () => {
       <div className="grid xl:grid-cols-[auto_1fr] lg:grid-cols-[300px_1fr]  gap-8 ">
         <div className="lg:flex hidden ">
           <Image
-            src={"/Service.png"}
+            src={"/service.png"}
             alt="a doctor"
             width={450}
             height={1000}

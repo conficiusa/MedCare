@@ -29,16 +29,6 @@ export function DoctorDashboardSidebar({
       <SidebarContent>
         <DoctorSidebarMain />
       </SidebarContent>
-      <button
-        onClick={() =>
-          fetch(
-            `http://ec2-13-51-207-214.eu-north-1.compute.amazonaws.com/api/v1/embeddings/doctor/create/${data?.user?.id}`,
-            { method: "PATCH" }
-          )
-        }
-      >
-        click
-      </button>
       <SidebarFooter>
         <NavUser />
       </SidebarFooter>

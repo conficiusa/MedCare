@@ -26,7 +26,23 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useSession } from "next-auth/react";
+import { Fragment } from "react";
 
+
+const navItems = [
+  {
+    icon: <Bell className="w-4 h-4 text-muted-foreground"/>,
+    label: "Notifications",
+  },
+  {
+    icon: <CreditCard className="w-4 h-4 text-muted-foreground"/>,
+    label: "Billing",
+  },
+  {
+    icon: <BadgeCheck className="w-4 h-4 text-muted-foreground"/>,
+    label: "Account",
+  },
+]
 export function NavUser() {
   const { isMobile } = useSidebar();
   const { data: session } = useSession();
@@ -44,7 +60,9 @@ export function NavUser() {
                   src={session?.user?.image ?? undefined}
                   alt={session?.user?.name ?? " your profile avatar "}
                 />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarFallback className="rounded-lg">
+                  {session?.user?.name?.split(" ")[0]}
+                </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
@@ -81,30 +99,19 @@ export function NavUser() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
+            {navItems.map((item) => (
+              <Fragment key={item.label}>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem className="flex gap-2">
+                    {item.icon}
+                    {item?.label}
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+              </Fragment>
+            ))}
+            <DropdownMenuItem className="flex gap-2">
+              <LogOut className="text-muted-foreground w-4 h-4"/>
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>

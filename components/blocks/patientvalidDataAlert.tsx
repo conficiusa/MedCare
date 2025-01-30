@@ -24,6 +24,7 @@ import { Form } from "../ui/form";
 import { sendEmailAction } from "@/lib/actions";
 import { PatientOnboardStepFour } from "@/lib/onboardingPatientactions";
 import { patientOnboardemail } from "@/lib/emails";
+import { SendWelcomeEmail } from "@/lib/jobs";
 
 export function PatientOnboardingAlert({
   update,
@@ -58,11 +59,11 @@ export function PatientOnboardingAlert({
             description:
               "Enjoy expert healthcare from the comfort of your home",
           });
-          await sendEmailAction(
-            session?.user?.email as string,
-            "Welcome to Medcare-Hub",
-            patientOnboardemail(session?.user?.name as string)
-          );
+          await SendWelcomeEmail.dispatch({
+            body: patientOnboardemail(session?.user?.name as string),
+            recipient: session.user.email as string,
+            subject: "Welcome to Medcare-Hub",
+          });
           router.push("/find-a-doctor");
         }
       } else {

@@ -106,10 +106,6 @@ const items: itemsTypes[] = [
         title: "preferences",
         url: "#",
       },
-      {
-        title: "",
-        url: "#",
-      },
     ],
   },
 ];

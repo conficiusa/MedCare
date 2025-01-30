@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -8,7 +8,7 @@ interface FeatureCardProps {
   heading: string;
   ctaText: string;
   ctaHref: string;
-  imageSrc: string;
+  imageSrc: StaticImageData;
   imageAlt: string;
   delay?: number;
 }
@@ -43,7 +43,7 @@ export function FeatureCard({
           src={imageSrc}
           alt={imageAlt}
           fill
-          className="object-contain object-center"
+          className="object-contain object-center rounded-lg drop-shadow-xl"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
       </div>

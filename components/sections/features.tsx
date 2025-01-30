@@ -1,6 +1,6 @@
 import { FeatureCard } from "@/components/blocks/feature-cards";
-import Image from "next/image";
-
+import doc from "@/public/black-doc.jpg";
+import patient from "@/public/patient.jpg";
 export default function Features() {
   const features = [
     {
@@ -8,7 +8,7 @@ export default function Features() {
       heading: "Anytime, anywhere, anything care",
       ctaText: "Get care now",
       ctaHref: "/care",
-      imageSrc: "/feature1.png",
+      imageSrc: patient,
       imageAlt:
         "Telemedicine consultation interface showing a patient care plan",
       delay: 0,
@@ -18,16 +18,16 @@ export default function Features() {
       heading: "Hospitals, Pharmacies, Laboratories",
       ctaText: "Ways we help",
       ctaHref: "/organizations",
-      imageSrc: "/feature1.png",
+      imageSrc: doc,
       imageAlt: "Medical device with video conferencing capabilities",
       delay: 200,
     },
     {
       title: "CLINICIANS",
-      heading: "Quality care starts here",
+      heading: "Quality care starts here, join medcare now",
       ctaText: "Join the team",
       ctaHref: "/join",
-      imageSrc: "/feature1.png",
+      imageSrc: doc,
       imageAlt: "Clinician scheduling interface showing appointments",
       delay: 400,
     },
