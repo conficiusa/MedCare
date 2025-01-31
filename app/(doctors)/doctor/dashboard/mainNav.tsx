@@ -91,12 +91,12 @@ const items: itemsTypes[] = [
   },
   {
     title: "Settings",
-    url: "#",
+    url: "settings",
     icon: Settings2,
     items: [
       {
         title: "profile",
-        url: "#",
+        url: "settings/profile",
       },
       {
         title: "account",

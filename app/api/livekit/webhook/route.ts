@@ -1,7 +1,6 @@
 import { markAppointmentComplete, sendEmailAction } from "@/lib/actions";
 import { WebhookReceiver } from "livekit-server-sdk";
 import { NextResponse } from "next/server";
-import { sendEmail } from "../../utils/email";
 import { Appointment } from "@/lib/definitions";
 import { EmailTemplateParams, generateThankYouEmail } from "@/lib/emails";
 
@@ -56,7 +55,7 @@ export async function POST(req: Request): Promise<NextResponse> {
           reportIssueLink: `${process.env.NEXT_PUBLIC_HOSTNAME}/report-issue`,
         } satisfies EmailTemplateParams;
         const thankyou = generateThankYouEmail(params);
-        
+
         await sendEmailAction(
           "email",
           appointment?.patient?.email as string,

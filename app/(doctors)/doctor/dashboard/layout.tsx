@@ -20,6 +20,9 @@ export default async function DashboardLayout({
   if (!session) {
     redirect("/sign-in");
   }
+  if (session?.user?.role !== "doctor") {
+    redirect("/find-a-doctor");
+  }
   return (
     <div>
       <SidebarProvider>
