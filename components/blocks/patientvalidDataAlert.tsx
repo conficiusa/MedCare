@@ -59,7 +59,7 @@ export function PatientOnboardingAlert({
               "Enjoy expert healthcare from the comfort of your home",
           });
           await sendEmailAction(
-            "patient-welcome",
+            "email",
             session?.user?.email as string,
             "Welcome to medcare hub",
             patientOnboardemail(session?.user?.name as string)

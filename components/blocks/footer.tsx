@@ -219,7 +219,7 @@ const Footer = () => {
       </div>
       <div className="py-2 md:px-10 md:py-5">
         <div className="text-sm text-muted-foreground font-semibold space-y-4">
-          <p>save time, avoid stress, choose Medcare Hub</p>
+          <p>Expert care from the comfort of your home, choose Medcare Hub</p>
           <p>
             &copy; {new Date().getFullYear()} Medcare Hub. All rights reserved.
           </p>

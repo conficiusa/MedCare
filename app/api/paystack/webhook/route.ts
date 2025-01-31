@@ -5,7 +5,11 @@ import { handleSuccessfulPayment } from "@/app/api/utils/handlepaymentsucess";
 import { sendEmail } from "../../utils/email";
 import moment from "moment";
 import { ErrorReturn, SuccessReturn } from "@/lib/definitions";
-import { doctorAppointmentEmail } from "@/lib/emails";
+import {
+  appointmentConfirmPatient,
+  doctorAppointmentEmail,
+} from "@/lib/emails";
+import { sendEmailAction } from "@/lib/actions";
 
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY as string;
 function verifySignature(body: string, signature: string): boolean {
@@ -51,35 +55,24 @@ export async function POST(req: Request): Promise<NextResponse> {
     );
     if ("data" in updateappointment) {
       const appointment = updateappointment?.data;
-      const emailToPatient = `
-        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; background-color: #f4f7f6;">
-          <h2 style="color: #4CAF50;">Appointment Confirmation</h2>
-          <p style="font-size: 16px;">Dear ${appointment?.patient?.name},</p>
-          <p style="font-size: 16px;">Your appointment with Dr. ${
-            appointment?.doctor?.name
-          } on ${moment(appointment?.date).format(
-        "dddd, MMMM Do YYYY hh:mm A"
-      )} has been successfully confirmed. Thank you for using MedCare .</p>
-          <p style="font-size: 16px;">If you have any questions, feel free to contact us.</p>
-          <p style="font-size: 16px;">Best regards,</p>
-          <p style="font-size: 16px;">The Telemedicine Platform Team</p>
-        </div>
-      `;
-      await sendEmail(
+      await sendEmailAction(
+        "email",
         event?.data?.metadata?.patient_email,
         "Appointment Confirmation",
-        emailToPatient
-      ),
-        await sendEmail(
-          event?.data?.metadata?.doctor_email,
-          "Appointment Confirmation",
-          doctorAppointmentEmail(
-            appointment?.doctor?.name,
-            appointment?.patient?.name,
-            moment(appointment?.date).format("dddd, MMMM Do YYYY"),
-            moment(appointment?.date).format("hh:mm A")
-          )
-        );
+        appointmentConfirmPatient(appointment)
+      );
+
+      await sendEmailAction(
+        "email",
+        event?.data?.metadata?.doctor_email,
+        "Appointment Confirmation",
+        doctorAppointmentEmail(
+          appointment?.doctor?.name,
+          appointment?.patient?.name,
+          moment(appointment?.date).format("dddd, MMMM Do YYYY"),
+          moment(appointment?.date).format("hh:mm A")
+        )
+      );
       return NextResponse.json(
         {
           message: "Appointment confirmed",

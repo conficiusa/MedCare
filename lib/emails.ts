@@ -1,3 +1,29 @@
+import moment from "moment";
+import { Appointment } from "./definitions";
+
+export const appointmentConfirmPatient = (appointment: Appointment) => {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; background-color: #f4f7f6;">
+          <h2 style="color: #4CAF50;">Appointment Confirmation</h2>
+          <p style="font-size: 16px;">Dear ${appointment?.patient?.name},</p>
+          <p style="font-size: 16px;">Your appointment with Dr. ${
+            appointment?.doctor?.name
+          } on ${moment(appointment?.date).format(
+    "dddd, MMMM Do YYYY hh:mm A"
+  )} has been successfully confirmed. Thank you for using MedCare .</p>
+          <p style="font-size: 16px;">If you have any questions, feel free to contact us.</p>
+          <p style="font-size: 16px;">Best regards,</p>
+          <p style="font-size: 16px;">The Telemedicine Platform Team</p>
+        </div>
+        </body>
+      `;
+};
 export const patientOnboardemail = (name: string) => {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -184,7 +210,6 @@ export const doctorAppointmentEmail = (
 </html>`;
 };
 
-
 export interface EmailTemplateParams {
   patientName?: string;
   doctorName: string;
@@ -259,4 +284,3 @@ export function generateThankYouEmail(params: EmailTemplateParams): string {
     </html>
   `;
 }
-
