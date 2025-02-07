@@ -2,31 +2,18 @@
 import { useEffect, useState } from "react";
 import { consultationMachine } from "@/lib/stateMachines";
 import { useActorRef, useSelector } from "@xstate/react";
-import { useChannel } from "ably/react";
 import ConsultationStatusDialog from "@/components/blocks/askIfOver";
 import { useRouter } from "next/navigation";
 
-interface event {
-  type?: string;
-  disconnectReason?: number;
-}
 export default function ParticipantState({
-  clientId,
   appointmentId,
+  state,
 }: {
-  clientId: string;
   appointmentId: string;
+  state: string;
 }) {
   const consultRef = useActorRef(consultationMachine);
-  const state = useSelector(consultRef, (state) => state.value);
   const router = useRouter();
-
-  useChannel(`consultation-${clientId}`, (event) => {
-    consultRef.send({
-      type: "PARTICIPANT_LEFT",
-      disconnectReason: event?.data?.disconnectReason,
-    });
-  });
 
   useEffect(() => {
     if (state === "showDialogs") {

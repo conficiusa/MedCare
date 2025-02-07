@@ -44,7 +44,7 @@ const OnboardingDoctorProfile = ({
       role: "doctor",
       gender: user?.gender ?? "",
       languages: getFilteredValues(user?.languages, languages),
-      phone: parsePhoneNumber(user?.phone)?.number ?? ("" as any),
+      phone: user?.phone ?? ("" as any),
     },
   });
   // Output: Carrier information or message

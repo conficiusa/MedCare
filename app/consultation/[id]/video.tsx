@@ -6,7 +6,6 @@ import {
   LiveKitRoom,
   ParticipantTile,
   RoomAudioRenderer,
-  useParticipants,
   useTracks,
 } from "@livekit/components-react";
 import "@livekit/components-styles";
@@ -18,6 +17,9 @@ import { generateRoomToken } from "@/lib/getTokens";
 import { Session } from "next-auth";
 import { ErrorReturn } from "@/lib/definitions";
 import Link from "next/link";
+import { useActorRef, useSelector } from "@xstate/react";
+import { consultationMachine } from "@/lib/stateMachines";
+import ParticipantState from "./state";
 
 export default function VideoCall({
   appointmentId,
@@ -29,6 +31,10 @@ export default function VideoCall({
   const [token, setToken] = useState("");
   const [error, setError] = useState<ErrorReturn | undefined>(undefined);
   const router = useRouter();
+  const consultRef = useActorRef(consultationMachine);
+  const state = useSelector(consultRef, (state) => state.value);
+
+  console.log(state);
 
   useEffect(() => {
     (async () => {
@@ -78,30 +84,32 @@ export default function VideoCall({
     );
   }
   return (
-    <LiveKitRoom
-      video={true}
-      audio={true}
-      token={token}
-      serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
-      // Use the default LiveKit theme for nice styles.
-      data-lk-theme="default"
-      style={{ height: "100dvh" }}
-    >
-      {/* Your custom component with basic video conferencing functionality. */}
-      <MyVideoConference />
-      {/* The RoomAudioRenderer takes care of room-wide audio for you. */}
-      <RoomAudioRenderer />
-      {/* Controls for the user to start/stop audio, video, and screen
-      share tracks and to leave the room. */}
-      <ControlBar />
-    </LiveKitRoom>
+    <>
+      <ParticipantState appointmentId={appointmentId} state={state} />
+      <LiveKitRoom
+        onDisconnected={(reason) => {
+          consultRef.send({
+            type: "PARTICIPANT_LEFT",
+            disconnectReason: 1,
+          });
+        }}
+        video={true}
+        audio={true}
+        token={token}
+        serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
+        data-lk-theme="default"
+        style={{ height: "100dvh" }}
+      >
+        <MyVideoConference />
+        <RoomAudioRenderer />
+
+        <ControlBar />
+      </LiveKitRoom>
+    </>
   );
 }
 
 function MyVideoConference() {
-  const participant = useParticipants();
-  // `useTracks` returns all camera and screen share tracks. If a user
-  // joins without a published camera track, a placeholder track is returned.
   const tracks = useTracks(
     [
       { source: Track.Source.Camera, withPlaceholder: true },
@@ -114,8 +122,6 @@ function MyVideoConference() {
       tracks={tracks}
       style={{ height: "calc(100vh - var(--lk-control-bar-height) - 6rem)" }}
     >
-      {/* The GridLayout accepts zero or one child. The child is used
-      as a template to render all passed in tracks. */}
       <ParticipantTile />
     </GridLayout>
   );

@@ -100,7 +100,7 @@ export function OnboardingAlert({
               <AlertDialogAction
                 onClick={form.handleSubmit((data) =>
                   toast.promise(finishUp(data), {
-                    loading: "Setting up your accounts...",
+                    loading: "Setting up your account...",
                     success: (res) => {
                       if (res?.statusCode === 200) {
                         router.push("/onboarding/doctor/awaiting-verification");

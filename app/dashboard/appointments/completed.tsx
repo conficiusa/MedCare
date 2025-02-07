@@ -60,7 +60,7 @@ const CompletedAppointment = async ({ session }: { session: Session }) => {
   return (
     <div className="space-y-8 mt-8">
       <p className="text-xs text-pretty text-muted-foreground">
-        You've completed these sessions. if these appointments were wrongly
+        You&apos;ve completed these sessions. if these appointments were wrongly
         marked as completed, please make a complaint lets rectify the issue
       </p>
       {appointments.map((appointment, index) => (

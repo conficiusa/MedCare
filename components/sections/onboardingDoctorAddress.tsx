@@ -105,14 +105,14 @@ const OnboardingDoctorAddress = ({
           <FormBuilder
             control={form.control}
             name="address_1"
-            label="Address 1"
+            label="Address Line 1"
           >
             <Input type="text" placeholder="address" />
           </FormBuilder>
           <FormBuilder
             control={form.control}
             name="address_2"
-            label="Address 2"
+            label="Address Line 2"
           >
             <Input type="text" placeholder="address" />
           </FormBuilder>
