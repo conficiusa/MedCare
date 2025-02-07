@@ -4,7 +4,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Session } from "next-auth";
 import Image from "next/image";
 import React from "react";
-import { useForm } from "react-hook-form";
 
 const ProfileForm = ({ session }: { session: Session }) => {
   return (

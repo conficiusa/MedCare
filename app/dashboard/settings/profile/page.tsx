@@ -1,8 +1,11 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Camera } from "lucide-react";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import ProfileForm from "./profileForm";
 
 export default async function ProfilePage() {
   const session = await auth();
@@ -46,10 +49,9 @@ export default async function ProfilePage() {
                     Update your photo and personal details
                   </p>
                 </div>
-                <Button>Save</Button>
+                <Button className="w-[200px]">Save</Button>
               </div>
-
-              
+              <ProfileForm session={session} />
             </div>
           </div>
         </main>

@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import AppointmentsSkeleton from "@/components/skeletons/appointments-skeleton";
 import PendingAppointment from "./pending";
+import CompletedAppointment from "./completed";
 
 const tabs = [
   { value: "upcoming", label: "Upcoming Today" },
@@ -44,6 +45,11 @@ const AppointmentTabs = ({ session }: { session: Session }) => {
       <TabsContent value="pending">
         <Suspense fallback={<AppointmentsSkeleton />}>
           <PendingAppointment session={session} />
+        </Suspense>
+      </TabsContent>
+      <TabsContent value="completed">
+        <Suspense fallback={<AppointmentsSkeleton />}>
+          <CompletedAppointment session={session} />
         </Suspense>
       </TabsContent>
     </Tabs>

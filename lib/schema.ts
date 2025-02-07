@@ -311,3 +311,14 @@ export const reviewSchema = z.object({
   rating: z.number().int().min(1).max(5),
   comment: z.string().optional(),
 });
+
+export const fullPatientSchema = PatientOnboardingSchema1.merge(
+  PatientOnboardingSchema2
+)
+  .merge(PatientOnboardingSchema3)
+  .merge(patientOnBoardingSchema4)
+  .extend({
+    name: z.string().min(1, "Please enter your full name."),
+    image: z.string().optional(),
+  });
+

@@ -3,7 +3,7 @@ import { Doctor } from "@/lib/definitions";
 const AboutDoctor = ({ doctor }: { doctor: Doctor }) => {
   return (
     <div className="grid gap-5 text-sm max-w-4xl py-4">
-      <p className="leading-6 tracking-wider font-light">
+      <p className="leading-6 tracking-wide font-[400]">
         {doctor?.doctorInfo?.bio}
       </p>
       <div>

@@ -8,6 +8,8 @@ import { Suspense } from "react";
 import { DoctorProfileAsideSkeleton } from "@/components/skeletons/doctorProfileSkeletons";
 import type { Metadata, ResolvingMetadata } from "next";
 import { Doctor } from "@/lib/definitions";
+import DoctorReviews from "@/components/blocks/reviews";
+import FetchReviews from "@/components/blocks/fetchReviews";
 
 interface Params {
   id: string;
@@ -60,12 +62,12 @@ const DoctorProfile = async ({ params }: DoctorProfileProps) => {
   if ("data" in data) {
     const { doctor, availability } = data?.data;
     return (
-      <section className="min-h-[calc(100dvh_-_4rem)] mb-10">
+      <section className="min-h-[calc(100dvh_-_4rem)] ">
         <div className="grid lg:grid-cols-[300px_1fr] h-full gap-6">
           <Suspense fallback={<DoctorProfileAsideSkeleton />}>
             <DoctorProfileAside doctor={doctor} />
           </Suspense>
-          <div className="max-lg:px-8">
+          <div className="max-lg:px-8 pb-10">
             <Tabs defaultValue="about" className="mt-4">
               <TabsList className="bg-transparent md:w-2/3 justify-between flex">
                 <TabsTrigger
@@ -92,6 +94,12 @@ const DoctorProfile = async ({ params }: DoctorProfileProps) => {
               </TabsContent>
               <TabsContent value="service">
                 <ServiceDetails availability={availability} doctor={doctor} />
+              </TabsContent>
+              <TabsContent value="reviews">
+                <FetchReviews
+                  id={params.id as string}
+                  rating={doctor?.doctorInfo?.rating}
+                />
               </TabsContent>
             </Tabs>
           </div>

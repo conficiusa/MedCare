@@ -153,3 +153,37 @@ export const PatientOnboardStepFour = async (
     },
   });
 };
+export const PatientProfileUpdate = async (
+  data: z.output<typeof patientOnBoardingSchema4>
+) => {
+  const authSession = await auth();
+
+  if (!authSession) {
+    return {
+      error: "Not Authenticated",
+      message: "You must be logged in to onboard as a patient",
+      status: "fail",
+      statusCode: 401,
+      type: "Authentication Error",
+    } as ErrorReturn;
+  }
+
+  const user = await User.findById(authSession?.user?.id);
+  return handlePatientOnboarding(5, data, patientOnBoardingSchema4, {
+    image: user?.image,
+    address_1: user?.address_1,
+    address_2: user?.address_2,
+    city: user?.city,
+    region: user?.region,
+    country: user?.country,
+    phone: user?.phone,
+    dob: user?.dob,
+    languages: user?.languages,
+    role: "patient",
+    onboarding_level: 7,
+    patientInfo: {
+      conditions: user?.patientInfo?.conditions,
+      medicalHistory: user?.patientInfo?.medicalHistory,
+    },
+  });
+};

@@ -3,10 +3,7 @@ import { toast } from "sonner";
 import { VerifyPaystackPayment } from "@/lib/formSubmissions";
 
 // TODO: make sure to get the amount backend for verification in future
-export const onSuccess = async (
-  res: any,
-  amount: number,
-) => {
+export const onSuccess = async (res: any, amount: number) => {
   // verify payment
   const verificationPromise = VerifyPaystackPayment(res.reference, amount);
   toast.promise(verificationPromise, {
@@ -16,7 +13,7 @@ export const onSuccess = async (
     success: async (data: any) => {
       //verifying payment was a success
       if (data?.data?.data?.status === "success") {
-        return "Your appointment will be confirmed via email";
+        return "Appointment Confirmed";
       }
     },
     error: (error: any) => {

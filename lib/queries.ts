@@ -18,6 +18,8 @@ import { redirect } from "next/navigation";
 import { startOfDay } from "date-fns";
 import User from "@/models/User";
 import { unstable_cache as nextcache } from "next/cache";
+import Review from "@/models/Reviews";
+import { ReviewsPerPage } from "./constants";
 
 interface QueryOptions {
   filter?: Record<string, any>;
@@ -38,7 +40,12 @@ export const fetchDoctorCardData = async (
   filter = { ...filter, ...applyCaseInsensitiveRegex(filter) };
 
   // Build the aggregation pipeline using the utility function
-  const pipeline = buildDoctorAggregationPipeline(filter, options, queryterm, showall);
+  const pipeline = buildDoctorAggregationPipeline(
+    filter,
+    options,
+    queryterm,
+    showall
+  );
 
   // Execute the aggregation
   const doctors = await User.aggregate(pipeline);
@@ -351,3 +358,62 @@ export const fetchDoctorAvailibility = nextcache(
   ["availability"],
   { revalidate: 3600, tags: ["availability"] }
 );
+
+export const fetchDoctorReviews = async (
+  id: string,
+  skip: number
+): Promise<ReturnType> => {
+  try {
+    const session = await auth();
+    if (!session) {
+      redirect("/sign-in");
+    }
+    if (!id || typeof id !== "string") {
+      return {
+        error: "Invalid Doctor ID",
+        message: "Invalid Doctor ID",
+        status: "fail",
+        statusCode: 400,
+        type: "Bad Request",
+      };
+    }
+    const Reviews = await Review.find({
+      doctorId: id,
+      comment: { $exists: true, $ne: "" },
+    })
+      .skip(skip)
+      .limit(ReviewsPerPage)
+      .sort({ createdAt: -1 });
+    if (!Reviews) {
+      return {
+        error: "No reviews found",
+        message: "No reviews found",
+        status: "fail",
+        statusCode: 404,
+        type: "Not found",
+      };
+    }
+    const ReviewsArray = Reviews.map((doc) => ({
+      id: doc.id.toString(),
+      doctorId: doc.doctorId.toString(),
+      userId: doc.userId.toString(),
+      ...doc.toObject(),
+    }));
+
+    return {
+      data: ReviewsArray,
+      message: "Reviews fetched successfully",
+      status: "success",
+      statusCode: 200,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      error: "Server Error",
+      message: "Failed to fetch reviews",
+      status: "fail",
+      statusCode: 500,
+      type: "Bad Request",
+    };
+  }
+};

@@ -101,12 +101,12 @@ const items: itemsTypes[] = [
   },
   {
     title: "Settings",
-    url: "#",
+    url: "settings",
     icon: Settings2,
     items: [
       {
-        title: "General",
-        url: "#",
+        title: "Profile",
+        url: "settings/profile",
       },
       {
         title: "Team",
@@ -137,7 +137,7 @@ export function NavMain() {
           >
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
+                <SidebarMenuButton tooltip={item.title} className="text-[13px]">
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
@@ -147,7 +147,10 @@ export function NavMain() {
                 <SidebarMenuSub>
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
-                      <SidebarMenuSubButton asChild>
+                      <SidebarMenuSubButton
+                        asChild
+                        className="text-xs text-muted-foreground"
+                      >
                         <a href={subItem.url}>
                           <span>{subItem.title}</span>
                         </a>
