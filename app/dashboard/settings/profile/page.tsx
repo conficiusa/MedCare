@@ -1,11 +1,11 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+
 import { Camera } from "lucide-react";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import ProfileForm from "./profileForm";
+import ProfilePic from "./profilePicUpdate";
 
 export default async function ProfilePage() {
   const session = await auth();
@@ -19,7 +19,7 @@ export default async function ProfilePage() {
         <main className="flex-1">
           <div className="rounded-xl">
             {/* Header with gradient */}
-            <div className="relative h-48 rounded-t-xl bg-gradient-to-r from-blue-200 via-green-100 to-yellow-100">
+            <div className="relative h-48 rounded-t-xl bg-muted dark:bg-muted/70">
               <Button
                 size="icon"
                 variant="secondary"
@@ -32,14 +32,8 @@ export default async function ProfilePage() {
             {/* Profile Content */}
             <div className="relative -mt-16 rounded-b-xl border bg-background px-6 pb-6 pt-20">
               {/* Profile Image */}
-              <div className="absolute -top-24 left-6 size-32 rounded-full border-4 border-background bg-white">
-                <Image
-                  src={session?.user?.image as string}
-                  alt="Profile"
-                  width={128}
-                  height={128}
-                  className="rounded-full"
-                />
+              <div className="absolute -top-24 left-6 size-32 rounded-full border-4 border-background">
+                <ProfilePic initialImage={session?.user?.image ?? null} />
               </div>
 
               <div className="mb-8 flex items-start justify-between">

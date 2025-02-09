@@ -18,6 +18,7 @@ import { Doctor } from "@/lib/definitions";
 import { Session } from "next-auth";
 import { UpdateSession } from "next-auth/react";
 import ImageUpload from "@/components/blocks/imageUploader";
+import { ProfilePicturesFolder } from "@/lib/constants";
 
 export default function DoctorImageUpload({
   currentStep,
@@ -47,7 +48,7 @@ export default function DoctorImageUpload({
     data: z.output<typeof onDoctorBoardingSchema5>
   ) => {
     try {
-      const res = await DoctorOnboardStepFive(data);
+      const res = await DoctorOnboardStepFive(data,6);
       if ("data" in res) {
         if (res?.statusCode === 200) {
           await update({
@@ -77,7 +78,7 @@ export default function DoctorImageUpload({
   const onSave = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
-    const response = await upload(formData);
+    const response = await upload(formData, ProfilePicturesFolder);
     if ("data" in response) {
       form.setValue("image", response?.data.url);
       form.handleSubmit(handleSubmit)();

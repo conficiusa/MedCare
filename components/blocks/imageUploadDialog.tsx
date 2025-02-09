@@ -1,0 +1,128 @@
+"use client";
+import { useCallback, useState } from "react";
+import { useDropzone } from "react-dropzone";
+import Image from "next/image";
+import {
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { ImageIcon, X } from "lucide-react";
+import { ProfilePicturesFolder } from "@/lib/constants";
+import { upload } from "@/lib/actions";
+import { toast } from "sonner";
+
+interface UploadDialogProps {
+  onImageChange: (image: string | null) => void;
+}
+
+export function UploadDialog({ onImageChange }: UploadDialogProps) {
+  const [preview, setPreview] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    const file = acceptedFiles[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      setPreview(e.target?.result as string);
+    };
+
+    reader.readAsDataURL(file);
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      "image/*": [".jpeg", ".jpg", ".png"],
+    },
+    maxFiles: 1,
+  });
+
+  const handleSave = useCallback(async () => {
+    if (!file) {
+      throw new Error("No file selected");
+    }
+    const formData = new FormData();
+    formData.append("file", file);
+    const result = await upload(formData, ProfilePicturesFolder);
+    if ("data" in result) {
+      onImageChange(result.data?.url);
+    } else {
+      throw new Error("An error occurred while uploading the image");
+    }
+  }, [file, onImageChange]);
+
+  const handleClear = useCallback(() => {
+    setPreview(null);
+  }, []);
+
+  return (
+    <div className="p-4">
+      <DialogHeader>
+        <DialogTitle>Upload Image</DialogTitle>
+        <DialogDescription>
+          Drag and drop an image or click to select a file.
+        </DialogDescription>
+      </DialogHeader>
+      <div
+        {...getRootProps()}
+        className={`mt-4 border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
+          isDragActive
+            ? "border-primary bg-primary/10"
+            : "border-muted hover:border-primary/50"
+        } `}
+      >
+        <input {...getInputProps()} />
+        {preview ? (
+          <div className="relative">
+            <Image
+              src={preview || "/placeholder.svg"}
+              alt="Preview"
+              width={200}
+              height={200}
+              className="mx-auto w-full rounded-lg object-cover aspect-square"
+            />
+            <Button
+              variant="secondary"
+              size="icon"
+              className="absolute top-2 right-2"
+              onClick={handleClear}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center">
+            <ImageIcon className="h-10 w-10 text-gray-400 mb-2" />
+            <p className="text-sm text-gray-500">
+              {isDragActive
+                ? "Drop the image here"
+                : "Drag an image here or click to select"}
+            </p>
+          </div>
+        )}
+      </div>
+      {preview && (
+        <div className="mt-4 flex justify-end space-x-2">
+          <Button variant="outline" onClick={handleClear}>
+            Clear
+          </Button>
+          <Button
+            onClick={() =>
+              toast.promise(handleSave, {
+                loading: "Uploading Image",
+                error: (error) => error.message||"An error occurred while uploading the image",
+                success: "Image uploaded successfully",
+              })
+            }
+            disabled={!preview}
+          >
+            Save
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+}

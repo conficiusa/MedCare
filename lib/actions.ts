@@ -42,8 +42,7 @@ import Appointment from "@/models/Appointment";
 import { sendEmail } from "@/app/api/utils/email";
 import Review from "@/models/Reviews";
 import mongoose from "mongoose";
-import { SendWelcomeEmail } from "./jobs";
-import { patientOnboardemail } from "./emails";
+import { nanoid } from "nanoid";
 import { Client } from "@upstash/qstash";
 
 export const Authenticate = async (
@@ -328,7 +327,10 @@ export const CreateAppointment = async (
   }
 };
 
-export async function upload(formData: FormData): Promise<ReturnType> {
+export async function upload(
+  formData: FormData,
+  subDir: string
+): Promise<ReturnType> {
   const authSession = await auth();
 
   if (!authSession) {
@@ -341,12 +343,12 @@ export async function upload(formData: FormData): Promise<ReturnType> {
     } as ErrorReturn;
   }
   const file = formData.get("file") as File;
-  const filename = `${Date.now()}-${file.name}`;
   if (!file) {
     throw new Error("No file uploaded");
   }
+  const filename = `${nanoid()}-${file.name}`;
   try {
-    const blob = await put(filename, file, {
+    const blob = await put(`${subDir}`, file, {
       access: "public",
     });
     revalidatePath("/");
@@ -356,10 +358,10 @@ export async function upload(formData: FormData): Promise<ReturnType> {
       status: "success",
       statusCode: 200,
     };
-  } catch (error) {
+  } catch (error:any) {
     console.error("Error uploading file:", error);
     return {
-      error: error,
+      error: error?.message,
       message: "Error uploading file",
       status: "fail",
       statusCode: 500,
@@ -477,6 +479,7 @@ export const handleDoctorOnboarding = async (
     }
 
     revalidateTag("user");
+    revalidatePath("/");
     return {
       data: updatedDoctor.toObject(),
       message: `Step ${step} completed successfully.`,

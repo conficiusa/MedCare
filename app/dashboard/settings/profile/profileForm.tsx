@@ -10,8 +10,7 @@ import { fullPatientSchema } from "@/lib/schema";
 import { getFilteredValues } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Session } from "next-auth";
-import Image from "next/image";
-import React, { useRef } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import DatePickerForm from "@/components/blocks/dobpicker";
@@ -19,6 +18,7 @@ import MultiSelector from "@/components/blocks/multipleSelector";
 import { toast } from "sonner";
 import ImageUpload from "@/components/blocks/imageUploader";
 import { upload } from "@/lib/actions";
+import { ProfilePicturesFolder } from "@/lib/constants";
 
 const ProfileForm = ({ session }: { session: Session }) => {
   const [image, setImage] = React.useState<File | null>(null);
@@ -46,14 +46,14 @@ const ProfileForm = ({ session }: { session: Session }) => {
   const onSave = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
-    const response = await upload(formData);
+    const response = await upload(formData, ProfilePicturesFolder);
     if ("data" in response) {
       form.setValue("image", response?.data.url);
     } else {
       throw new Error("An error occurred while uploading the image");
     }
   };
-  
+
   return (
     <Form {...form}>
       <form className="space-y-8">
@@ -102,26 +102,6 @@ const ProfileForm = ({ session }: { session: Session }) => {
               control={form.control}
               label="Choose your date of birth"
             />
-          </div>
-
-          <div className="flex flex-col items-center gap-5 justify-center min-w-[300px]">
-            <h2 className="text-xs uppercase text-muted-foreground">
-              Profile Image
-            </h2>
-            <div className="space-y-2">
-              <div className="flex items-center gap-4 flex-col ">
-                <ImageUpload
-                  label=""
-                  id="profileImage"
-                  image={image}
-                  setImage={setImage}
-                  isCircular={false}
-                  showControls={false}
-                  onSave={onSave}
-                  existingImageUrl={prevImage as string}
-                />
-              </div>
-            </div>
           </div>
         </div>
         <div className="dark:bg-muted/40 bg-muted/70 p-10 rounded-2xl shadow-md grid gap-4">
