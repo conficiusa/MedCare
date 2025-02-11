@@ -120,6 +120,21 @@ export interface ITimeSlot {
   updatedAt: Date;
 }
 
+export interface IBank extends Document {
+  name: string;
+  slug: string;
+  code: string;
+  longcode: string;
+  gateway: string;
+  pay_with_bank: boolean;
+  supports_transfer: boolean;
+  active: boolean;
+  country: string;
+  currency: string;
+  type: "ghipss" | "mobile_money";
+  isdeleted: boolean;
+}
+
 //onboarding steps
 export interface IOnboardingState extends Document {
   userId: Types.ObjectId; // Reference to the user
@@ -447,4 +462,39 @@ export interface BankTokenType {
   expiresAt: Date;
   used: boolean;
   createdAt: Date;
+}
+
+// {
+//       "id": 46,
+//       "name": "Guaranty Trust Bank (Ghana) Limited",
+//       "slug": "guaranty-trust-bank-(ghana)-limited",
+//       "code": "230100",
+//       "longcode": "",
+//       "gateway": null,
+//       "pay_with_bank": false,
+//       "supports_transfer": true,
+//       "active": true,
+//       "country": "Ghana",
+//       "currency": "GHS",
+//       "type": "ghipss",
+//       "is_deleted": false,
+//       "createdAt": "2018-03-29T12:54:59.000Z",
+//       "updatedAt": "2018-03-29T12:54:59.000Z"
+// },
+export interface Bank {
+  id: string;
+  name: string;
+  slug: string;
+  code: string;
+  longcode: string;
+  gateway: string;
+  pay_with_bank: boolean;
+  supports_transfer: boolean;
+  active: boolean;
+  country: string;
+  currency: string;
+  type: "ghipss" | "mobile_money";
+  isdeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
 }

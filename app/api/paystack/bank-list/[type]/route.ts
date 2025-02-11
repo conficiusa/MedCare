@@ -1,25 +1,21 @@
 import { auth } from "@/auth";
-import { NextRequest, NextResponse } from "next/server";
+import {  NextResponse } from "next/server";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { type: string } }
-): Promise<NextResponse> {
+export const GET = auth(async function GET(req, res): Promise<NextResponse> {
+
   try {
-    const session = await auth();
-    if (!session) {
-      return NextResponse.json(
-        { message: "Not authenticated" },
-        { status: 401 }
-      );
-    }
-
-    const { type } = params;
+    // if (!req.auth) {
+    //   return NextResponse.json(
+    //     { error: "You are not authenticated" },
+    //     { status: 401 }
+    //   );
+    // }
+    const { type } = res?.params as { type: string };
     const country = "ghana";
 
     const url = new URL("https://api.paystack.co/bank");
     url.searchParams.append("country", country);
-    url.searchParams.append("type", type);
+    // url.searchParams.append("type", type);
 
     const options = {
       method: "GET",
@@ -39,4 +35,4 @@ export async function GET(
       { status: 500 }
     );
   }
-}
+});

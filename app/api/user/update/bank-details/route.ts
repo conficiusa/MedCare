@@ -1,4 +1,3 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import crypto from "crypto";
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
