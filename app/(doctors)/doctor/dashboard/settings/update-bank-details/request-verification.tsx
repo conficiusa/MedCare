@@ -28,13 +28,13 @@ export default function VerificationCard() {
     if (code.length === 6) {
       consultRef.send({ type: "VERIFY_CODE", code });
     }
-  }, [code]);
-  
+  }, [code, consultRef]);
+
   useEffect(() => {
     if (value === "verified_successfully") {
       router.refresh();
     }
-  }, [value]);
+  }, [value, router]);
 
   if (
     ![
@@ -59,8 +59,8 @@ export default function VerificationCard() {
         </CardHeader>
         <CardContent className="text-center">
           <p className="text-sm text-muted-foreground mb-4">
-            We'll send a verification code to your registered email address.
-            Please enter this code on the next screen to proceed.
+            We&apos;ll send a verification code to your registered email
+            address. Please enter this code on the next screen to proceed.
           </p>
         </CardContent>
         <CardFooter className="flex justify-center">
