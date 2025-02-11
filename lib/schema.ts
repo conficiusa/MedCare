@@ -322,3 +322,36 @@ export const fullPatientSchema = PatientOnboardingSchema1.merge(
     image: z.string().optional(),
   });
 
+export const fullDoctorSchema = onDoctorBoardingSchema1
+  .merge(onDoctorBoardingSchema2)
+  .merge(onDoctorBoardingSchema5)
+  .merge(onDoctorBoardingSchema6)
+  .extend({
+    name: z.string().min(1, "Please enter your full name."),
+    license_number: z.string().min(1, "Please enter your Registration number "),
+    bio: z.string().min(1, "Please tell us about yourself"),
+    experience: z.coerce.number({
+      required_error: "Experience level is required",
+      invalid_type_error: "Experience must be a number",
+    }),
+    current_facility: z.string().min(1, "Please enter your current facility "),
+    medical_school: z.string().min(1, "Please enter your medical school"),
+    certifications: z
+      .array(multiSelectSchema)
+      .max(4, "You can only select up to 4 certifications"),
+    specialities: z
+      .array(multiSelectSchema)
+      .max(2, "You can only select up to 2 specialities"),
+  })
+  .refine(
+    (data) => {
+      if (!data?.experience) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "experience level is required",
+      path: ["experience"],
+    }
+  );

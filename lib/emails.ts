@@ -284,3 +284,106 @@ export function generateThankYouEmail(params: EmailTemplateParams): string {
     </html>
   `;
 }
+
+export function bankUpdateEmail(token: string): string {
+  return `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Bank Details Update Verification</title>
+    <style type="text/css">
+      /* Some email clients strip out head styles, so critical styles should be inline. */
+      @media only screen and (max-width: 600px) {
+        .container {
+          width: 100% !important;
+        }
+        .mobile-padding {
+          padding-left: 20px !important;
+          padding-right: 20px !important;
+        }
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #f2f4f6; font-family: Arial, sans-serif;">
+    <!-- Wrapper Table -->
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td align="center" style="padding: 20px 0;">
+          <!-- Container Table -->
+          <table
+            class="container"
+            border="0"
+            cellpadding="0"
+            cellspacing="0"
+            width="600"
+            style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1); overflow: hidden;"
+          >
+            <!-- Header -->
+            <tr>
+              <td align="center" style="padding: 20px;">
+                <img
+                  src="https://yourdomain.com/logo.png"
+                  alt="Telemedicine Platform"
+                  width="150"
+                  style="display: block; max-width: 100%; height: auto;"
+                />
+              </td>
+            </tr>
+            <!-- Title Section -->
+            <tr>
+              <td class="mobile-padding" style="padding: 0 40px 20px 40px; text-align: center;">
+                <h1 style="margin: 0; font-size: 24px; color: #333333;">Bank Details Update Request</h1>
+              </td>
+            </tr>
+            <!-- Body Content -->
+            <tr>
+              <td class="mobile-padding" style="padding: 0 40px 20px 40px; color: #333333;">
+                <p style="font-size: 16px; line-height: 1.5; margin: 0 0 10px 0;">Hello,</p>
+                <p style="font-size: 16px; line-height: 1.5; margin: 0 0 10px 0;">
+                  We received a request to update your bank details on your Telemedicine Platform account.
+                  To ensure the security of your account, please use the verification token below.
+                </p>
+                <p style="font-size: 16px; line-height: 1.5; margin: 0 0 20px 0;">
+                  Enter the token in the designated field on our website to proceed.
+                </p>
+                <!-- Token Display -->
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 20px 0;">
+                  <tr>
+                    <td align="center">
+                      <span style="display: inline-block; padding: 12px 20px; font-size: 24px; letter-spacing: 2px; font-weight: bold; color: #d9534f; background-color: #f7f7f7; border: 2px dashed #cccccc; border-radius: 4px;">
+                        ${token}
+                      </span>
+                    </td>
+                  </tr>
+                </table>
+                <p style="font-size: 16px; line-height: 1.5; margin: 0 0 10px 0;">
+                  This token is valid for <strong>10 minutes</strong>.
+                </p>
+                <p style="font-size: 16px; line-height: 1.5; margin: 0 0 20px 0;">
+                  If you did not request this update, please disregard this email or contact our support team immediately.
+                </p>
+                <p style="font-size: 16px; line-height: 1.5; margin: 0;">Thank you,</p>
+                <p style="font-size: 16px; line-height: 1.5; margin: 0;">The Telemedicine Platform Team</p>
+              </td>
+            </tr>
+            <!-- Footer -->
+            <tr>
+              <td align="center" style="background-color: #f2f4f6; padding: 20px; font-size: 12px; color: #888888;">
+                <p style="margin: 0;">© 2025 Telemedicine Platform. All rights reserved.</p>
+                <p style="margin: 0;">1234 Example Street, Suite 100, City, Country</p>
+              </td>
+            </tr>
+          </table>
+          <!-- End Container Table -->
+        </td>
+      </tr>
+    </table>
+    <!-- End Wrapper Table -->
+  </body>
+</html>
+`;
+}

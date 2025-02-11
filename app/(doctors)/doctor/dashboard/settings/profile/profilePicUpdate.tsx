@@ -7,16 +7,12 @@ import { z } from "zod";
 import { DoctorOnboardStepFive } from "@/lib/onboarding";
 import { useSession } from "next-auth/react";
 
-export default function ProfilePic({
-  initialImage,
-}: {
-  initialImage: string | null;
-}) {
+export default function ProfilePic() {
   const { update, data: session } = useSession();
   const form = useForm<z.output<typeof onDoctorBoardingSchema5>>({
     resolver: zodResolver(onDoctorBoardingSchema5),
     defaultValues: {
-      image: initialImage ?? "",
+      image: session?.user.image ?? "",
     },
   });
 
@@ -30,8 +26,8 @@ export default function ProfilePic({
   ) => {
     try {
       const res = await DoctorOnboardStepFive(data, 7);
-        if ("data" in res) {
-          console.log(res)
+      if ("data" in res) {
+        console.log(res);
         if (res?.statusCode === 200) {
           await update({
             ...session,
@@ -55,7 +51,7 @@ export default function ProfilePic({
 
   return (
     <ImageUploader
-      initialImage={initialImage ?? ""}
+      initialImage={session?.user.image ?? ""}
       onImageChange={handleImageChange}
     />
   );

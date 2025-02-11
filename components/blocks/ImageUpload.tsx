@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Image from "next/image";
 import { UploadDialog } from "./imageUploadDialog";
 import { Camera } from "lucide-react";
+import { useState } from "react";
 interface ImageUploaderProps {
   initialImage?: string;
   onImageChange: (image: string | null) => void;
@@ -12,14 +13,16 @@ export function ImageUploader({
   initialImage,
   onImageChange,
 }: ImageUploaderProps) {
+  const [open, setOpen] = useState(false);
+  const [optimisticImage, setOptimisticImage] = useState<string | null>(null);
   return (
     <>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <div className="cursor-pointer relative group ">
             {initialImage ? (
               <Image
-                src={initialImage}
+                src={optimisticImage ?? initialImage}
                 alt="Uploaded image"
                 width={128}
                 height={128}
@@ -38,7 +41,11 @@ export function ImageUploader({
           </div>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
-          <UploadDialog onImageChange={onImageChange}/>
+          <UploadDialog
+            onImageChange={onImageChange}
+            setOpen={setOpen}
+            setOptimisticImage={setOptimisticImage}
+          />
         </DialogContent>
       </Dialog>
     </>

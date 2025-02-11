@@ -57,6 +57,8 @@ export const DoctorOnboardStepOne = async (
       rate: user?.doctorInfo?.rate,
       specialities: user?.doctorInfo?.specialities,
       onboarding_level: 2,
+      rating: user?.doctorInfo?.rating,
+      verification: user?.doctorInfo?.verification,
     },
   });
 };
@@ -103,6 +105,8 @@ export const DoctorOnboardStepTwo = async (
       payment_channel: user?.doctorInfo?.payment_channel,
       rate: user?.doctorInfo?.rate,
       specialities: user?.doctorInfo?.specialities,
+      rating: user?.doctorInfo?.rating,
+      verification: user?.doctorInfo?.verification,
     },
   });
 };
@@ -148,6 +152,8 @@ export const DoctorOnboardStepThree = async (
       medical_school: data?.medical_school,
       payment_channel: user?.doctorInfo?.payment_channel,
       rate: user?.doctorInfo?.rate,
+      verification: user?.doctorInfo?.verification,
+      rating: user?.doctorInfo?.rating,
     },
   });
 };
@@ -193,6 +199,7 @@ export const DoctorOnboardStepFour = async (
       bio: user?.doctorInfo?.bio,
       certifications: user?.doctorInfo?.certifications,
       onboarding_level: 5,
+      verification: user?.doctorInfo?.verification,
     },
   });
 };
@@ -214,34 +221,40 @@ export const DoctorOnboardStepFive = async (
   }
 
   const user = await User.findById(authSession?.user?.id);
-  return handleDoctorOnboarding(onboarding_level, data, onDoctorBoardingSchema5, {
-    image: data?.image,
-    address_1: user?.address_1,
-    address_2: user?.address_2,
-    city: user?.city,
-    region: user?.region,
-    country: user?.country,
-    phone: user?.phone,
-    dob: user?.dob,
-    languages: user?.languages,
-    role: "doctor",
+  return handleDoctorOnboarding(
     onboarding_level,
-    doctorInfo: {
-      bank: user?.doctorInfo?.bank,
-      account_name: user?.doctorInfo?.account_name,
-      rate: user?.doctorInfo?.rate,
-      payment_channel: user?.doctorInfo?.payment_channel,
-      medical_school: user?.doctorInfo?.medical_school,
-      account_number: user?.doctorInfo?.account_number,
-      license_number: user?.doctorInfo?.license_number,
-      current_facility: user?.doctorInfo?.current_facility,
-      experience: user?.doctorInfo?.experience ?? 0,
-      specialities: user?.doctorInfo?.specialities,
-      bio: user?.doctorInfo?.bio,
-      certifications: user?.doctorInfo?.certifications,
+    data,
+    onDoctorBoardingSchema5,
+    {
+      image: data?.image,
+      address_1: user?.address_1,
+      address_2: user?.address_2,
+      city: user?.city,
+      region: user?.region,
+      country: user?.country,
+      phone: user?.phone,
+      dob: user?.dob,
+      languages: user?.languages,
+      role: "doctor",
       onboarding_level,
-    },
-  });
+      doctorInfo: {
+        bank: user?.doctorInfo?.bank,
+        account_name: user?.doctorInfo?.account_name,
+        rate: user?.doctorInfo?.rate,
+        payment_channel: user?.doctorInfo?.payment_channel,
+        medical_school: user?.doctorInfo?.medical_school,
+        account_number: user?.doctorInfo?.account_number,
+        license_number: user?.doctorInfo?.license_number,
+        current_facility: user?.doctorInfo?.current_facility,
+        experience: user?.doctorInfo?.experience ?? 0,
+        specialities: user?.doctorInfo?.specialities,
+        bio: user?.doctorInfo?.bio,
+        certifications: user?.doctorInfo?.certifications,
+        verification: user?.doctorInfo?.verification,
+        onboarding_level,
+      },
+    }
+  );
 };
 export const DoctorOnboardStepSix = async (
   data: z.output<typeof onDoctorBoardingSchema6>,

@@ -28,6 +28,6 @@
     ".next/types/**/*.ts",
     "app/(auth)/sign-up",
     "app/api/utils/email.ts"
-, "embeddings/create-embeddings.mts"  ],
+, "embeddings/create-embeddings.mts", "app/(doctors)/doctor/dashboard/settings/update-bank-details"  ],
   "exclude": ["node_modules"]
 }

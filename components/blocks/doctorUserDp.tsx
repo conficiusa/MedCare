@@ -1,4 +1,4 @@
-import { auth, signOut } from "@/auth";
+"use client";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,9 +10,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { LogOut } from "@/lib/actions";
 
-export default async function DoctorUserDp() {
-  const session = await auth();
+export default function DoctorUserDp() {
+  const { data: session } = useSession();
   const userName = session?.user?.name || "";
   const initials = userName
     .split(" ")
@@ -37,16 +39,13 @@ export default async function DoctorUserDp() {
             <DropdownMenuItem>Settings</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <form
-            action={async () => {
-              "use server";
-              await signOut({ redirectTo: "/" });
-            }}
+
+          <button
+            onClick={async() => await LogOut()}
+            className="relative w-full flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent"
           >
-            <button className="relative w-full flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent">
-              logout
-            </button>
-          </form>
+            logout
+          </button>
         </DropdownMenuContent>
       ) : (
         <DropdownMenuContent className="w-56" collisionPadding={20}>
@@ -71,16 +70,13 @@ export default async function DoctorUserDp() {
             <DropdownMenuItem>Support</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <form
-            action={async () => {
-              "use server";
-              await signOut({ redirectTo: "/" });
-            }}
+
+          <button
+            onClick={async() => await LogOut()}
+            className="relative w-full flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent"
           >
-            <button className="relative w-full flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent">
-              logout
-            </button>
-          </form>
+            logout
+          </button>
         </DropdownMenuContent>
       )}
     </DropdownMenu>

@@ -72,7 +72,7 @@ const items: itemsTypes[] = [
   },
   {
     title: "Analytics",
-    url: "/doctor/dashboard/analytics",
+    url: "",
     icon: TrendingUp,
     items: [
       {
@@ -91,16 +91,20 @@ const items: itemsTypes[] = [
   },
   {
     title: "Settings",
-    url: "settings",
+    url: "",
     icon: Settings2,
     items: [
       {
         title: "profile",
-        url: "settings/profile",
+        url: "/doctor/dashboard/settings/profile",
       },
       {
         title: "account",
         url: "#",
+      },
+      {
+        title: "bank details",
+        url: "/doctor/dashboard/settings/update-bank-details",
       },
       {
         title: "preferences",

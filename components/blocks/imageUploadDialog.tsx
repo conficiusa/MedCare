@@ -6,30 +6,37 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { ImageIcon, X } from "lucide-react";
+import { ImageIcon, Trash, X } from "lucide-react";
 import { ProfilePicturesFolder } from "@/lib/constants";
 import { upload } from "@/lib/actions";
 import { toast } from "sonner";
 
 interface UploadDialogProps {
   onImageChange: (image: string | null) => void;
+  setOpen: (open: boolean) => void;
+  setOptimisticImage: (image: string | null) => void;
 }
 
-export function UploadDialog({ onImageChange }: UploadDialogProps) {
+export function UploadDialog({
+  onImageChange,
+  setOpen,
+  setOptimisticImage,
+}: UploadDialogProps) {
   const [preview, setPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    const file = acceptedFiles[0];
+    const selectedFile = acceptedFiles[0];
     const reader = new FileReader();
-
     reader.onload = (e) => {
       setPreview(e.target?.result as string);
     };
-
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(selectedFile);
+    setOptimisticImage(URL.createObjectURL(selectedFile));
+    setFile(selectedFile);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -41,21 +48,22 @@ export function UploadDialog({ onImageChange }: UploadDialogProps) {
   });
 
   const handleSave = useCallback(async () => {
-    if (!file) {
-      throw new Error("No file selected");
-    }
+    if (!file) throw new Error("No file selected");
     const formData = new FormData();
     formData.append("file", file);
     const result = await upload(formData, ProfilePicturesFolder);
     if ("data" in result) {
       onImageChange(result.data?.url);
+      setOpen(false);
     } else {
       throw new Error("An error occurred while uploading the image");
+      setOptimisticImage(null);
     }
   }, [file, onImageChange]);
 
   const handleClear = useCallback(() => {
     setPreview(null);
+    setFile(null);
   }, []);
 
   return (
@@ -68,7 +76,7 @@ export function UploadDialog({ onImageChange }: UploadDialogProps) {
       </DialogHeader>
       <div
         {...getRootProps()}
-        className={`mt-4 border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
+        className={`mt-4 border-2 border-dashed max-h-[60dvh] rounded-lg p-8 text-center cursor-pointer transition-colors ${
           isDragActive
             ? "border-primary bg-primary/10"
             : "border-muted hover:border-primary/50"
@@ -82,16 +90,9 @@ export function UploadDialog({ onImageChange }: UploadDialogProps) {
               alt="Preview"
               width={200}
               height={200}
-              className="mx-auto w-full rounded-lg object-cover aspect-square"
+              className="mx-auto rounded-lg object-cover "
             />
-            <Button
-              variant="secondary"
-              size="icon"
-              className="absolute top-2 right-2"
-              onClick={handleClear}
-            >
-              <X className="h-4 w-4" />
-            </Button>
+           
           </div>
         ) : (
           <div className="flex flex-col items-center">
@@ -104,24 +105,34 @@ export function UploadDialog({ onImageChange }: UploadDialogProps) {
           </div>
         )}
       </div>
+
       {preview && (
-        <div className="mt-4 flex justify-end space-x-2">
-          <Button variant="outline" onClick={handleClear}>
-            Clear
-          </Button>
-          <Button
-            onClick={() =>
-              toast.promise(handleSave, {
-                loading: "Uploading Image",
-                error: (error) => error.message||"An error occurred while uploading the image",
-                success: "Image uploaded successfully",
-              })
-            }
-            disabled={!preview}
-          >
-            Save
-          </Button>
-        </div>
+        <DialogFooter>
+          <div className="mt-4 flex justify-end space-x-2">
+            <Button variant="outline" onClick={handleClear}>
+              Clear <Trash className="w-4 h-4 text-muted-foreground" />
+            </Button>
+            <Button
+              onClick={() =>
+                toast.promise(handleSave, {
+                  loading: "Uploading Image",
+                  error: (error) => {
+                    setOptimisticImage(null);
+                    return (
+                      error.message ||
+                      "An error occurred while uploading the image"
+                    );
+                  },
+                  success: "Image uploaded successfully",
+                })
+              }
+              disabled={!preview}
+              className="flex-1"
+            >
+              Save
+            </Button>
+          </div>
+        </DialogFooter>
       )}
     </div>
   );

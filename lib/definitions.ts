@@ -139,6 +139,14 @@ export interface IAvailability extends Document {
   expiresAt: Date; // TTL field to automatically delete past slots
 }
 
+export interface IBankTokenType extends Document {
+  email: string;
+  token: string;
+  expiresAt: Date;
+  used: boolean;
+  createdAt: Date;
+}
+
 ////////////Application definitions///////////
 ////////////Application definitions///////////
 ////////////Application definitions///////////
@@ -430,5 +438,13 @@ export interface ReviewType {
   doctorId: string;
   rating: number;
   comment: string;
+  createdAt: Date;
+}
+
+export interface BankTokenType {
+  email: string;
+  token: string;
+  expiresAt: Date;
+  used: boolean;
   createdAt: Date;
 }

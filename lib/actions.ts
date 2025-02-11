@@ -1,5 +1,5 @@
 "use server";
-import { auth, signIn } from "@/auth";
+import { auth, signIn, signOut } from "@/auth";
 import { AuthError, Session } from "next-auth";
 import {
   isBefore,
@@ -63,6 +63,10 @@ export const Authenticate = async (
     status: "success",
     statusCode: 200,
   } as SuccessReturn;
+};
+
+export const LogOut = async () => {
+  await signOut({ redirectTo: "/" });
 };
 
 export async function emailAuth(
@@ -358,7 +362,7 @@ export async function upload(
       status: "success",
       statusCode: 200,
     };
-  } catch (error:any) {
+  } catch (error: any) {
     console.error("Error uploading file:", error);
     return {
       error: error?.message,
