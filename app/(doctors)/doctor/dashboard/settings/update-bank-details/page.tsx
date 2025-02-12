@@ -18,7 +18,7 @@ const page = async () => {
   const token = cookieStore.get("bankToken");
   return (
     <>
-      {!token ? (
+      {token ? (
         <main className="p-8">
           <div className="mb-4 space-y-2">
             <h1 className="text-3xl font-semibold capitalize ">
