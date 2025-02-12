@@ -9,7 +9,7 @@ export const POST = verifySignatureAppRouter(async (req: Request) => {
       subject: string;
       body: string;
     };
-    await sendEmail("addaconficius@yahoo.com", subject, body);
+    await sendEmail(recipient, subject, body);
     return new Response(`Welcome email sent sucessfully`);
   } catch (error) {
     console.error(error);
