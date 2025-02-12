@@ -37,14 +37,16 @@ export const GET = auth(async function GET(req) {
       `https://api.paystack.co/bank/resolve?account_number=${account_number}&bank_code=${bank_code}`,
       options
     );
-
     const data = await response.json();
 
+    if (!data.status) {
+      return NextResponse.json({ error: data.message }, { status: 400 });
+    }
+    
     return NextResponse.json(
       {
         data,
         status: "success",
-        statusCode: 200,
       },
       { status: 200, statusText: "OK" }
     );

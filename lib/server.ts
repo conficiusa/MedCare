@@ -9,7 +9,7 @@ export const useFetchBanks = (type: string) => {
     refetchOnWindowFocus: false,
     enabled: !!type,
     staleTime: Infinity,
-    
+    retry: 1,
     select: (data) => data?.data?.data,
   });
 };
@@ -28,6 +28,7 @@ export const useResolveAccount = (querys: {
     refetchOnWindowFocus: false,
     enabled: !!querys?.account_number && !!querys?.bank_code,
     staleTime: Infinity,
+    retry: 1,
     select: (data) => data?.data?.data,
   });
 };

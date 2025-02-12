@@ -43,7 +43,7 @@ export default function DoctorReviews({
     if (isInView && hasMore) {
       loadMore();
     }
-  }, [isInView, hasMore]);
+  }, [isInView, hasMore, loadMore]);
 
   return (
     <>

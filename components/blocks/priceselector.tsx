@@ -28,7 +28,7 @@ export function PriceInput({
 
   const rate = useMemo(() => {
     return form.watch("rate");
-  }, [form]);
+  }, [form.watch("rate")]);
 
   const handleDecrement = () => {
     const currentValue = rate || 0;
@@ -36,18 +36,13 @@ export function PriceInput({
       form.setValue("rate", Number((currentValue - 1).toFixed(2)));
     }
   };
-  const handleSliderChange = (value: number[]) => {
-    form.setValue("rate", Number(value[0].toFixed(2)));
-  };
 
   return (
     <div className={cn("space-y-4", className)}>
       <div className="flex flex-col sm:flex-row gap-2">
         <div className="relative flex-grow">
           <div className="relative">
-            <span className="font-medium absolute top-[56%] left-2">
-              GHS
-            </span>
+            <span className="font-medium absolute top-[56%] left-2">GHS</span>
             <FormBuilder label="Set consultation fee" name="rate">
               <Input
                 type="number"
@@ -56,7 +51,7 @@ export function PriceInput({
               />
             </FormBuilder>
           </div>
-          <div className="absolute right-2 top-[75%] -translate-y-1/2 flex flex-col">
+          <div className="absolute right-2 top-[73%] -translate-y-1/2 flex flex-col">
             <Button
               type="button"
               variant="ghost"
@@ -80,24 +75,16 @@ export function PriceInput({
           </div>
         </div>
       </div>
-      <div className="pt-4">
-        <Slider
-          min={30}
-          max={1000}
-          step={20}
-          onValueChange={handleSliderChange}
-          aria-label="Adjust price"
-          defaultValue={[rate]}
-        />
-      </div>
+
       <div className="flex flex-wrap gap-2">
         {suggestedPrices.map((price) => (
           <Button
             key={price}
-            variant="outline"
+            variant="secondary"
             size="sm"
             type="button"
             onClick={() => form.setValue("rate", Number(price.toFixed(2)))}
+            className="bg-white dark:bg-secondary border-[1px] dark:border-none border-muted-foreground"
           >
             {formatCurrency(price)}
           </Button>

@@ -16,9 +16,10 @@ const AvailableToggle = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+  
   const handleToggle = useCallback(() => {
     setShowAvailable((prev) => !prev);
-  }, [showavailable]);
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -28,7 +29,7 @@ const AvailableToggle = () => {
       params.delete("show_all");
     }
     replace(`${pathname}?${params.toString()}`);
-  }, [ replace, searchParams, pathname]);
+  }, [replace, searchParams, pathname, showavailable]);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

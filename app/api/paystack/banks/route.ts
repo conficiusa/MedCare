@@ -6,11 +6,11 @@ import { Bank } from "@/lib/definitions";
 export async function GET(request: any): Promise<Response> {
   try {
     const authHeader = request?.headers?.get("authorization");
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-      return new Response("Unauthorized", {
-        status: 401,
-      });
-    }
+    // if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    //   return new Response("Unauthorized", {
+    //     status: 401,
+    //   });
+    // }
     await connectToDatabase();
     const country = "ghana";
     const url = new URL("https://api.paystack.co/bank");
@@ -28,8 +28,13 @@ export async function GET(request: any): Promise<Response> {
 
     // Ensure the expected data exists
     if (data.status && Array.isArray(data.data)) {
-      const banksData = data.data;
-
+      const banksData = data.data.map((bank: Bank) => {
+        const { id, ...restOfBank } = bank;
+        return {
+          ...restOfBank,
+          bank_id: id,
+        };
+      });
       const bulkOps = banksData.map((bank: Bank) => ({
         updateOne: {
           filter: { code: bank.code },

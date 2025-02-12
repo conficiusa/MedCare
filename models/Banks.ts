@@ -3,9 +3,10 @@ import { models, Schema, model } from "mongoose";
 
 const BanksSchema = new Schema<IBank>(
   {
+    bank_id: { type: String, required: true, unique: true },
     name: { type: String, required: true },
-    slug: { type: String, required: true },
-    code: { type: String, required: true },
+    slug: { type: String, required: true, unique: true },
+    code: { type: String, required: true, unique: true },
     longcode: { type: String, required: true },
     gateway: { type: String, required: true },
     pay_with_bank: { type: Boolean, required: true },
@@ -21,7 +22,6 @@ const BanksSchema = new Schema<IBank>(
     toJSON: {
       virtuals: true,
       transform: (doc, ret) => {
-        ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;
       },
@@ -29,7 +29,6 @@ const BanksSchema = new Schema<IBank>(
     toObject: {
       virtuals: true,
       transform: (doc, ret) => {
-        ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;
       },
@@ -37,7 +36,7 @@ const BanksSchema = new Schema<IBank>(
   }
 );
 
-BanksSchema?.index({ code: 1 });
+BanksSchema.index({ type: 1 });
 const Banks = models.Banks || model<IBank>("Banks", BanksSchema);
 
 export default Banks;

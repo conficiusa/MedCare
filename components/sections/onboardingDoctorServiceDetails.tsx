@@ -62,10 +62,10 @@ const DoctorOnboardingServiceDetails = ({
   });
   const channel = useMemo(() => {
     return form.watch("payment_channel");
-  }, [form.watch("payment_channel")]);
+  }, [form]);
   const provider = useMemo(() => {
     return form.watch("bank");
-  }, [form.watch("bank")]);
+  }, [form]);
   const {
     data: banks,
     isLoading,

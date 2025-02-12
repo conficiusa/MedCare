@@ -28,16 +28,19 @@ export function UploadDialog({
   const [preview, setPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    const selectedFile = acceptedFiles[0];
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setPreview(e.target?.result as string);
-    };
-    reader.readAsDataURL(selectedFile);
-    setOptimisticImage(URL.createObjectURL(selectedFile));
-    setFile(selectedFile);
-  }, []);
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const selectedFile = acceptedFiles[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(selectedFile);
+      setOptimisticImage(URL.createObjectURL(selectedFile));
+      setFile(selectedFile);
+    },
+    [setOptimisticImage, setOpen]
+  );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -56,10 +59,10 @@ export function UploadDialog({
       onImageChange(result.data?.url);
       setOpen(false);
     } else {
-      throw new Error("An error occurred while uploading the image");
       setOptimisticImage(null);
+      throw new Error("An error occurred while uploading the image");
     }
-  }, [file, onImageChange]);
+  }, [file, onImageChange, setOptimisticImage]);
 
   const handleClear = useCallback(() => {
     setPreview(null);
@@ -92,7 +95,6 @@ export function UploadDialog({
               height={200}
               className="mx-auto rounded-lg object-cover "
             />
-           
           </div>
         ) : (
           <div className="flex flex-col items-center">

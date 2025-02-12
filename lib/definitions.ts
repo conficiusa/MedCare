@@ -133,6 +133,7 @@ export interface IBank extends Document {
   currency: string;
   type: "ghipss" | "mobile_money";
   isdeleted: boolean;
+  bank_id: string;
 }
 
 //onboarding steps
@@ -464,23 +465,6 @@ export interface BankTokenType {
   createdAt: Date;
 }
 
-// {
-//       "id": 46,
-//       "name": "Guaranty Trust Bank (Ghana) Limited",
-//       "slug": "guaranty-trust-bank-(ghana)-limited",
-//       "code": "230100",
-//       "longcode": "",
-//       "gateway": null,
-//       "pay_with_bank": false,
-//       "supports_transfer": true,
-//       "active": true,
-//       "country": "Ghana",
-//       "currency": "GHS",
-//       "type": "ghipss",
-//       "is_deleted": false,
-//       "createdAt": "2018-03-29T12:54:59.000Z",
-//       "updatedAt": "2018-03-29T12:54:59.000Z"
-// },
 export interface Bank {
   id: string;
   name: string;
@@ -497,4 +481,5 @@ export interface Bank {
   isdeleted: boolean;
   createdAt: string;
   updatedAt: string;
+  bank_id: string;
 }
