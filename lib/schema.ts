@@ -171,6 +171,7 @@ export const onDoctorBoardingSchema4 = z
   );
 export const onDoctorBoardingSchema5 = z.object({
   image: z.string().min(1, "Failed to get image url"),
+  thumbnail: z.string().min(1, "Failed to get thumbnail url"),
 });
 
 export const onDoctorBoardingSchema6 = z.object({

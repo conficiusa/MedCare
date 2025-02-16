@@ -23,6 +23,7 @@ declare module "next-auth" {
     dob?: Date | undefined;
     gender?: string | undefined;
     image?: string | undefined | null;
+    thumbnail?: string | undefined | null;
     address_1?: string | undefined | null;
     patientInfo?: PatientInfo;
     address_2?: string | undefined | null;
@@ -50,6 +51,7 @@ declare module "next-auth" {
       dob?: Date | undefined;
       gender?: string | undefined;
       image?: string | undefined | null;
+      thumbnail?: string | undefined | null;
       address_1?: string | undefined | null;
       address_2?: string | undefined | null;
       onboarding_level?: string | undefined;
@@ -79,6 +81,7 @@ declare module "next-auth/jwt" {
     dob?: Date;
     gender?: string | undefined;
     image?: string | undefined | null;
+    thumbnail?: string | undefined | null;
     address_1?: string | undefined | null;
     address_2?: string | undefined | null;
     patientInfo?: PatientInfo;
@@ -154,6 +157,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         token.dob = existingOauthUser.dob || "";
         token.gender = existingOauthUser.gender || "";
         token.image = existingOauthUser.image || "";
+        token.thumbnail = existingOauthUser.thumbnail || "";
         token.onboarding_level =
           existingOauthUser.onboarding_level || undefined;
         token.address_1 = existingOauthUser.address_1 || "";
@@ -174,6 +178,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
           gender: updatedUser?.gender,
           dob: updatedUser?.dob,
           image: updatedUser?.image,
+          thumbnail: updatedUser?.thumbnail,
           address_1: updatedUser?.address_1,
           address_2: updatedUser?.address_2,
           doctorInfo: updatedUser?.doctorInfo,
@@ -197,6 +202,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         session.user.dob = token?.dob;
         session.user.gender = token?.gender;
         session.user.image = token?.image;
+        session.user.thumbnail = token?.thumbnail;
         session.user.onboarding_level = token?.onboarding_level;
         session.user.doctorInfo = token?.doctorInfo;
         session.user.address_1 = token?.address_1;
@@ -212,6 +218,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         session.user.languages = token?.languages;
         session.user.dob = token?.dob;
         session.user.image = token?.image;
+        session.user.thumbnail = token?.thumbnail;
         session.user.gender = token?.gender;
         session.user.onboarding_level = token?.onboarding_level;
         session.user.doctorInfo = token?.doctorInfo;

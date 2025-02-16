@@ -1,5 +1,4 @@
 "use server";
-"use server";
 import {
   PatientOnboardingSchema1,
   PatientOnboardingSchema2,

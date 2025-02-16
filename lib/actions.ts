@@ -251,7 +251,7 @@ export const CreateAppointment = async (
       ...appointmentData,
       doctor: {
         name: doctor?.name,
-        image: doctor?.image,
+        image: doctor?.thumbnail,
         doctorId: appointmentData?.doctor?.doctorId,
         email: doctor?.email,
       },

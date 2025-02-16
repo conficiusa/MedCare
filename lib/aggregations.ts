@@ -7,24 +7,23 @@ export const buildDoctorAggregationPipeline = (
   const pipeline: any[] = [];
 
   // Add $search stage if searchQuery exists
-   if (searchQuery) {
-     pipeline.push({
-       $search: {
-         index: "default", // Replace with your search index name
-         text: {
-           query: searchQuery,
-           path: [
-             "doctorInfo.specialities",
-             "doctorInfo.certifications",
-             "name",
-             "city",
-             "languages",
-           ], // Searches all fields, or specify fields like ['name', 'specialty']
-         },
-       },
-     });
-   }
-
+  if (searchQuery) {
+    pipeline.push({
+      $search: {
+        index: "default", // Replace with your search index name
+        text: {
+          query: searchQuery,
+          path: [
+            "doctorInfo.specialities",
+            "doctorInfo.certifications",
+            "name",
+            "city",
+            "languages",
+          ], // Searches all fields, or specify fields like ['name', 'specialty']
+        },
+      },
+    });
+  }
 
   // Always apply the basic filter
   pipeline.push({ $match: filter });
@@ -59,7 +58,7 @@ export const buildDoctorAggregationPipeline = (
     $group: {
       _id: "$_id",
       name: { $first: "$name" },
-      image: { $first: "$image" },
+      thumbnail: { $first: "$thumbnail" },
       doctorInfo: { $first: "$doctorInfo" },
       availability: { $push: "$availability" },
     },
@@ -69,7 +68,7 @@ export const buildDoctorAggregationPipeline = (
   pipeline.push({
     $project: {
       name: 1,
-      image: 1,
+      thumbnail: 1,
       doctorInfo: 1,
       availability: 1,
     },

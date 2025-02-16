@@ -49,7 +49,6 @@ export const fetchDoctorCardData = async (
 
   // Execute the aggregation
   const doctors = await User.aggregate(pipeline);
-
   // Manually apply the transformation
   const transformedDoctors = doctors.map((doc) => {
     const ret = { ...doc }; // Spread the document into a new object

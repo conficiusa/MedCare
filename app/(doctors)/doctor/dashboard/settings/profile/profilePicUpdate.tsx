@@ -13,6 +13,7 @@ export default function ProfilePic() {
     resolver: zodResolver(onDoctorBoardingSchema5),
     defaultValues: {
       image: session?.user.image ?? "",
+      thumbnail: session?.user.thumbnail ?? "",
     },
   });
 

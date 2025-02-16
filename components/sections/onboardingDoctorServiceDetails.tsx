@@ -8,7 +8,7 @@ import { FormBuilder } from "@/components/blocks/formBuilder";
 import { Button } from "@/components/ui/button";
 import { Step } from "@/components/blocks/onboardingDoctor";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import AnimationWrapper from "@/components/wrappers/animationWrapper";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
@@ -27,11 +27,13 @@ import {
 } from "../ui/form";
 import { DoctorOnboardStepFour } from "@/lib/onboarding";
 import { toast } from "sonner";
-import { Doctor } from "@/lib/definitions";
+import { Bank, Doctor } from "@/lib/definitions";
 import { UpdateSession } from "next-auth/react";
 import { Session } from "next-auth";
 import { PriceInput } from "../blocks/priceselector";
 import Loader from "../blocks/loader";
+import { validatePhoneNumber } from "@/lib/carrierValidate";
+import { resolveAccountDetails } from "@/lib/utils";
 
 const DoctorOnboardingServiceDetails = ({
   currentStep,
@@ -48,6 +50,13 @@ const DoctorOnboardingServiceDetails = ({
   update: UpdateSession;
   session: Session;
 }) => {
+  const [accountDetails, setAccountDetails] = useState<{
+    account_name: string;
+    account_number: string;
+    bank_id: string;
+  } | null>(null);
+  const [resolveError, setResolveError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<z.output<typeof onDoctorBoardingSchema4>>({
     resolver: zodResolver(onDoctorBoardingSchema4),
     defaultValues: {
@@ -60,39 +69,71 @@ const DoctorOnboardingServiceDetails = ({
       rate: user?.doctorInfo?.rate ?? 0,
     },
   });
-  const channel = useMemo(() => {
-    return form.watch("payment_channel");
-  }, [form]);
-  const provider = useMemo(() => {
-    return form.watch("bank");
-  }, [form]);
+  const channel = form.watch("payment_channel");
+  const account = form.watch("account_number");
+  const bank = form.watch("bank");
+  const resolveAccount = async () => {
+    await resolveAccountDetails({
+      bank: form.watch("bank"),
+      account_number: form.watch("account_number"),
+      banks: banks ?? [],
+      setAccountDetails,
+      setResolveError,
+      setIsSubmitting,
+      form,
+    });
+  };
+
   const {
     data: banks,
     isLoading,
     isError,
-  } = useFetchBanks(channel === "mobile_money" ? "mobile_money" : "ghipss");
+  } = useFetchBanks(
+    form.watch("payment_channel") === "mobile_money" ? "mobile_money" : "ghipss"
+  );
   useEffect(() => {
     if (channel) {
       form.setValue("account_name", "");
       form.setValue("account_number", "");
       form.setValue("bank", "");
     }
-  }, [channel, form]);
+  }, [form, channel]);
+  useEffect(() => {
+    if (account) {
+      setAccountDetails(null);
+    }
+  }, [account]);
+
+  useEffect(() => {
+    if (bank) {
+      setAccountDetails(null);
+    }
+  }, [bank]);
+  useEffect(() => {
+    if (form.formState.errors.account_name) {
+      toast.error("Please resolve account details");
+    }
+  }, [form]);
+
   useEffect(() => {
     const validate = async () => {
-      if (provider) {
+      if (form.watch("bank")) {
         if (form.watch("account_number")) {
           await form.trigger("account_number");
         }
       }
     };
     validate();
-  }, [provider, form]);
+  }, [form]);
 
   const handleSubmit = async (
     data: z.output<typeof onDoctorBoardingSchema4>
   ) => {
     try {
+      if (!accountDetails) {
+        toast.error("Please resolve account details");
+        return;
+      }
       const res = await DoctorOnboardStepFour(data);
       if ("data" in res) {
         if (res?.statusCode === 200) {
@@ -179,29 +220,24 @@ const DoctorOnboardingServiceDetails = ({
                   </FormItem>
                 )}
               />
-              {channel === "mobile_money" ? (
-                isLoading ? (
-                  <div className="w-full grid gap-4">
-                    <Skeleton className="w-full h-10" />
-                    <Skeleton className="w-full h-10" />
-                    <Skeleton className="w-full h-10" />
-                  </div>
-                ) : (
-                  <div className="mt-6">
-                    <AnimationWrapper className="space-y-5">
-                      <SelectComponent
-                        name="bank"
-                        label="Choose a Mobile money provider"
-                        items={banks?.map((bank: any) => ({
-                          value: bank?.id,
-                          label: bank?.name,
-                        }))}
-                        placeholder="Choose a mobile money provider"
-                      />
+              {form.watch("payment_channel") === "mobile_money" ? (
+                <div className="mt-6">
+                  <AnimationWrapper className="space-y-5">
+                    <SelectComponent
+                      name="bank"
+                      label="Choose a Mobile money provider"
+                      items={banks?.map((bank: Bank) => ({
+                        value: bank?.bank_id,
+                        label: bank?.name,
+                      }))}
+                      placeholder="Choose a mobile money provider"
+                    />
+                    <div className="flex items-end gap-5 max-sm:flex-col">
                       <FormBuilder
                         name="account_number"
                         label="Enter your mobile money number"
                         message
+                        className="sm:flex-1 w-full"
                       >
                         <PhoneInput
                           type="text"
@@ -210,23 +246,31 @@ const DoctorOnboardingServiceDetails = ({
                           defaultCountry="GH"
                         />
                       </FormBuilder>
-                      <FormBuilder
-                        name="account_name"
-                        label="Enter the name on your mobile money account"
+                      <Button
+                        size={"sm"}
+                        onClick={async () => await resolveAccount()}
+                        type="button"
+                        disabled={
+                          isSubmitting ||
+                          !form.watch("account_number") ||
+                          !form.watch("bank")
+                        }
                       >
-                        <Input
-                          type="text"
-                          placeholder="Enter your mobile money account name"
-                        />
-                      </FormBuilder>
-                    </AnimationWrapper>
-                  </div>
-                )
-              ) : isLoading ? (
-                <div className="w-full grid gap-4">
-                  <Skeleton className="w-full h-10" />
-                  <Skeleton className="w-full h-10" />
-                  <Skeleton className="w-full h-10" />
+                        {isSubmitting ? "Resolving..." : "Resolve Account"}
+                      </Button>
+                    </div>
+                    {accountDetails && (
+                      <p className="text-primary text-xs  ">
+                        Account successfully resolved with the name{" "}
+                        {accountDetails?.account_name}
+                      </p>
+                    )}
+                    {resolveError && (
+                      <p className="text-destructive text-xs  ">
+                        {resolveError}
+                      </p>
+                    )}
+                  </AnimationWrapper>
                 </div>
               ) : (
                 <div className="grid gap-4">
@@ -239,22 +283,40 @@ const DoctorOnboardingServiceDetails = ({
                     label="Choose your bank"
                     loading={isLoading}
                     items={banks?.map((bank: any) => ({
-                      value: bank?.id,
+                      value: bank?.bank_id,
                       label: bank?.name,
                     }))}
                   />
-                  <FormBuilder
-                    name="account_number"
-                    label="Enter account number"
-                  >
-                    <Input type="number" placeholder="Enter account number" />
-                  </FormBuilder>
-                  <FormBuilder name="account_name" label="Account name">
-                    <Input
-                      type="text"
-                      placeholder="Enter the name registered with the account"
-                    />
-                  </FormBuilder>
+                  <div className="flex items-end gap-5 max-sm:flex-col">
+                    <FormBuilder
+                      name="account_number"
+                      label="Enter account number"
+                      className="sm:flex-1 w-full"
+                    >
+                      <Input type="number" placeholder="Enter account number" />
+                    </FormBuilder>
+                    <Button
+                      size={"sm"}
+                      onClick={async () => await resolveAccount()}
+                      type="button"
+                      disabled={
+                        isSubmitting ||
+                        !form.watch("account_number") ||
+                        !form.watch("bank")
+                      }
+                    >
+                      {isSubmitting ? "Resolving..." : "Resolve Account"}
+                    </Button>
+                  </div>
+                  {accountDetails && (
+                    <p className="text-primary text-xs  ">
+                      Account successfully resolved with the name{" "}
+                      {accountDetails?.account_name}
+                    </p>
+                  )}
+                  {resolveError && (
+                    <p className="text-destructive text-xs  ">{resolveError}</p>
+                  )}
                 </div>
               )}
             </div>

@@ -37,6 +37,7 @@ export const DoctorOnboardStepOne = async (
     region: user?.region,
     country: user?.country,
     image: user?.image,
+    thumbnail: user?.thumbnail,
     onboarding_level: 2,
     phone: data.phone,
     gender: data?.gender,
@@ -86,6 +87,7 @@ export const DoctorOnboardStepTwo = async (
     region: data.region,
     country: data.country,
     image: user?.image,
+    thumbnail: user?.thumbnail,
     phone: user?.phone,
     languages: user?.languages,
     onboarding_level: 3,
@@ -132,6 +134,7 @@ export const DoctorOnboardStepThree = async (
     city: user?.city,
     region: user?.region,
     country: user?.country,
+    thumbnail: user?.thumbnail,
     image: user?.image,
     phone: user?.phone,
     dob: user?.dob,
@@ -180,6 +183,7 @@ export const DoctorOnboardStepFour = async (
     region: user?.region,
     country: user?.country,
     image: user?.image,
+    thumbnail: user?.thumbnail,
     phone: user?.phone,
     dob: user?.dob,
     languages: user?.languages,
@@ -227,6 +231,7 @@ export const DoctorOnboardStepFive = async (
     onDoctorBoardingSchema5,
     {
       image: data?.image,
+      thumbnail: data?.thumbnail,
       address_1: user?.address_1,
       address_2: user?.address_2,
       city: user?.city,
@@ -275,6 +280,7 @@ export const DoctorOnboardStepSix = async (
   const user = await User.findById(authSession?.user?.id);
   return handleDoctorOnboarding(7, data, onDoctorBoardingSchema6, {
     image: user?.image,
+    thumbnail: user?.thumbnail,
     address_1: user?.address_1,
     address_2: user?.address_2,
     city: user?.city,

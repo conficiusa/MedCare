@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export const GET = auth(async function GET(req) {
   try {
@@ -42,7 +42,7 @@ export const GET = auth(async function GET(req) {
     if (!data.status) {
       return NextResponse.json({ error: data.message }, { status: 400 });
     }
-    
+
     return NextResponse.json(
       {
         data,

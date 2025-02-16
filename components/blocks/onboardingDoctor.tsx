@@ -154,7 +154,7 @@ export default function DoctorOnboarding({
   };
 
   return (
-    <div className="min-h-[100dvh] bg-muted dark:bg-background flex items-center justify-center p-4">
+    <div className="min-h-[100dvh] bg-muted dark:bg-background flex items-center justify-center p-4 max-sm:px-2">
       <div className="w-full max-w-4xl dark:bg-muted/30 bg-background rounded-xl shadow-lg overflow-hidden">
         <div className="flex flex-col md:flex-row">
           <DoctorOnboardingSideNav currentStep={currentStep} steps={steps} />

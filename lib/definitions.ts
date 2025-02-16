@@ -7,6 +7,7 @@ export interface IUser extends Document {
   name: string;
   email: string;
   image?: string;
+  thumbnail?: string;
   role?: "doctor" | "patient" | null;
   languages?: string[];
   country?: string;
@@ -194,13 +195,6 @@ export interface DoctorInfo {
   medical_school: string;
 }
 
-export interface DoctorCard {
-  _id: string;
-  name: string;
-  doctorInfo: DoctorInfo;
-  image: string;
-}
-
 export interface PatientInfo {
   conditions?: string[];
   medicalHistory?: string;
@@ -209,6 +203,7 @@ export interface PatientInfo {
 export interface Doctor {
   id: string;
   name: string;
+  thumbnail: string;
   email: string;
   image: string;
   role: "doctor" | "patient" | null;
@@ -228,6 +223,7 @@ export interface Patient {
   id: string;
   name: string;
   email: string;
+  thumbnail: string;
   image: string;
   role: "doctor" | "patient" | null;
   languages: string[];
@@ -343,6 +339,7 @@ export interface User {
   email: string;
   image?: string;
   role?: "doctor" | "patient" | null;
+  thumbnail?: string;
   languages?: string[];
   country?: string;
   region?: string;
@@ -364,7 +361,7 @@ export interface DoctorCard {
   id: string;
   name: string;
   doctorInfo: DoctorInfo;
-  image: string;
+  thumbnail: string;
 }
 export interface VerificationResponse {
   status: boolean;

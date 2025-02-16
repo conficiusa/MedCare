@@ -1,6 +1,8 @@
 import { clsx, type ClassValue } from "clsx";
 import { Query } from "mongoose";
 import { twMerge } from "tailwind-merge";
+import { validatePhoneNumber } from "@/lib/carrierValidate";
+import { toast } from "sonner";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -90,4 +92,69 @@ export const getFilteredValues = (
 ) => {
   if (!field || field.length === 0) return [];
   return availableOptions.filter((option) => field.includes(option.value));
+};
+
+const mobile_money_codes = ["29", "28", "66"];
+const carriers = ["AirtelTigo", "MTN", "Vodafone"];
+
+export const resolveAccountDetails = async ({
+  bank,
+  account_number,
+  banks,
+  setAccountDetails,
+  setResolveError,
+  setIsSubmitting,
+  form,
+}: {
+  bank: string;
+  account_number: string;
+  banks: any[];
+  setAccountDetails: (accountDetails: any) => void;
+  setResolveError: (resolveError: any) => void;
+  setIsSubmitting: (isSubmitting: boolean) => void;
+  form: any;
+}) => {
+  setResolveError(null);
+  setAccountDetails(null);
+  if (bank && account_number) {
+    const isValid = await form.trigger(["account_number", "bank"]);
+    if (!isValid) return;
+    const carrierIndex = mobile_money_codes.indexOf(bank);
+    if (mobile_money_codes.includes(bank)) {
+      const carrierValidation = validatePhoneNumber(
+        carriers[carrierIndex],
+        account_number
+      );
+      if (!carrierValidation) {
+        toast.error(
+          "*Enter a valid number, Phone number should match selected Provider"
+        );
+        form.setError("account_number", {
+          message:
+            "Enter a valid number, Phone number should match selected Provider",
+        });
+        return;
+      }
+    }
+    setIsSubmitting(true);
+    const bankCode = banks?.find((b: any) => b.id === bank);
+    const res = await fetch(
+      `/api/paystack/resolve/?bank_code=${
+        bankCode?.code
+      }&account_number=${Number(account_number)}`
+    );
+    const data = await res.json();
+    if (res?.status !== 200) {
+      toast.error("Failed to verify account number", {
+        description: data?.error,
+      });
+      setIsSubmitting(false);
+      setAccountDetails(null);
+      setResolveError(data?.error);
+      return;
+    }
+    setAccountDetails(data?.data?.data);
+    form.setValue("account_name", data?.data?.data?.account_name);
+    setIsSubmitting(false);
+  }
 };

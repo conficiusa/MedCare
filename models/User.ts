@@ -69,6 +69,7 @@ const UserSchema = new Schema<IUser, Model<IUser>>(
     image: {
       type: String,
     },
+    thumbnail: { type: String },
     gender: {
       type: String,
       enum: ["Male", "Female"],

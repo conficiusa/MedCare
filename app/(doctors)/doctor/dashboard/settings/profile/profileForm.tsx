@@ -39,6 +39,7 @@ const ProfileForm = ({ user }: { user: Doctor }) => {
       languages: getFilteredValues(user?.languages, languages),
       name: user?.name ?? "",
       image: user?.image ?? "",
+      thumbnail: user?.thumbnail ?? "",
       bio: user?.doctorInfo?.bio ?? "",
       certifications: getFilteredValues(
         user?.doctorInfo?.certifications,

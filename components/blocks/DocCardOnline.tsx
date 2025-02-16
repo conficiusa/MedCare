@@ -1,9 +1,4 @@
-import {
-  CircleDot,
-  MessageSquareDot,
-  Stethoscope,
-  Video,
-} from "lucide-react";
+import { CircleDot, MessageSquareDot, Stethoscope, Video } from "lucide-react";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -11,7 +6,6 @@ import { cn, formatCurrency } from "@/lib/utils";
 import Image from "next/image";
 import { DoctorCard } from "@/lib/definitions";
 import Ratings from "@/components/blocks/ratingStars";
-import { TooltipBuilder } from "./tooltipBuilder";
 
 const DocCardOnline = async ({
   className,
@@ -19,7 +13,8 @@ const DocCardOnline = async ({
 }: {
   className?: string;
   doctors: DoctorCard[];
-}) => {
+  }) => {
+  console.log(doctors);
   return (
     <>
       {doctors?.map((doctor) => (
@@ -34,7 +29,7 @@ const DocCardOnline = async ({
             <div className="">
               <div className="w-14 h-14 rounded-full  border-[1px]">
                 <Image
-                  src={doctor.image || "/user.jpg"}
+                  src={doctor?.thumbnail || "/user.jpg"}
                   width={100}
                   height={100}
                   alt="A medical doctor"
@@ -56,7 +51,7 @@ const DocCardOnline = async ({
                   </span>
                 </p>
               </div>
-           
+
               {doctor?.doctorInfo?.rating && (
                 <div className="flex items-center gap-2 text-sm">
                   <Ratings value={doctor?.doctorInfo?.rating} />

@@ -26,7 +26,10 @@ export default function DoctorUserDp() {
       <DropdownMenuTrigger asChild>
         <Avatar>
           <AvatarFallback>{initials}</AvatarFallback>
-          <AvatarImage src={session?.user?.image ?? undefined} alt={userName} />
+          <AvatarImage
+            src={session?.user?.thumbnail ?? undefined}
+            alt={userName}
+          />
         </Avatar>
       </DropdownMenuTrigger>
       {session?.user?.doctorInfo?.verification !== "approved" ? (
@@ -41,7 +44,7 @@ export default function DoctorUserDp() {
           <DropdownMenuSeparator />
 
           <button
-            onClick={async() => await LogOut()}
+            onClick={async () => await LogOut()}
             className="relative w-full flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent"
           >
             logout
@@ -72,7 +75,7 @@ export default function DoctorUserDp() {
           <DropdownMenuSeparator />
 
           <button
-            onClick={async() => await LogOut()}
+            onClick={async () => await LogOut()}
             className="relative w-full flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent"
           >
             logout

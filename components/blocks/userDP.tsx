@@ -29,7 +29,10 @@ export default async function UserDp() {
       <DropdownMenuTrigger asChild>
         <Avatar>
           <AvatarFallback>{initials}</AvatarFallback>
-          <AvatarImage src={session?.user?.image ?? undefined} alt={userName} />
+          <AvatarImage
+            src={session?.user?.thumbnail ?? undefined}
+            alt={userName}
+          />
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" collisionPadding={20}>

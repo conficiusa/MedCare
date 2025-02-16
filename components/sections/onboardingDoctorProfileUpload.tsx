@@ -19,6 +19,8 @@ import { Session } from "next-auth";
 import { UpdateSession } from "next-auth/react";
 import ImageUpload from "@/components/blocks/imageUploader";
 import { ProfilePicturesFolder } from "@/lib/constants";
+import { Button } from "../ui/button";
+import { toast } from "sonner";
 
 export default function DoctorImageUpload({
   currentStep,
@@ -48,7 +50,7 @@ export default function DoctorImageUpload({
     data: z.output<typeof onDoctorBoardingSchema5>
   ) => {
     try {
-      const res = await DoctorOnboardStepFive(data,6);
+      const res = await DoctorOnboardStepFive(data, 6);
       if ("data" in res) {
         if (res?.statusCode === 200) {
           await update({
@@ -56,6 +58,7 @@ export default function DoctorImageUpload({
             user: {
               ...session.user,
               image: res?.data?.image,
+              thumbnail: res?.data?.thumbnail,
               onboarding_level: res?.data?.doctorInfo?.onboarding_level,
               doctorInfo: {
                 ...session?.user?.doctorInfo,
@@ -78,17 +81,22 @@ export default function DoctorImageUpload({
   const onSave = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
-    const response = await upload(formData, ProfilePicturesFolder);
-    if ("data" in response) {
-      form.setValue("image", response?.data.url);
-      form.handleSubmit(handleSubmit)();
-    } else {
+    const res = await fetch("/api/user/update/image-processing", {
+      method: "POST",
+      body: formData,
+    });
+    const response = await res.json();
+    if (res?.status !== 200) {
+      toast.error("An error occurred while uploading the image");
       throw new Error("An error occurred while uploading the image");
     }
+    form.setValue("image", response?.originalUrl);
+    form.setValue("thumbnail", response?.thumbnailUrl);
+    form.handleSubmit(handleSubmit)();
   };
 
   return (
-    <Card className="w-full max-w-3xl mx-auto">
+    <Card className="w-full max-w-3xl mx-auto max-sm:px-1">
       <CardHeader>
         <CardTitle>Upload a professional image</CardTitle>
         <CardDescription>
@@ -104,8 +112,6 @@ export default function DoctorImageUpload({
             id="profileImage"
             image={profileImage}
             setImage={setProfileImage}
-            isCircular={false}
-            showControls={false}
             onSave={onSave}
             existingImageUrl={prevImage as string}
           />
