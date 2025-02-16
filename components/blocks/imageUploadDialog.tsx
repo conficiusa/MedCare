@@ -15,7 +15,10 @@ import { upload } from "@/lib/actions";
 import { toast } from "sonner";
 
 interface UploadDialogProps {
-  onImageChange: (image: string | null) => void;
+  onImageChange: (response: {
+    originalUrl: string;
+    thumbnailUrl: string;
+  }) => void;
   setOpen: (open: boolean) => void;
   setOptimisticImage: (image: string | null) => void;
 }
@@ -54,14 +57,17 @@ export function UploadDialog({
     if (!file) throw new Error("No file selected");
     const formData = new FormData();
     formData.append("file", file);
-    const result = await upload(formData, ProfilePicturesFolder);
-    if ("data" in result) {
-      onImageChange(result.data?.url);
-      setOpen(false);
-    } else {
-      setOptimisticImage(null);
+    const res = await fetch("/api/user/update/image-processing", {
+      method: "POST",
+      body: formData,
+    });
+    const response = await res.json();
+    if (res?.status !== 200) {
+      toast.error("An error occurred while uploading the image");
       throw new Error("An error occurred while uploading the image");
     }
+    onImageChange(response);
+    setOpen(false);
   }, [file, onImageChange, setOptimisticImage]);
 
   const handleClear = useCallback(() => {

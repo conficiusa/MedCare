@@ -14,7 +14,6 @@ const DocCardOnline = async ({
   className?: string;
   doctors: DoctorCard[];
   }) => {
-  console.log(doctors);
   return (
     <>
       {doctors?.map((doctor) => (

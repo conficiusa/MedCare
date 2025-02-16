@@ -17,9 +17,13 @@ export default function ProfilePic() {
     },
   });
 
-  const handleImageChange = async (newImage: string | null) => {
-    if (!newImage) return;
-    form.setValue("image", newImage);
+  const handleImageChange = async (response: {
+    originalUrl: string;
+    thumbnailUrl: string;
+  }) => {
+    if (!response) return;
+    form.setValue("image", response.originalUrl);
+    form.setValue("thumbnail", response.thumbnailUrl);
     await form.handleSubmit(handleSubmit)();
   };
   const handleSubmit = async (

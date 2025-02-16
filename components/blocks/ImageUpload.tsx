@@ -6,7 +6,10 @@ import { Camera } from "lucide-react";
 import { useState } from "react";
 interface ImageUploaderProps {
   initialImage?: string;
-  onImageChange: (image: string | null) => void;
+  onImageChange: (response: {
+    originalUrl: string;
+    thumbnailUrl: string;
+  }) => void;
 }
 
 export function ImageUploader({

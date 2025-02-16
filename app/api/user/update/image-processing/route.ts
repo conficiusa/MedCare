@@ -53,8 +53,3 @@ export const POST = auth(async function POST(req) {
   }
 });
 
-export const config = {
-  api: {
-    bodyParser: false, // Required to handle formData
-  },
-};
