@@ -40,6 +40,7 @@ const ProfileForm = ({ session }: { session: Session }) => {
       languages: getFilteredValues(session?.user?.languages, languages),
       name: session?.user?.name ?? "",
       image: session?.user?.image ?? "",
+      thumbnail: session?.user?.thumbnail ?? "",
     },
   });
 

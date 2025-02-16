@@ -1,5 +1,6 @@
 "use server";
 import {
+  fullPatientSchema,
   PatientOnboardingSchema1,
   PatientOnboardingSchema2,
   PatientOnboardingSchema3,
@@ -153,10 +154,9 @@ export const PatientOnboardStepFour = async (
   });
 };
 export const PatientProfileUpdate = async (
-  data: z.output<typeof patientOnBoardingSchema4>
+  data: z.output<typeof fullPatientSchema>
 ) => {
   const authSession = await auth();
-
   if (!authSession) {
     return {
       error: "Not Authenticated",
@@ -168,18 +168,20 @@ export const PatientProfileUpdate = async (
   }
 
   const user = await User.findById(authSession?.user?.id);
-  return handlePatientOnboarding(5, data, patientOnBoardingSchema4, {
-    image: user?.image,
-    address_1: user?.address_1,
-    address_2: user?.address_2,
-    city: user?.city,
-    region: user?.region,
-    country: user?.country,
-    phone: user?.phone,
-    dob: user?.dob,
-    languages: user?.languages,
+  return handlePatientOnboarding(5, data, fullPatientSchema, {
+    image: data?.image,
+    address_1: data?.address_1,
+    address_2: data?.address_2,
+    city: data?.city,
+    region: data?.region,
+    country: data?.country,
+    phone: data?.phone,
+    dob: data?.dob,
+    languages: data.languages?.map((item) => item.value),
+    thumbnail: data?.thumbnail,
+    gender: data?.gender,
     role: "patient",
-    onboarding_level: 7,
+    onboarding_level: 5,
     patientInfo: {
       conditions: user?.patientInfo?.conditions,
       medicalHistory: user?.patientInfo?.medicalHistory,

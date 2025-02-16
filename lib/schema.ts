@@ -321,6 +321,7 @@ export const fullPatientSchema = PatientOnboardingSchema1.merge(
   .extend({
     name: z.string().min(1, "Please enter your full name."),
     image: z.string().optional(),
+    thumbnail: z.string().optional(),
   });
 
 export const fullDoctorSchema = onDoctorBoardingSchema1

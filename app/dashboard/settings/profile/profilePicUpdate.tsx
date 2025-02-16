@@ -1,37 +1,34 @@
 "use client";
 import { ImageUploader } from "@/components/blocks/ImageUpload";
-import { useForm } from "react-hook-form";
-import { onDoctorBoardingSchema5 } from "@/lib/schema";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { UseFormReturn } from "react-hook-form";
+import { fullPatientSchema } from "@/lib/schema";
 import { z } from "zod";
-import { DoctorOnboardStepFive } from "@/lib/onboarding";
 import { useSession } from "next-auth/react";
+import { PatientProfileUpdate } from "@/lib/onboardingPatientactions";
 
 export default function ProfilePic({
   initialImage,
+  form,
 }: {
   initialImage: string | null;
+  form: UseFormReturn<z.output<typeof fullPatientSchema>>;
 }) {
   const { update, data: session } = useSession();
-  const form = useForm<z.output<typeof onDoctorBoardingSchema5>>({
-    resolver: zodResolver(onDoctorBoardingSchema5),
-    defaultValues: {
-      image: initialImage ?? "",
-    },
-  });
+  const handleImageChange = async (response: {
+    originalUrl: string;
+    thumbnailUrl: string;
+  }) => {
+    if (!response) return;
+    form.setValue("image", response?.originalUrl);
+    form.setValue("thumbnail", response?.thumbnailUrl);
 
-  const handleImageChange = async (newImage: string | null) => {
-    if (!newImage) return;
-    form.setValue("image", newImage);
     await form.handleSubmit(handleSubmit)();
   };
-  const handleSubmit = async (
-    data: z.output<typeof onDoctorBoardingSchema5>
-  ) => {
+  const handleSubmit = async (data: z.output<typeof fullPatientSchema>) => {
     try {
-      const res = await DoctorOnboardStepFive(data, 7);
-        if ("data" in res) {
-          console.log(res)
+      const res = await PatientProfileUpdate(data);
+      if ("data" in res) {
+        console.log(res);
         if (res?.statusCode === 200) {
           await update({
             ...session,
