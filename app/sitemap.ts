@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import connectToDatabase from "@/lib/mongoose";
 import User from "@/models/User";
 
-const DOMAIN = process.env.NEXT_PUBLIC_DOMAIN || "https://medcare.com";
+const DOMAIN = process.env.NEXT_PUBLIC_DOMAIN || "https://medcare-hub.vercel.app";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   await connectToDatabase();
