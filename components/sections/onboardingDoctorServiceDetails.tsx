@@ -8,13 +8,12 @@ import { FormBuilder } from "@/components/blocks/formBuilder";
 import { Button } from "@/components/ui/button";
 import { Step } from "@/components/blocks/onboardingDoctor";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import AnimationWrapper from "@/components/wrappers/animationWrapper";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import SelectComponent from "@/components/blocks/selectComponent";
 import { useFetchBanks } from "@/lib/server";
-import { Skeleton } from "../ui/skeleton";
 import PopoverSelect from "../blocks/popoverselect";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -32,7 +31,6 @@ import { UpdateSession } from "next-auth/react";
 import { Session } from "next-auth";
 import { PriceInput } from "../blocks/priceselector";
 import Loader from "../blocks/loader";
-import { validatePhoneNumber } from "@/lib/carrierValidate";
 import { resolveAccountDetails } from "@/lib/utils";
 
 const DoctorOnboardingServiceDetails = ({
@@ -93,6 +91,8 @@ const DoctorOnboardingServiceDetails = ({
   );
   useEffect(() => {
     if (channel) {
+       setResolveError(null);
+       setAccountDetails(null);
       form.setValue("account_name", "");
       form.setValue("account_number", "");
       form.setValue("bank", "");

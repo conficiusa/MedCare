@@ -137,7 +137,7 @@ export const resolveAccountDetails = async ({
       }
     }
     setIsSubmitting(true);
-    const bankCode = banks?.find((b: any) => b.id === bank);
+    const bankCode = banks?.find((b: any) => b.bank_id === bank);
     const res = await fetch(
       `/api/paystack/resolve/?bank_code=${
         bankCode?.code

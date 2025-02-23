@@ -98,6 +98,7 @@ export function UploadDialog({
               src={preview || "/placeholder.svg"}
               alt="Preview"
               width={200}
+              priority
               height={200}
               className="mx-auto rounded-lg object-cover "
             />

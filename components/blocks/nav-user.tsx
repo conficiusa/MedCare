@@ -28,24 +28,24 @@ import {
 import { useSession } from "next-auth/react";
 import { Fragment } from "react";
 
-
 const navItems = [
   {
-    icon: <Bell className="w-4 h-4 text-muted-foreground"/>,
+    icon: <Bell className="w-4 h-4 text-muted-foreground" />,
     label: "Notifications",
   },
   {
-    icon: <CreditCard className="w-4 h-4 text-muted-foreground"/>,
+    icon: <CreditCard className="w-4 h-4 text-muted-foreground" />,
     label: "Billing",
   },
   {
-    icon: <BadgeCheck className="w-4 h-4 text-muted-foreground"/>,
+    icon: <BadgeCheck className="w-4 h-4 text-muted-foreground" />,
     label: "Account",
   },
-]
+];
 export function NavUser() {
   const { isMobile } = useSidebar();
   const { data: session } = useSession();
+  const names = session?.user?.name?.split(" ");
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -57,11 +57,11 @@ export function NavUser() {
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
-                  src={session?.user?.image ?? undefined}
+                  src={session?.user?.thumbnail ?? undefined}
                   alt={session?.user?.name ?? " your profile avatar "}
                 />
                 <AvatarFallback className="rounded-lg">
-                  {session?.user?.name?.split(" ")[0]}
+                  {names?.[0] && names?.[1].charAt(0) ? names[0] + names[1].charAt(0) : ""}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -83,10 +83,12 @@ export function NavUser() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage
-                    src={session?.user?.image ?? undefined}
+                    src={session?.user?.thumbnail ?? undefined}
                     alt={session?.user?.name ?? ""}
                   />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarFallback className="rounded-lg">
+                    {names?.[0] && names?.[1] ? names[0] + names[1] : ""}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">
@@ -111,7 +113,7 @@ export function NavUser() {
               </Fragment>
             ))}
             <DropdownMenuItem className="flex gap-2">
-              <LogOut className="text-muted-foreground w-4 h-4"/>
+              <LogOut className="text-muted-foreground w-4 h-4" />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>

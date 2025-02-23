@@ -29,6 +29,7 @@ export function ImageUploader({
                 alt="Uploaded image"
                 width={128}
                 height={128}
+                priority
                 className="rounded-full aspect-square object-cover transition-opacity group-hover:opacity-75 dark:bg-background"
               />
             ) : (

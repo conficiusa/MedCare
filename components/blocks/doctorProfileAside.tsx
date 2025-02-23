@@ -22,6 +22,7 @@ const DoctorProfileAside = ({ doctor }: { doctor: Doctor }) => {
             height={200}
             alt="the doctors' profile"
             className="aspect-[4/5] object-cover rounded-md"
+            
           />
         </div>
         <div className="max-lg:block hidden">

@@ -17,9 +17,9 @@ function OnlineCardSkeleton() {
           <Skeleton className="h-4 w-[150px]" />
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between">
+      <CardFooter className="flex justify-between items-end">
         <Skeleton className="h-10 w-[100px]" />
-        <Skeleton className="h-4 w-[100px]" />
+        <Skeleton className="h-2 w-[30px]" />
       </CardFooter>
     </Card>
   );

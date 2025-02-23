@@ -161,7 +161,8 @@ export const DoctorOnboardStepThree = async (
   });
 };
 export const DoctorOnboardStepFour = async (
-  data: z.output<typeof onDoctorBoardingSchema4>
+  data: z.output<typeof onDoctorBoardingSchema4>,
+  onboarding_level: number=5
 ) => {
   const authSession = await auth();
 
@@ -176,7 +177,7 @@ export const DoctorOnboardStepFour = async (
   }
 
   const user = await User.findById(authSession?.user?.id);
-  return handleDoctorOnboarding(5, data, onDoctorBoardingSchema4, {
+  return handleDoctorOnboarding(onboarding_level, data, onDoctorBoardingSchema4, {
     address_1: user?.address_1,
     address_2: user?.address_2,
     city: user?.city,
@@ -188,7 +189,7 @@ export const DoctorOnboardStepFour = async (
     dob: user?.dob,
     languages: user?.languages,
     role: "doctor",
-    onboarding_level: 5,
+    onboarding_level: onboarding_level,
     doctorInfo: {
       bank: data?.bank,
       account_name: data?.account_name,
@@ -202,7 +203,7 @@ export const DoctorOnboardStepFour = async (
       specialities: user?.doctorInfo?.specialities,
       bio: user?.doctorInfo?.bio,
       certifications: user?.doctorInfo?.certifications,
-      onboarding_level: 5,
+      onboarding_level: onboarding_level,
       verification: user?.doctorInfo?.verification,
     },
   });
