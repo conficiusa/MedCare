@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://medcare-hub.vercel.app/sitemap.xml
+Sitemap: https://medcare-hub.vercel.app/sitemaps/sitemap.xml
