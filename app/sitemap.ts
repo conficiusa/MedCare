@@ -1,12 +1,12 @@
 import { MetadataRoute } from 'next';
 import connectToDatabase from "@/lib/mongoose";
 import User from "@/models/User";
+import { ENVConfig } from '@/lib/utils';
 
-const DOMAIN = process.env.NEXT_PUBLIC_DOMAIN || "https://medcare-hub.vercel.app";
+const DOMAIN = ENVConfig.getAppURL();
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   await connectToDatabase();
-  
   // Fetch all published doctor profiles
   const doctors = await User.find({
     role: "doctor",
@@ -43,7 +43,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Generate doctor routes with proper typing
   const doctorRoutes: MetadataRoute.Sitemap = doctors.map((doctor) => ({
-    url: `${DOMAIN}/find-a-doctor/${doctor._id}`,
+    url: `${DOMAIN}/find-a-doctor/${doctor.id}`,
     lastModified: new Date(),
     changeFrequency: 'weekly',
     priority: 0.8,

@@ -158,3 +158,22 @@ export const resolveAccountDetails = async ({
     setIsSubmitting(false);
   }
 };
+
+
+export class ENVConfig {
+  static getAppURL() {
+    if (process.env.NODE_ENV === "production") {
+      return process.env.NEXT_PUBLIC_APP_URL_PROD;
+    }
+    return process.env.NEXT_PUBLIC_APP_URL_DEV;
+  }
+
+  // static getMongoDBURI() {
+  //   if (process.env.NODE_ENV === "production") {
+  //     return process.env.MONGODB_URI_PROD;
+  //   }
+  //   return process.env.MONGODB_URI;
+  // }
+
+  // Add more methods as needed for other environment-specific configurations
+}

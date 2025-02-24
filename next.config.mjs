@@ -1,13 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async redirects() {
-    return [
-      {
-        source: "/sitemap.xml",
-        destination: "/api/sitemap",
-        permanent: true, // This is fine if the redirect is intended to be permanent
-      },
-    ];
+  env: {
+    NEXT_PUBLIC_SITE_URL:
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000"
+        : "https://medcare-hub.vercel.app",
   },
   images: {
     remotePatterns: [
@@ -24,19 +21,6 @@ const nextConfig = {
         pathname: "/**",
       },
     ],
-  },
-  async headers() {
-    return [
-      {
-        source: "/api/sitemap",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=86400, stale-while-revalidate=86400", // Cache for 1 day
-          },
-        ],
-      },
-    ];
   },
 };
 

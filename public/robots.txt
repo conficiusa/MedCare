@@ -1,14 +1,3 @@
 User-agent: *
-Disallow: /dashboard
-Disallow: /doctor/dashboard
-Disallow: /onboarding/awaiting-verification
-Disallow: /consultation/*
-Disallow: /api/*
-Disallow: /@modal/*
-
 Allow: /
-Allow: /find-a-doctor/
-Allow: /sign-in
-Allow: /blog
-
-Sitemap: https://medcare.com/api/sitemap
+Sitemap: https://medcare-hub.vercel.app/sitemap.xml
