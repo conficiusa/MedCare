@@ -19,6 +19,9 @@ import { Doctor } from "@/lib/definitions";
 import { UpdateSession } from "next-auth/react";
 import { Session } from "next-auth";
 import { getFilteredValues } from "@/lib/utils";
+import { AddressCombobox } from "../ui/autoComplete";
+import { Label } from "../ui/label";
+import { useEffect, useState } from "react";
 
 const DoctorOnboardingCredentials = ({
   currentStep,
@@ -35,6 +38,7 @@ const DoctorOnboardingCredentials = ({
   update: UpdateSession;
   session: Session;
 }) => {
+  const [address, setAddress] = useState("");
   const form = useForm<z.output<typeof onDoctorBoardingSchema3>>({
     resolver: zodResolver(onDoctorBoardingSchema3),
     defaultValues: {
@@ -55,6 +59,10 @@ const DoctorOnboardingCredentials = ({
       medical_school: user?.doctorInfo?.medical_school ?? "",
     },
   });
+
+  useEffect(() => {
+    form.setValue("medical_school", address);
+  }, [address]);
 
   const handleSubmit = async (
     data: z.output<typeof onDoctorBoardingSchema3>
@@ -111,12 +119,16 @@ const DoctorOnboardingCredentials = ({
             className="grid gap-6"
             onSubmit={form.handleSubmit(handleSubmit)}
           >
-            <FormBuilder
-              name="medical_school"
-              label="Where did you attend medical school"
-            >
-              <Input placeholder="Medical School" />
-            </FormBuilder>
+            <div className="space-y-2">
+              <Label htmlFor="university">
+                Where did you attend medical school
+              </Label>
+              <AddressCombobox
+                types="university"
+                placeholder="Search medical school"
+                setAddress={setAddress}
+              />
+            </div>
 
             <FormBuilder
               name="license_number"

@@ -1041,3 +1041,81 @@ const updateDoctorRating = async (doctorId: string) => {
     });
   }
 };
+
+// !Google Places API
+const apiKey = process.env.GOOGLE_API_KEY;
+const suggestionSchema = z.object({
+  predictions: z
+    .object({ description: z.string(), place_id: z.string() })
+    .array()
+    .optional(),
+  status: z.string(),
+});
+console.log("API KEY", apiKey);
+export async function getGooglePlaces(query: string, types?: string) {
+  const components = "country:GH"; // TODO: change country
+  const language = "fr"; // TODO: change language
+  const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(
+    query
+  )}&key=${apiKey}&components=${components}&types=${types}&language=${language}`;
+  const response = await fetch(url);
+  const data = (await response.json()) as unknown;
+  const validation = suggestionSchema.safeParse(data);
+  if (!validation.success) {
+    return [];
+  }
+  if (validation.data.status !== "OK") {
+    return [];
+  }
+
+  return validation.data.predictions;
+}
+
+// const placeSchema = z.object({
+//   result: z.object({
+//     address_components: z
+//       .object({
+//         long_name: z.string(),
+//         short_name: z.string(),
+//         types: z.string().array(),
+//       })
+//       .array(),
+//   }),
+//   status: z.string(),
+// });
+
+interface PlaceDetails {
+  result: {
+    name: string;
+    address_components: Array<{
+      long_name: string;
+      short_name: string;
+      types: string[];
+    }>;
+  };
+  status: string;
+}
+
+export async function getGooglePlaceById(id: string) {
+  const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${apiKey}`;
+  const response = await fetch(url);
+  const data = (await response.json()) as PlaceDetails;
+  // const validation = placeSchema.safeParse(data);
+  console.log("data", data);
+
+  const place: Record<"name" | "city", string | undefined> = {
+    name: undefined,
+    city: undefined,
+  };
+
+  data.result.address_components.forEach((component: any) => {
+    console.log("COMPONENT", component);
+    if (component.types.includes("locality")) {
+      place.city = component.long_name;
+    }
+  });
+  place.name = data.result.name;
+
+  console.log("PLACE", place);
+  return place;
+}
