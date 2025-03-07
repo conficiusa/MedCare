@@ -79,11 +79,9 @@ export const buildDoctorAggregationPipeline = (
     pipeline.push({ $sort: options.sort });
   }
 
-  // Apply pagination if limit and page are provided
-  if (options.limit) {
-    const skip = options.page ? (options.page - 1) * options.limit : 0;
-    pipeline.push({ $skip: skip }, { $limit: options.limit });
-  }
+  // Don't apply pagination in this function anymore
+  // Pagination will be applied separately in the query function
+  // This allows us to get the total count first
 
   return pipeline;
 };

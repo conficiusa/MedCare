@@ -8,6 +8,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Checkbox } from "../ui/checkbox";
 
 interface FormBuilderProps {
   name: string;
@@ -22,7 +23,7 @@ interface FormBuilderProps {
   [key: string]: any;
 }
 
-export const FormBuilder = ({
+const FormBuilder = ({
   name,
   label,
   children,
@@ -130,3 +131,52 @@ export const FormBuilderWithIcons = ({
     />
   );
 };
+
+interface CheckBoxFormBuilderProps {
+  control: any;
+  name: string;
+  label: string;
+  description?: string | null;
+  message?: boolean;
+  messageClassName?: string;
+  descriptionClassName?: string;
+  labelClassName?: string;
+}
+
+const CheckBoxFormBuilder = ({
+  control,
+  name,
+  label,
+  description = null,
+  message,
+  messageClassName,
+  descriptionClassName,
+  labelClassName,
+}: CheckBoxFormBuilderProps) => {
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+          <FormControl>
+            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+          </FormControl>
+          <div className="space-y-1">
+            <FormLabel className={cn("font-normal", labelClassName)}>
+              {label}
+            </FormLabel>
+            {description && (
+              <FormDescription className={cn("", descriptionClassName)}>
+                {description}
+              </FormDescription>
+            )}
+            {message && <FormMessage className={cn("", messageClassName)} />}
+          </div>
+        </FormItem>
+      )}
+    />
+  );
+};
+
+export { FormBuilder, CheckBoxFormBuilder };

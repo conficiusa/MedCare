@@ -21,11 +21,13 @@ interface CalenderDatePickerProps {
   name: string;
   control: any;
   label?: string;
+  disabled?: boolean;
 }
 const CalenderDatePicker = ({
   name,
   control,
   label,
+  disabled,
 }: CalenderDatePickerProps) => {
   return (
     <FormField
@@ -36,7 +38,9 @@ const CalenderDatePicker = ({
           <FormLabel>{label}</FormLabel>
           <FormControl>
             <Popover>
-              <PopoverTrigger asChild>
+              <PopoverTrigger asChild
+                disabled
+              >
                 <FormControl>
                   <Button
                     variant={"outline"}
@@ -44,6 +48,7 @@ const CalenderDatePicker = ({
                       "w-full  text-left font-normal",
                       !field.value && "text-muted-foreground"
                     )}
+                    disabled={disabled}
                   >
                     {field.value ? (
                       format(field.value, "PPP")

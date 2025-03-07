@@ -9,9 +9,9 @@ const userCollectionName = "users";
 const availabilityCollectionName = "availabilities";
 
 const sampleImageUrl =
-  "https://xgyzgqc7wzq7cyz6.public.blob.vercel-storage.com/1733850094847-doctormale-KeiKFnKcLFEaQ6fJjszq8txz0Dxz2m.jpg";
+  "https://xgyzgqc7wzq7cyz6.public.blob.vercel-storage.com/doctormale-iPfmvRqjxqNXRUM8ncVfb8mPBSjmk0.jpg";
 const sampleImageTwoUrl =
-  "https://xgyzgqc7wzq7cyz6.public.blob.vercel-storage.com/mock%20use%20(1)-TmsZBhLFrPxkF3V93pNPiux4UhESPh.jpg";
+  "https://xgyzgqc7wzq7cyz6.public.blob.vercel-storage.com/mock%20use%20%282%29-nZ9qlId7QbzXt6l0u1VzsnZVjCPdQG.jpg";
 
 const names = [
   "John Smith",

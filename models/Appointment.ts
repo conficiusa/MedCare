@@ -10,6 +10,7 @@ const AppointmentSchema = new Schema<IAppointment>(
       },
       ref: "Transaction",
     },
+    reportId: { type: Schema.Types.ObjectId, ref: "medicalRecords" },
     doctor: {
       doctorId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
       name: { type: String, required: true },
@@ -92,6 +93,7 @@ const AppointmentSchema = new Schema<IAppointment>(
         ret.id = ret._id.toString();
         ret.doctor.doctorId = ret.doctor.doctorId.toString();
         ret.patient.patientId = ret.patient.patientId.toString();
+        ret.reportId = ret.reportId?.toString();
         ret.transactionId = ret?.transactionId?.toString();
         delete ret._id;
         delete ret.__v;

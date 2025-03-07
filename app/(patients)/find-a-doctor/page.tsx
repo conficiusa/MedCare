@@ -28,14 +28,14 @@ const FindDoctor = async (props: {
     <section className="min-h-[calc(100dvh_-_8rem)] rounded-sm bg-muted dark:bg-background">
       <div className="p-10 max-sm:px-4 max-sm:py-6">
         <p className="text-sm mb-2">
-          Find a healthcare professional based on the type of service, symptom
-          or speciality
+          Find a healthcare professional based on the name of
+          physician,speciality or city
         </p>
         <div className="flex gap-6">
           <SearchInput
             label="search doctor"
             containerClassName="md:w-3/5 "
-            placeholder="example: symptom - flu, cold; specialty - dermatology, mental health, primary care"
+            placeholder="Search by name, city, or speciality"
           />
           <AvailableToggle />
         </div>

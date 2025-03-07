@@ -39,17 +39,35 @@ export const fetchDoctorCardData = async (
   let filter = { ...defaultFilter, ...options.filter };
   filter = { ...filter, ...applyCaseInsensitiveRegex(filter) };
 
-  // Build the aggregation pipeline using the utility function
-  const pipeline = buildDoctorAggregationPipeline(
+  // First, build a pipeline that finds all matching doctors (without pagination)
+  // This ensures search is performed on the entire dataset
+  const searchPipeline = buildDoctorAggregationPipeline(
     filter,
-    options,
+    { sort: options.sort }, // Include sorting but no pagination
     queryterm,
     showall
   );
 
-  // Execute the aggregation
-  const doctors = await User.aggregate(pipeline);
-  // Manually apply the transformation
+  // Count the total number of doctors after applying search and filters
+  const countPipeline = [...searchPipeline];
+  const countResult = await User.aggregate([
+    ...countPipeline,
+    { $count: "total" },
+  ]);
+
+  const totalDoctors = countResult.length > 0 ? countResult[0].total : 0;
+
+  // Now apply pagination after search
+  const paginatedPipeline = [...searchPipeline];
+  if (options.limit) {
+    const skip = options.page ? (options.page - 1) * options.limit : 0;
+    paginatedPipeline.push({ $skip: skip }, { $limit: options.limit });
+  }
+
+  // Execute the aggregation with pagination
+  const doctors = await User.aggregate(paginatedPipeline);
+
+  // Transform the results
   const transformedDoctors = doctors.map((doc) => {
     const ret = { ...doc }; // Spread the document into a new object
     ret.id = ret._id.toString();
@@ -61,8 +79,8 @@ export const fetchDoctorCardData = async (
   // If no doctors are found, return a 404
   if (transformedDoctors.length === 0) {
     return {
-      error: "No doctors match you query",
-      message: "Adjust your query if set. or check back later",
+      error: "No doctors match your query",
+      message: "Adjust your query if set, or check back later",
       status: "fail",
       statusCode: 404,
       type: "Not found",
@@ -70,6 +88,7 @@ export const fetchDoctorCardData = async (
   }
   return {
     data: transformedDoctors as DoctorCard[],
+    totalDoctors,
     statusCode: 200,
     message: "Load success",
     status: "success",
@@ -206,6 +225,11 @@ export const findTimeSlotBySlotId = async (slotId: string) => {
   }
 };
 
+/**
+ *
+ * @param id Id of the appointment to fetch. should be a valid ObjectId
+ * @returns  Returns an object with the appointment data if found, or an error object if not found
+ */
 export const FetchAppointment = async (id: string): Promise<ReturnType> => {
   try {
     const authsession = await auth();
@@ -280,11 +304,25 @@ export const FetchAppointmentByRoomId = async (
   }
 };
 
+/**
+ * @param id The id of the user to fetch
+ * @param select Optional array of fields to select
+ * @returns Returns an object with the user data if found, or an error object if not found
+ * @example await fetchUserData(id, ["name", "email"])
+ * 
+ */
 export const fetchUserData = nextcache(
-  async (id: string): Promise<ReturnType> => {
+  async (id: string, select?: string[]): Promise<ReturnType> => {
     try {
-      const user = await User.findById(id);
-
+      await connectToDatabase();
+      let query = User.findById(id);
+      
+      // Only apply select if it's provided
+      if (select && select.length > 0) {
+        query = query.select(select);
+      }
+      
+      const user = await query.exec();
       if (!user) {
         return {
           error: "User not found",

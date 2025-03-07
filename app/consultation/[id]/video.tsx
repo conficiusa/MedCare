@@ -15,7 +15,7 @@ import { Track } from "livekit-client";
 import { useRouter } from "next/navigation";
 import { generateRoomToken } from "@/lib/getTokens";
 import { Session } from "next-auth";
-import { ErrorReturn } from "@/lib/definitions";
+import { Appointment, ErrorReturn } from "@/lib/definitions";
 import Link from "next/link";
 import { useActorRef, useSelector } from "@xstate/react";
 import { consultationMachine } from "@/lib/stateMachines";
@@ -24,15 +24,18 @@ import ParticipantState from "./state";
 export default function VideoCall({
   appointmentId,
   session,
+  appointment,
 }: {
   appointmentId: string;
   session: Session;
+  appointment: Appointment;
 }) {
   const [token, setToken] = useState("");
   const [error, setError] = useState<ErrorReturn | undefined>(undefined);
   const router = useRouter();
   const consultRef = useActorRef(consultationMachine);
   const state = useSelector(consultRef, (state) => state.value);
+  const isDoctor = session?.user?.id === appointment?.doctor.doctorId;
 
   console.log(state);
 
@@ -85,7 +88,11 @@ export default function VideoCall({
   }
   return (
     <>
-      <ParticipantState appointmentId={appointmentId} state={state} />
+      <ParticipantState
+        appointmentId={appointmentId}
+        state={state}
+        isDoctor={isDoctor}
+      />
       <LiveKitRoom
         onDisconnected={(reason) => {
           consultRef.send({

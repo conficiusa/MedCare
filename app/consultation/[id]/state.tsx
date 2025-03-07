@@ -8,9 +8,11 @@ import { useRouter } from "next/navigation";
 export default function ParticipantState({
   appointmentId,
   state,
+  isDoctor = false,
 }: {
   appointmentId: string;
   state: string;
+  isDoctor?: boolean;
 }) {
   const consultRef = useActorRef(consultationMachine);
   const router = useRouter();
@@ -18,11 +20,14 @@ export default function ParticipantState({
   useEffect(() => {
     if (state === "showDialogs") {
       router.refresh();
-      router.push(`/consultation/review/${appointmentId}`);
+      if (isDoctor) {
+        router.push(`/consultation/report/${appointmentId}`);
+      } else {
+        router.push(`/consultation/review/${appointmentId}`);
+      }
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state, appointmentId]);
+  }, [state, appointmentId, isDoctor]);
   return (
     <div>
       {state === "askIfOver" && (

@@ -326,8 +326,8 @@ export function bankUpdateEmail(token: string): string {
             <tr>
               <td align="center" style="padding: 20px;">
                 <img
-                  src="https://yourdomain.com/logo.png"
-                  alt="Telemedicine Platform"
+                  src="https://medcare-hub.vercel.app/logo.png"
+                  alt="Medcare hub"
                   width="150"
                   style="display: block; max-width: 100%; height: auto;"
                 />
@@ -344,7 +344,7 @@ export function bankUpdateEmail(token: string): string {
               <td class="mobile-padding" style="padding: 0 40px 20px 40px; color: #333333;">
                 <p style="font-size: 16px; line-height: 1.5; margin: 0 0 10px 0;">Hello,</p>
                 <p style="font-size: 16px; line-height: 1.5; margin: 0 0 10px 0;">
-                  We received a request to update your bank details on your Telemedicine Platform account.
+                  We received a request to update your bank details on your Medcare Hub account.
                   To ensure the security of your account, please use the verification token below.
                 </p>
                 <p style="font-size: 16px; line-height: 1.5; margin: 0 0 20px 0;">
@@ -373,7 +373,7 @@ export function bankUpdateEmail(token: string): string {
             <!-- Footer -->
             <tr>
               <td align="center" style="background-color: #f2f4f6; padding: 20px; font-size: 12px; color: #888888;">
-                <p style="margin: 0;">© 2025 Telemedicine Platform. All rights reserved.</p>
+                <p style="margin: 0;">© 2025 Medcare Hub. All rights reserved.</p>
                 <p style="margin: 0;">1234 Example Street, Suite 100, City, Country</p>
               </td>
             </tr>

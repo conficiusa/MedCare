@@ -993,6 +993,15 @@ export const addReview = async (data: Partial<ReviewType>) => {
     } as ErrorReturn;
   }
 
+  if (data.doctorId === authSession?.user?.id) {
+    return {
+      error: "Invalid Review",
+      message: "You cannot review yourself",
+      status: "fail",
+      statusCode: 400,
+      type: "Bad Request",
+    } satisfies ErrorReturn;
+  }
   try {
     await connectToDatabase();
     const parsedData = reviewSchema.safeParse(data);
@@ -1051,7 +1060,6 @@ const suggestionSchema = z.object({
     .optional(),
   status: z.string(),
 });
-console.log("API KEY", apiKey);
 export async function getGooglePlaces(query: string, types?: string) {
   const components = "country:GH"; // TODO: change country
   const language = "fr"; // TODO: change language

@@ -46,9 +46,6 @@ const SearchInput = ({
         }}
         defaultValue={searchParams.get("query")?.toString()}
       />
-      <Button size="icon" className="absolute right-0 top-0 w-14">
-        <Search />
-      </Button>
     </div>
   );
 };

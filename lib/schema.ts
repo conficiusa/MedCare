@@ -6,6 +6,7 @@ const multiSelectSchema = z.object({
   value: z.string(),
 });
 
+
 export const SignUpSchema = z
   .object({
     name: z
