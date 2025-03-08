@@ -435,7 +435,7 @@ export default function ConsultationReport({
                   You understand that inaccurate or incomplete information may
                   affect patient care decisions and could have legal
                   implications. This submission will become part of the
-                  patient's permanent medical record.
+                  patient&apos;s permanent medical record.
                 </p>
 
                 <div className="flex justify-end gap-4">

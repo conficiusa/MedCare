@@ -62,6 +62,7 @@ const DoctorOnboardingCredentials = ({
 
   useEffect(() => {
     form.setValue("medical_school", address);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address]);
 
   const handleSubmit = async (

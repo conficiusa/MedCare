@@ -42,6 +42,8 @@ export function UploadDialog({
       setOptimisticImage(URL.createObjectURL(selectedFile));
       setFile(selectedFile);
     },
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setOptimisticImage, setOpen]
   );
 
@@ -68,6 +70,8 @@ export function UploadDialog({
     }
     onImageChange(response);
     setOpen(false);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file, onImageChange, setOptimisticImage]);
 
   const handleClear = useCallback(() => {

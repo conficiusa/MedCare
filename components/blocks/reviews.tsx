@@ -1,7 +1,7 @@
 "use client";
 
 import { useInView } from "react-intersection-observer";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ReviewsPerPage } from "@/lib/constants";
 import { ReviewType as Review } from "@/lib/definitions";
 import { fetchDoctorReviews } from "@/lib/queries";
@@ -23,7 +23,7 @@ export default function DoctorReviews({
   const [error, setError] = useState(null);
   const [hasMore, setHasMore] = useState(true);
 
-  const loadMore = async () => {
+  const loadMore = useCallback(async () => {
     if (hasMore) {
       const reviewsData = await fetchDoctorReviews(id, skip);
       if ("data" in reviewsData) {
@@ -37,7 +37,9 @@ export default function DoctorReviews({
         setError(reviewsData.error);
       }
     }
-  };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasMore, id, skip]);
 
   useEffect(() => {
     if (isInView && hasMore) {

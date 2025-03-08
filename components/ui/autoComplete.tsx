@@ -59,6 +59,7 @@ export function AddressCombobox({
     } else {
       setItems([]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch]);
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
