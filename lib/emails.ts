@@ -2,7 +2,7 @@ import moment from "moment";
 import { Appointment } from "./definitions";
 
 export const appointmentConfirmPatient = (appointment: Appointment) => {
-  return `<!DOCTYPE html>
+	return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -13,10 +13,10 @@ export const appointmentConfirmPatient = (appointment: Appointment) => {
           <h2 style="color: #4CAF50;">Appointment Confirmation</h2>
           <p style="font-size: 16px;">Dear ${appointment?.patient?.name},</p>
           <p style="font-size: 16px;">Your appointment with Dr. ${
-            appointment?.doctor?.name
-          } on ${moment(appointment?.date).format(
-    "dddd, MMMM Do YYYY hh:mm A"
-  )} has been successfully confirmed. Thank you for using MedCare .</p>
+						appointment?.doctor?.name
+					} on ${moment(appointment?.date).format(
+		"dddd, MMMM Do YYYY hh:mm A"
+	)} has been successfully confirmed. Thank you for using MedCare .</p>
           <p style="font-size: 16px;">If you have any questions, feel free to contact us.</p>
           <p style="font-size: 16px;">Best regards,</p>
           <p style="font-size: 16px;">The Telemedicine Platform Team</p>
@@ -25,7 +25,7 @@ export const appointmentConfirmPatient = (appointment: Appointment) => {
       `;
 };
 export const patientOnboardemail = (name: string) => {
-  return `<!DOCTYPE html>
+	return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -118,12 +118,12 @@ export const patientOnboardemail = (name: string) => {
 };
 
 export const doctorAppointmentEmail = (
-  doctorName: string,
-  patientName: string,
-  appointmentDate: string,
-  appointmentTime: string
+	doctorName: string,
+	patientName: string,
+	appointmentDate: string,
+	appointmentTime: string
 ) => {
-  return `<!DOCTYPE html>
+	return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -210,20 +210,235 @@ export const doctorAppointmentEmail = (
 </html>`;
 };
 
+export const appointmentUpcomingReminder = (
+	doctorName: string,
+	patientName: string,
+	appointmentDate: string,
+	appointmentTime: string,
+	timeUntil: string,
+	joinLink?: string
+) => {
+	return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upcoming Appointment Reminder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      background-color: #4CAF50;
+      color: #ffffff;
+      padding: 20px;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .content {
+      padding: 20px;
+    }
+    .content p {
+      margin: 0 0 10px;
+    }
+    .content .details {
+      background-color: #f4f7f6;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+    .content .details p {
+      margin: 5px 0;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #4CAF50;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+    .urgent {
+      color: #ff0000;
+      font-weight: bold;
+    }
+    .footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      background-color: #f9f9f9;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header">
+      <h1>Upcoming Appointment Reminder</h1>
+    </div>
+    <div class="content">
+      <p>Dear ${patientName},</p>
+      <p><strong>${timeUntil}</strong> until your appointment with Dr. ${doctorName}!</p>
+      <div class="details">
+        <p><strong>Appointment Date:</strong> ${appointmentDate}</p>
+        <p><strong>Time:</strong> ${appointmentTime}</p>
+      </div>
+      <p>Please ensure you're ready for your appointment. Make sure your device, internet connection, and environment are set up for a successful consultation.</p>
+      ${
+				joinLink
+					? `<p><a href="${joinLink}" class="btn">Join Appointment</a></p>`
+					: ""
+			}
+      <p>If you need to reschedule, please do so as soon as possible through the MedCare Hub platform.</p>
+    </div>
+    <div class="footer">
+      <p>MedCare Hub &copy; 2024</p>
+    </div>
+  </div>
+</body>
+</html>`;
+};
+
+export const doctorUpcomingAppointmentReminder = (
+	doctorName: string,
+	patientName: string,
+	appointmentDate: string,
+	appointmentTime: string,
+	timeUntil: string,
+	joinLink?: string
+) => {
+	return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upcoming Appointment Reminder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      background-color: #4CAF50;
+      color: #ffffff;
+      padding: 20px;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .content {
+      padding: 20px;
+    }
+    .content p {
+      margin: 0 0 10px;
+    }
+    .content .details {
+      background-color: #f4f7f6;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+    .content .details p {
+      margin: 5px 0;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #4CAF50;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+    .urgent {
+      color: #ff0000;
+      font-weight: bold;
+    }
+    .footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      background-color: #f9f9f9;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header">
+      <h1>Upcoming Appointment Reminder</h1>
+    </div>
+    <div class="content">
+      <p>Dear Dr. ${doctorName},</p>
+      <p><strong>${timeUntil}</strong> until your appointment with ${patientName}!</p>
+      <div class="details">
+        <p><strong>Appointment Date:</strong> ${appointmentDate}</p>
+        <p><strong>Time:</strong> ${appointmentTime}</p>
+      </div>
+      <p>Please ensure you're ready for the consultation. Make sure your device, internet connection, and environment are set up for a successful appointment.</p>
+      ${
+				joinLink
+					? `<p><a href="${joinLink}" class="btn">Join Appointment</a></p>`
+					: ""
+			}
+    </div>
+    <div class="footer">
+      <p>MedCare Hub &copy; 2024</p>
+    </div>
+  </div>
+</body>
+</html>`;
+};
+
 export interface EmailTemplateParams {
-  patientName?: string;
-  doctorName: string;
-  reviewLink?: string;
-  reportIssueLink: string;
-  supportEmail: string;
+	patientName?: string;
+	doctorName: string;
+	reviewLink?: string;
+	reportIssueLink: string;
+	supportEmail: string;
 }
 
 export function generateThankYouEmail(params: EmailTemplateParams): string {
-  const { patientName, doctorName, reviewLink, reportIssueLink, supportEmail } =
-    params;
+	const { patientName, doctorName, reviewLink, reportIssueLink, supportEmail } =
+		params;
 
-  if (patientName) {
-    return `
+	if (patientName) {
+		return `
       <html>
       <body style="font-family: Arial, sans-serif; line-height: 1.6;">
         <h2>Thank You for Choosing MedCare, ${patientName}!</h2>
@@ -254,9 +469,9 @@ export function generateThankYouEmail(params: EmailTemplateParams): string {
       </body>
       </html>
     `;
-  }
+	}
 
-  return `
+	return `
     <html>
     <body style="font-family: Arial, sans-serif; line-height: 1.6;">
       <h2>Thank You for Your Commitment, Dr. ${doctorName}!</h2>
@@ -286,7 +501,7 @@ export function generateThankYouEmail(params: EmailTemplateParams): string {
 }
 
 export function bankUpdateEmail(token: string): string {
-  return `<!DOCTYPE html>
+	return `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
