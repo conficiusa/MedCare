@@ -1,16 +1,18 @@
+
 import { NextResponse } from "next/server";
 import Banks from "@/models/Banks";
 import connectToDatabase from "@/lib/mongoose";
 import { Bank } from "@/lib/definitions";
 
+export const dynamic = "force-dynamic";
 export async function GET(request: any): Promise<Response> {
   try {
     const authHeader = request?.headers?.get("authorization");
-    // if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    //   return new Response("Unauthorized", {
-    //     status: 401,
-    //   });
-    // }
+    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+      return new Response("Unauthorized", {
+        status: 401,
+      });
+    }
     await connectToDatabase();
     const country = "ghana";
     const url = new URL("https://api.paystack.co/bank");
