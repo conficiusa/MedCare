@@ -5,7 +5,7 @@ import mongoose, { Mongoose } from "mongoose";
 const MONGODB_URI = process.env.MONGODB_URI as string;
 const kmsProviders = {
 	aws: {
-		accessKeyId: process.env.AWS_ACCESS_KEY as string,
+		accessKeyId: process.env.AWS_ACCESSKEY as string,
 		secretAccessKey: process.env.AWS_SECRET as string,
 	},
 };

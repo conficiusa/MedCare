@@ -7,7 +7,7 @@ const connectionString = process.env.MONGODB_URI as string;
 // Use the Windows DLL with absolute path
 const kmsProviders = {
   aws: {
-    accessKeyId: process.env.AWS_ACCESS_KEY as string,
+    accessKeyId: process.env.AWS_ACCESSKEY as string,
     secretAccessKey: process.env.AWS_SECRET as string,
   },
 };
