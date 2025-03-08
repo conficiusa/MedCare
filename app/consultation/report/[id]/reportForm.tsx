@@ -160,7 +160,7 @@ export default function ConsultationReport({
   };
 
   return (
-    <div className="min-h-screen dark:bg-background py-4 bg-red-300">
+    <div className="min-h-screen dark:bg-background py-4">
       <div className="mx-auto px-2 sm:px-6 lg:px-8">
         <div className="sm:bg-muted sm:dark:bg-muted/30 shadow-xl rounded-lg overflow-hidden">
           {/* Header */}
