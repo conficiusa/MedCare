@@ -202,7 +202,6 @@ export const googleSignIn = async (
 		};
 	}
 };
-
 export const CreateAppointment = async (
 	appointmentData: Partial<AppointmentType>
 ): Promise<ReturnType> => {
@@ -310,6 +309,68 @@ export const CreateAppointment = async (
 			);
 		}
 
+		// Schedule appointment reminders using QStash
+		try {
+			const appointmentObj = appointment.toObject();
+			const appointmentDate = new Date(appointmentObj.date);
+			const startTime = appointmentData?.timeSlot?.startTime;
+			
+			if (startTime) {
+				// Parse time in format HH:MM
+				const [hours, minutes] = startTime.split(':').map(Number);
+				appointmentDate.setHours(hours, minutes);
+			}
+			
+			// Create QStash client
+			const qstashClient = new Client({ token: process.env.QSTASH_TOKEN as string });
+			
+			// Calculate timestamps for 10 minutes and 1 minute before
+			const tenMinsBefore = new Date(appointmentDate.getTime() - 10 * 60 * 1000);
+			const oneMinBefore = new Date(appointmentDate.getTime() - 1 * 60 * 1000);
+			
+			// Format the appointment time for display
+			const formattedTime = appointmentDate.toLocaleTimeString('en-US', { 
+				hour: '2-digit', 
+				minute: '2-digit',
+				hour12: true
+			});
+			
+			// Schedule 10-minute reminder
+			await qstashClient.publishJSON({
+				url: "https://medcare-hub.vercel.app/api/jobs/appointment-reminder",
+				body: {
+					appointmentId: appointmentObj.id,
+					doctorName: appointmentObj.doctor.name,
+					doctorEmail: appointmentObj.doctor.email,
+					patientName: appointmentObj.patient.name,
+					patientEmail: appointmentObj.patient.email,
+					startTime: formattedTime,
+					timeRemaining: 10
+				},
+				delay: Math.max(0, tenMinsBefore.getTime() - Date.now()),
+			});
+			
+			// Schedule 1-minute reminder
+			await qstashClient.publishJSON({
+				url: "https://medcare-hub.vercel.app/api/jobs/appointment-reminder",
+				body: {
+					appointmentId: appointmentObj.id,
+					doctorName: appointmentObj.doctor.name,
+					doctorEmail: appointmentObj.doctor.email,
+					patientName: appointmentObj.patient.name,
+					patientEmail: appointmentObj.patient.email,
+					startTime: formattedTime,
+					timeRemaining: 1
+				},
+				delay: Math.max(0, oneMinBefore.getTime() - Date.now()),
+			});
+			
+			console.log('Appointment reminders scheduled successfully');
+		} catch (reminderError) {
+			// Just log the error but don't fail the appointment creation
+			console.error('Failed to schedule appointment reminders:', reminderError);
+		}
+
 		// Return the appointment
 		return {
 			data: appointment.toObject() as Partial<AppointmentType>,
@@ -330,7 +391,6 @@ export const CreateAppointment = async (
 		} as ErrorReturn;
 	}
 };
-
 export async function upload(
 	formData: FormData,
 	subDir: string

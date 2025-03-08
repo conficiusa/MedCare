@@ -36,6 +36,7 @@ const UpcomingAppointment = async ({ session }: { session: Session }) => {
   const queryOptions = {
     filter: {
       paid: true,
+      status:"pending",
       date: {
         $gte: startOfToday,
         $lt: startOfTomorrow,

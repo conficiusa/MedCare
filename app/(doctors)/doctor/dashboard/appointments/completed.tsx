@@ -91,11 +91,8 @@ const CompletedAppointment = async ({ session }: { session: Session }) => {
 
 						<div className='flex-1 w-full'>
 							<div className='font-medium text-sm mb-1'>
-								{appointment?.mode} Consultation with Dr.{" "}
-								<Link href={`/find-a-doctor/${appointment?.doctor?.doctorId}`}>
-									{appointment?.doctor?.name} at{" "}
-									{moment(appointment.timeSlot?.startTime).format("h:mm A")}
-								</Link>
+								{appointment?.mode} consultation with{" "}
+								{appointment?.patient?.name} at {moment(appointment.timeSlot?.startTime).format("h:mm A")}
 							</div>
 							<div className='flex -space-x-1'>
 								<Avatar className='border-2  h-8 w-8 transition-transform hover:scale-110'>
@@ -130,7 +127,7 @@ const CompletedAppointment = async ({ session }: { session: Session }) => {
 
 					<div className='p-4 sm:p-6 flex justify-between items-center gap-4 md:flex-col'>
 						<p className='text-sm text-primary flex items-center justify-center gap-2'>
-							Completed <CheckCircle2 className="w-4 h-4"/>
+							Completed <CheckCircle2 className='w-4 h-4' />
 						</p>
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild className='md:order-2'>
@@ -148,15 +145,7 @@ const CompletedAppointment = async ({ session }: { session: Session }) => {
 								<DropdownMenuSeparator />
 								<DropdownMenuItem>
 									<CheckCheckIcon className='w-4 h-4 mr-2' />
-									<span>Mark as completed</span>
-								</DropdownMenuItem>
-								<DropdownMenuItem>
-									<TimerReset className='mr-2 h-4 w-4' />
-									<span>Request reschedule</span>
-								</DropdownMenuItem>
-								<DropdownMenuItem>
-									<UploadCloud className='mr-2 h-4 w-4' />
-									<span>Upload Relevant Files</span>
+									<span>Schedule a follow up</span>
 								</DropdownMenuItem>
 								<DropdownMenuSeparator />
 								<DropdownMenuItem>
@@ -165,11 +154,7 @@ const CompletedAppointment = async ({ session }: { session: Session }) => {
 								</DropdownMenuItem>
 								<DropdownMenuItem>
 									<HandHelping className='mr-2 h-4 w-4' />
-									<span>Support</span>
-								</DropdownMenuItem>
-								<DropdownMenuItem className='text-destructive'>
-									<X className='mr-2 h-4 w-4' />
-									<span>Cancel appointment</span>
+									<span>Contact Support</span>
 								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>
