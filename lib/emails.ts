@@ -98,7 +98,7 @@ export const patientOnboardemail = (name: string) => {
     <div class="content">
       <p>Dear ${name},</p>
       <p>Congratulations on completing your onboarding process! We're excited to have you as part of the Medcare Hub community. Our platform is designed to connect you with top medical professionals and provide you with convenient, high-quality care at your fingertips.</p>
-      <p>Here’s what you can do next:</p>
+      <p>Here's what you can do next:</p>
       <ul>
         <li>Explore available doctors and schedule appointments easily.</li>
         <li>Access your health records securely anytime, anywhere.</li>
@@ -601,4 +601,116 @@ export function bankUpdateEmail(token: string): string {
   </body>
 </html>
 `;
+}
+
+// Template for immediate start notification when appointment starts now or very soon
+export function generateImmediateStartEmail(
+	doctorName: string,
+	patientName: string,
+	formattedDate: string,
+	formattedTime: string,
+	consultationUrl: string,
+	isForDoctor: boolean
+): string {
+	const recipient = isForDoctor ? `Dr. ${doctorName}` : patientName;
+	const otherParty = isForDoctor ? patientName : `Dr. ${doctorName}`;
+
+	return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Appointment Starts Now</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      background-color: #4CAF50;
+      color: #ffffff;
+      padding: 20px;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .content {
+      padding: 20px;
+    }
+    .content p {
+      margin: 0 0 10px;
+    }
+    .content .details {
+      background-color: #f4f7f6;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+    .content .details p {
+      margin: 5px 0;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #4CAF50;
+      color: #ffffff !important;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      margin: 15px 0;
+      text-align: center;
+    }
+    .urgent {
+      color: #ff0000;
+      font-weight: bold;
+    }
+    .footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      background-color: #f9f9f9;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header">
+      <h1>Your Appointment Is Ready to Join</h1>
+    </div>
+    <div class="content">
+      <p>Dear ${recipient},</p>
+      <p><strong class="urgent">Your appointment is confirmed and ready to join now!</strong></p>
+      <div class="details">
+        <p><strong>${
+					isForDoctor ? "Patient" : "Doctor"
+				}:</strong> ${otherParty}</p>
+        <p><strong>Date:</strong> ${formattedDate}</p>
+        <p><strong>Time:</strong> ${formattedTime}</p>
+      </div>
+      <p>Your payment has been confirmed and the consultation is now available to join.</p>
+      <a href="${consultationUrl}" class="btn">Join Consultation Now</a>
+      <p>Please ensure your device, internet connection, and environment are prepared for a successful consultation.</p>
+    </div>
+    <div class="footer">
+      <p>MedCare Hub &copy; 2024</p>
+    </div>
+  </div>
+</body>
+</html>`;
 }

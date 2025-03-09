@@ -232,7 +232,7 @@ export const CreateAppointment = async (
 		// Find the doctor
 		const doctor = await User.findById(
 			appointmentData?.doctor?.doctorId
-		).select(["name", "image", "email"]);
+		).select(["name", "thumbnail", "email"]);
 
 		// Check if the doctor exists and handle the error
 		if (!doctor) {
@@ -245,6 +245,7 @@ export const CreateAppointment = async (
 			} as ErrorReturn;
 		}
 
+		console.log(doctor);
 		//compiling the complete data
 		const CompleteData = {
 			...appointmentData,
@@ -929,6 +930,23 @@ export const deleteSlot = async (slotId: string): Promise<ReturnType> => {
 				type: "Not Found",
 			} as ErrorReturn;
 		}
+		// Find the slot that's being deleted
+		const slotToDelete = availability.timeSlots.find(
+			(slot: ITimeSlot) => slot.slotId === slotId
+		);
+
+		// Check if the slot is booked
+		if (slotToDelete && slotToDelete.isBooked) {
+			return {
+				error: "Cannot delete booked slot",
+				message: "You cannot delete a slot that has already been booked",
+				status: "fail",
+				statusCode: 400,
+				type: "Bad Request",
+			} as ErrorReturn;
+		}
+
+		// If not booked, proceed with deletion
 		availability.timeSlots = availability.timeSlots.filter(
 			(slot: ITimeSlot) => slot.slotId !== slotId
 		);

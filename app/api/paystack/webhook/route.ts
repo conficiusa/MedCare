@@ -10,10 +10,11 @@ import {
 	doctorAppointmentEmail,
 	appointmentUpcomingReminder,
 	doctorUpcomingAppointmentReminder,
+	generateImmediateStartEmail,
 } from "@/lib/emails";
 import { sendEmailAction } from "@/lib/actions";
 import { Client } from "@upstash/qstash";
-import { parseISO, subMinutes, format } from "date-fns";
+import { parseISO, subMinutes, format, differenceInMinutes } from "date-fns";
 
 const qstashClient = new Client({ token: process.env.QSTASH_TOKEN as string });
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY as string;
@@ -31,118 +32,176 @@ async function scheduleAppointmentReminders(appointment: Appointment) {
 		const formattedDate = format(startTime, "PPP");
 		const formattedTime = format(startTime, "p");
 		const consultationUrl = `https://medcare-hub.vercel.app/consultation/${appointment.id}`;
+		const now = new Date();
 
-		// Schedule 10-minute reminder for patient
-		const tenMinsBefore = subMinutes(startTime, 10);
-		// Schedule 1-minute reminder for patient
-		const oneMinBefore = subMinutes(startTime, 1);
-		await Promise.all([
-			sendEmailAction(
-				"email",
-				appointment.patient.email,
-				"Reminder: Upcoming Appointment In 10 Minutes",
-				appointmentUpcomingReminder(
-					appointment.doctor.name!,
-					appointment.patient.name,
-					formattedDate,
-					formattedTime,
-					"10 minutes",
-					consultationUrl
-				),
-				Math.max(0, tenMinsBefore.getTime() - Date.now())
-			),
-			sendEmailAction(
-				"email",
-				appointment.patient.email,
-				"Reminder: Appointment starts now",
-				appointmentUpcomingReminder(
-					appointment.doctor.name!,
-					appointment.patient.name,
-					formattedDate,
-					formattedTime,
-					"1 minute",
-					consultationUrl
-				),
-				Math.max(0, oneMinBefore.getTime() - Date.now())
-			),
-			sendEmailAction(
-				"email",
-				appointment.doctor.email!,
-				"Reminder: Upcoming Appointment In 10 Minutes",
-				doctorUpcomingAppointmentReminder(
-					appointment.doctor.name!,
-					appointment.patient.name,
-					formattedDate,
-					formattedTime,
-					"10 minutes",
-					consultationUrl
-				),
-				Math.max(0, tenMinsBefore.getTime() - Date.now())
-			),
-			sendEmailAction(
-				"email",
-				appointment.doctor.email!,
-				"Appointment starts: Please join your consultation",
-				doctorUpcomingAppointmentReminder(
-					appointment.doctor.name!,
-					appointment.patient.name,
-					formattedDate,
-					formattedTime,
-					"1 minute",
-					consultationUrl
-				),
-				Math.max(0, oneMinBefore.getTime() - Date.now())
-			),
-		]);
+		// Calculate minutes remaining until the appointment
+		const minutesUntilAppointment = differenceInMinutes(startTime, now);
 
-		await qstashClient.publishJSON({
-			url: "https://medcare-hub.vercel.app/api/jobs/appointment-reminder",
-			body: {
-				recipient: appointment.patient.email,
-				subject: "Your Appointment Is Starting Soon",
-				body: appointmentUpcomingReminder(
-					appointment.doctor.name!,
-					appointment.patient.name,
-					formattedDate,
-					formattedTime,
-					"1 minute",
-					consultationUrl
-				),
-				doctorName: appointment.doctor.name,
-				patientName: appointment.patient.name,
-				appointmentTime: formattedTime,
-				timeUntil: "1 minute",
-			},
-			delay: Math.max(0, oneMinBefore.getTime() - Date.now()),
-		});
+		// Case 1: Appointment has already started or is about to start (less than 2 minutes away)
+		if (minutesUntilAppointment <= 2) {
+			console.log(
+				"Appointment starts now or has already started - sending immediate notifications"
+			);
 
-		// Schedule 1-minute reminder for doctor
-		await qstashClient.publishJSON({
-			url: "https://medcare-hub.vercel.app/api/jobs/appointment-reminder",
-			body: {
-				recipient: appointment.doctor.email,
-				subject: "Your Appointment Is Starting Soon",
-				body: doctorUpcomingAppointmentReminder(
-					appointment.doctor.name!,
-					appointment.patient.name,
-					formattedDate,
-					formattedTime,
-					"1 minute",
-					consultationUrl
+			// Send immediate join notifications to both parties
+			await Promise.all([
+				sendEmailAction(
+					"email",
+					appointment.patient.email,
+					"Your Appointment Is Ready to Join Now",
+					generateImmediateStartEmail(
+						appointment.doctor.name!,
+						appointment.patient.name,
+						formattedDate,
+						formattedTime,
+						consultationUrl,
+						false
+					)
 				),
-				doctorName: appointment.doctor.name,
-				patientName: appointment.patient.name,
-				appointmentTime: formattedTime,
-				timeUntil: "1 minute",
-			},
-			delay: Math.max(0, oneMinBefore.getTime() - Date.now()),
-		});
+				sendEmailAction(
+					"email",
+					appointment.doctor.email!,
+					"Your Appointment Is Ready to Join Now",
+					generateImmediateStartEmail(
+						appointment.doctor.name!,
+						appointment.patient.name,
+						formattedDate,
+						formattedTime,
+						consultationUrl,
+						true
+					)
+				),
+			]);
 
-		console.log("Appointment reminders scheduled successfully");
-		return true;
+			// Return true and indicate that we've already sent emails
+			return { success: true, immediateStart: true };
+		}
+
+		// Case 2: Between 2 and 15 minutes until appointment
+		// Only schedule the 1-minute reminder
+		if (minutesUntilAppointment > 2 && minutesUntilAppointment < 15) {
+			console.log(
+				"Less than 15 minutes until appointment - scheduling only 1-minute reminders"
+			);
+
+			// Schedule 1-minute reminder for patient and doctor
+			const oneMinBefore = subMinutes(startTime, 1);
+
+			await Promise.all([
+				sendEmailAction(
+					"email",
+					appointment.patient.email,
+					"Reminder: Appointment Starting Soon",
+					appointmentUpcomingReminder(
+						appointment.doctor.name!,
+						appointment.patient.name,
+						formattedDate,
+						formattedTime,
+						"1 minute",
+						consultationUrl
+					),
+					Math.max(0, oneMinBefore.getTime() - Date.now())
+				),
+				sendEmailAction(
+					"email",
+					appointment.doctor.email!,
+					"Reminder: Appointment Starting Soon",
+					doctorUpcomingAppointmentReminder(
+						appointment.doctor.name!,
+						appointment.patient.name,
+						formattedDate,
+						formattedTime,
+						"1 minute",
+						consultationUrl
+					),
+					Math.max(0, oneMinBefore.getTime() - Date.now())
+				),
+			]);
+
+			return { success: true, immediateStart: false };
+		}
+
+		// Case 3: More than 15 minutes until appointment
+		// Schedule both 10-minute and 1-minute reminders
+		if (minutesUntilAppointment >= 15) {
+			console.log(
+				"More than 15 minutes until appointment - scheduling both reminders"
+			);
+
+			const tenMinsBefore = subMinutes(startTime, 10);
+			const oneMinBefore = subMinutes(startTime, 1);
+
+			await Promise.all([
+				// 10-minute reminder for patient
+				sendEmailAction(
+					"email",
+					appointment.patient.email,
+					"Reminder: Upcoming Appointment In 10 Minutes",
+					appointmentUpcomingReminder(
+						appointment.doctor.name!,
+						appointment.patient.name,
+						formattedDate,
+						formattedTime,
+						"10 minutes",
+						consultationUrl
+					),
+					Math.max(0, tenMinsBefore.getTime() - Date.now())
+				),
+				// 1-minute reminder for patient
+				sendEmailAction(
+					"email",
+					appointment.patient.email,
+					"Reminder: Appointment Starting Soon",
+					appointmentUpcomingReminder(
+						appointment.doctor.name!,
+						appointment.patient.name,
+						formattedDate,
+						formattedTime,
+						"1 minute",
+						consultationUrl
+					),
+					Math.max(0, oneMinBefore.getTime() - Date.now())
+				),
+				// 10-minute reminder for doctor
+				sendEmailAction(
+					"email",
+					appointment.doctor.email!,
+					"Reminder: Upcoming Appointment In 10 Minutes",
+					doctorUpcomingAppointmentReminder(
+						appointment.doctor.name!,
+						appointment.patient.name,
+						formattedDate,
+						formattedTime,
+						"10 minutes",
+						consultationUrl
+					),
+					Math.max(0, tenMinsBefore.getTime() - Date.now())
+				),
+				// 1-minute reminder for doctor
+				sendEmailAction(
+					"email",
+					appointment.doctor.email!,
+					"Reminder: Appointment Starting Soon",
+					doctorUpcomingAppointmentReminder(
+						appointment.doctor.name!,
+						appointment.patient.name,
+						formattedDate,
+						formattedTime,
+						"1 minute",
+						consultationUrl
+					),
+					Math.max(0, oneMinBefore.getTime() - Date.now())
+				),
+			]);
+
+			return { success: true, immediateStart: false };
+		}
+
+		console.log("Appointment reminders scheduled based on time conditions");
+		return { success: true, immediateStart: false };
 	} catch (error) {
 		console.error("Error scheduling appointment reminders:", error);
-		return false;
+		return { success: false, immediateStart: false };
 	}
 }
 
@@ -183,28 +242,33 @@ export async function POST(req: Request): Promise<NextResponse> {
 		if ("data" in updateappointment) {
 			const appointment = updateappointment?.data;
 
-			// Send confirmation emails
-			await sendEmailAction(
-				"email",
-				event?.data?.metadata?.patient_email,
-				"Appointment Confirmation",
-				appointmentConfirmPatient(appointment)
-			);
+			// Schedule appointment reminders based on time conditions
+			const reminderResult = await scheduleAppointmentReminders(appointment);
 
-			await sendEmailAction(
-				"email",
-				event?.data?.metadata?.doctor_email,
-				"Appointment Confirmation",
-				doctorAppointmentEmail(
-					appointment?.doctor?.name,
-					appointment?.patient?.name,
-					moment(appointment?.date).format("dddd, MMMM Do YYYY"),
-					moment(appointment?.date).format("hh:mm A")
-				)
-			);
-
-			// Schedule appointment reminders
-			await scheduleAppointmentReminders(appointment);
+			// Only send confirmation emails if the appointment isn't starting immediately
+			// to avoid sending too many emails at once
+			if (!reminderResult.immediateStart) {
+				// Send confirmation emails
+				await Promise.all([
+					sendEmailAction(
+						"email",
+						event?.data?.metadata?.patient_email,
+						"Appointment Confirmation",
+						appointmentConfirmPatient(appointment)
+					),
+					sendEmailAction(
+						"email",
+						event?.data?.metadata?.doctor_email,
+						"Appointment Confirmation",
+						doctorAppointmentEmail(
+							appointment?.doctor?.name,
+							appointment?.patient?.name,
+							moment(appointment?.date).format("dddd, MMMM Do YYYY"),
+							moment(appointment?.date).format("hh:mm A")
+						)
+					),
+				]);
+			}
 
 			return NextResponse.json(
 				{

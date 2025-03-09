@@ -62,7 +62,7 @@ const CompletedAppointment = async ({ session }: { session: Session }) => {
 		<div className='space-y-8 mt-8'>
 			{appointments.map((appointment, index) => (
 				<div
-					className='flex flex-col border-1 border-primary sm:flex-row items-stretch sm:items-center border rounded-lg shadow-sm hover:shadow-md transition-all duration-200 ease-in-out'
+					className='flex flex-col border-1 border-primary/20 sm:flex-row items-stretch sm:items-center border rounded-lg shadow-sm hover:shadow-md transition-all duration-200 ease-in-out'
 					key={appointment?.id}
 				>
 					<div className='text-center p-4 sm:p-6 border-b sm:border-b-0 sm:border-r w-full sm:w-24'>
@@ -147,7 +147,6 @@ const CompletedAppointment = async ({ session }: { session: Session }) => {
 									<CheckCheckIcon className='w-4 h-4 mr-2' />
 									<span>Schedule a follow up</span>
 								</DropdownMenuItem>
-								<DropdownMenuSeparator />
 								<DropdownMenuItem>
 									<Flag className='mr-2 h-4 w-4' />
 									<span>Make a complaint</span>
