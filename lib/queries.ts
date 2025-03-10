@@ -47,13 +47,13 @@ export const fetchDoctorCardData = async (
 		queryterm,
 		showall
 	);
-
 	// Count the total number of doctors after applying search and filters
 	const countPipeline = [...searchPipeline];
 	const countResult = await User.aggregate([
 		...countPipeline,
 		{ $count: "total" },
 	]);
+
 
 	const totalDoctors = countResult.length > 0 ? countResult[0].total : 0;
 
@@ -162,7 +162,7 @@ export const fetchDoctorData = async (id: string): Promise<ReturnType> => {
 	}
 };
 
-export const fetchUserAppointments = reactcache(
+export const fetchUserAppointments = 
 	async (id: string, queryOptions: QueryOptions) => {
 		try {
 			const authsession = await auth();
@@ -174,9 +174,17 @@ export const fetchUserAppointments = reactcache(
 				$or: [{ "doctor.doctorId": id }, { "patient.patientId": id }],
 			};
 			const filter = { ...defaultFilter, ...queryOptions.filter };
+
+			// Get total count for pagination using the same filter
+			const count = await Appointment.countDocuments(filter);
+
+			// Create query and apply options before executing
 			let query = Appointment.find();
 			query = applyQueryOptions(query, { ...queryOptions, filter });
+
+			// Execute query after all options are applied
 			const appointments = await query.exec();
+
 			const plainAppointments = appointments?.map((doc) => ({
 				id: doc.id.toString(),
 				doctor: {
@@ -192,13 +200,13 @@ export const fetchUserAppointments = reactcache(
 				...doc.toObject(),
 			})) as AppointmentType[];
 
-			return plainAppointments;
+			return { appointments: plainAppointments, count };
 		} catch (error) {
 			console.error("Error fetching appointments", error);
 			throw new Error("Error fetching appointments");
 		}
 	}
-);
+
 
 export const findTimeSlotBySlotId = async (slotId: string) => {
 	try {

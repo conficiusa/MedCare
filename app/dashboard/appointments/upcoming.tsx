@@ -1,3 +1,4 @@
+import { PaginationUi } from "@/components/blocks/paginationUi";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,11 +26,20 @@ import moment from "moment";
 import { Session } from "next-auth";
 import Link from "next/link";
 
-const UpcomingAppointment = async ({ session }: { session: Session }) => {
+const UpcomingAppointment = async ({
+	session,
+	searchParams,
+}: {
+	session: Session;
+	searchParams: {
+		page: string;
+	};
+}) => {
 	const startOfToday = new Date();
 	startOfToday.setHours(0, 0, 0, 0);
 	const currentTime = new Date();
-
+	const currentPage = Number(searchParams?.page) || 1;
+	const ITEMS_PER_PAGE = 5;
 	const startOfTomorrow = new Date(startOfToday);
 	startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
 
@@ -48,13 +58,17 @@ const UpcomingAppointment = async ({ session }: { session: Session }) => {
 				],
 			},
 		},
+		limit: ITEMS_PER_PAGE,
+		page: currentPage,
 		sort: { "timeSlot.startTime": 1 as 1 | -1 },
 	};
 
-	const appointments = await fetchUserAppointments(
+	const { appointments, count } = await fetchUserAppointments(
 		session?.user?.id ?? "",
 		queryOptions
 	);
+	const totalPages = Math.ceil(count / ITEMS_PER_PAGE);
+
 	if (!appointments) {
 		return [];
 	}
@@ -207,6 +221,7 @@ const UpcomingAppointment = async ({ session }: { session: Session }) => {
 					</div>
 				</div>
 			))}
+			{totalPages > 1 && <PaginationUi totalPages={totalPages} />}
 		</div>
 	);
 };

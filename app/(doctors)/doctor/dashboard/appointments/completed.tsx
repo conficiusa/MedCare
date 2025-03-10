@@ -1,3 +1,4 @@
+import { PaginationUi } from "@/components/blocks/paginationUi";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,8 +17,6 @@ import {
 	MapPin,
 	X,
 	CheckCheckIcon,
-	TimerReset,
-	UploadCloud,
 	HandHelping,
 	Flag,
 	CheckCircle2,
@@ -26,11 +25,20 @@ import moment from "moment";
 import { Session } from "next-auth";
 import Link from "next/link";
 
-const CompletedAppointment = async ({ session }: { session: Session }) => {
+const CompletedAppointment = async ({
+	session,
+	searchParams,
+}: {
+	session: Session;
+	searchParams: {
+		page: string;
+	};
+}) => {
 	const startOfToday = new Date();
 	startOfToday.setHours(0, 0, 0, 0);
 	const currentTime = new Date();
-
+	const currentPage = Number(searchParams?.page) || 1;
+	const ITEMS_PER_PAGE = 5;
 	const startOfTomorrow = new Date(startOfToday);
 	startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
 
@@ -39,13 +47,16 @@ const CompletedAppointment = async ({ session }: { session: Session }) => {
 			paid: true,
 			status: "completed",
 		},
+		limit: ITEMS_PER_PAGE,
 		sort: { "timeSlot.startTime": 1 as 1 | -1 },
+		page: currentPage,
 	};
 
-	const appointments = await fetchUserAppointments(
+	const { appointments, count } = await fetchUserAppointments(
 		session?.user?.id ?? "",
 		queryOptions
 	);
+	const totalPages = Math.ceil(count / ITEMS_PER_PAGE);
 	if (!appointments) {
 		return [];
 	}
@@ -53,14 +64,14 @@ const CompletedAppointment = async ({ session }: { session: Session }) => {
 	if (appointments.length === 0) {
 		return (
 			<div className='h-44 mt-6 w-full border border-dashed rounded-lg flex justify-center items-center'>
-				<h1 className='text-sm'>You have no pending appointments today</h1>
+				<h1 className='text-sm'>You have no completed appointments today</h1>
 			</div>
 		);
 	}
 
 	return (
 		<div className='space-y-8 mt-8'>
-			{appointments.map((appointment, index) => (
+			{appointments?.map((appointment, index) => (
 				<div
 					className='flex flex-col border-1 border-primary/20 sm:flex-row items-stretch sm:items-center border rounded-lg shadow-sm hover:shadow-md transition-all duration-200 ease-in-out'
 					key={appointment?.id}
@@ -92,7 +103,8 @@ const CompletedAppointment = async ({ session }: { session: Session }) => {
 						<div className='flex-1 w-full'>
 							<div className='font-medium text-sm mb-1'>
 								{appointment?.mode} consultation with{" "}
-								{appointment?.patient?.name} at {moment(appointment.timeSlot?.startTime).format("h:mm A")}
+								{appointment?.patient?.name} at{" "}
+								{moment(appointment.timeSlot?.startTime).format("h:mm A")}
 							</div>
 							<div className='flex -space-x-1'>
 								<Avatar className='border-2  h-8 w-8 transition-transform hover:scale-110'>
@@ -186,6 +198,7 @@ const CompletedAppointment = async ({ session }: { session: Session }) => {
 					</div>
 				</div>
 			))}
+			{totalPages > 1 && <PaginationUi totalPages={totalPages} />}
 		</div>
 	);
 };

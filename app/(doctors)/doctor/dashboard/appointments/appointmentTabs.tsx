@@ -14,7 +14,13 @@ const tabs = [
 	{ value: "cancelled", label: "Cancelled" },
 ];
 
-const AppointmentTabs = ({ session }: { session: Session }) => {
+const AppointmentTabs = ({
+	session,
+	searchParams,
+}: {
+	session: Session;
+	searchParams: { page: string };
+}) => {
 	return (
 		<Tabs defaultValue='upcoming' className='w-full'>
 			<div className='overflow-x-auto relative'>
@@ -37,17 +43,17 @@ const AppointmentTabs = ({ session }: { session: Session }) => {
 			</div>
 			<TabsContent value='upcoming'>
 				<Suspense fallback={<AppointmentsSkeleton />}>
-					<UpcomingAppointment session={session} />
+					<UpcomingAppointment session={session}searchParams={searchParams} />
 				</Suspense>
 			</TabsContent>
 			<TabsContent value='pending'>
 				<Suspense fallback={<AppointmentsSkeleton />}>
-					<PendingAppointment session={session} />
+					<PendingAppointment session={session} searchParams={searchParams}/>
 				</Suspense>
 			</TabsContent>
 			<TabsContent value='completed'>
 				<Suspense fallback={<AppointmentsSkeleton />}>
-					<CompletedAppointment session={session} />
+					<CompletedAppointment session={session} searchParams={searchParams} />
 				</Suspense>
 			</TabsContent>
 		</Tabs>
