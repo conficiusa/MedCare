@@ -71,6 +71,13 @@ export interface IPatientInfo extends Document {
 	medicalHistory?: string;
 }
 
+interface AppointmentLogs {
+	action: string;
+	userId: ObjectId;
+	createdAt: Date;
+	role: "doctor" | "patient";
+}
+
 export interface IAppointment extends Document {
 	doctor: {
 		doctorId: ObjectId;
@@ -102,6 +109,7 @@ export interface IAppointment extends Document {
 		sid: string;
 		maxParticipants: number;
 	};
+	logs: AppointmentLogs[];
 }
 
 // Patient profile interface, extending the user
@@ -266,7 +274,7 @@ export interface Appointment {
 	status: "pending" | "completed" | "cancelled";
 	createdAt: Date;
 	updatedAt: Date;
-
+	logs: AppointmentLogs[];
 	mode: "online" | "in-person";
 	online_medium?: "video" | "audio" | "chat";
 	paid: boolean;

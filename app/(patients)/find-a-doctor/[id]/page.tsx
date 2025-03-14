@@ -8,7 +8,6 @@ import { Suspense } from "react";
 import { DoctorProfileAsideSkeleton } from "@/components/skeletons/doctorProfileSkeletons";
 import type { Metadata, ResolvingMetadata } from "next";
 import { Doctor } from "@/lib/definitions";
-import DoctorReviews from "@/components/blocks/reviews";
 import FetchReviews from "@/components/blocks/fetchReviews";
 
 interface Params {
@@ -29,7 +28,7 @@ export async function generateMetadata(
   // read route params
   const id = params.id;
   // fetch data
-  const data = await fetchDoctorData(params.id);
+  const data = await fetchDoctorData(id);
   if (data?.statusCode === 404) {
     notFound();
   }

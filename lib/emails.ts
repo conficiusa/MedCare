@@ -109,7 +109,7 @@ export const patientOnboardemail = (name: string) => {
     </div>
     <div class="footer">
       <p>If you have any questions, feel free to <a href="mailto:support@medcarehub.com">contact us</a>.</p>
-      <p>&copy; 2024 Medcare Hub. All rights reserved.</p>
+      <p>&copy; 2025 Medcare Hub. All rights reserved.</p>
     </div>
   </div>
 </body>
@@ -202,7 +202,7 @@ export const doctorAppointmentEmail = (
       <p>Thank you for being a valued partner in providing quality healthcare services.</p>
     </div>
     <div class="footer">
-      <p>MedCare Hub &copy; 2024</p>
+      <p>MedCare Hub &copy; 2025</p>
       <p><a href="https://medcare-hub.vercel.app/doctor/dashboard/appointments">Visit your dashboard</a> to view more details.</p>
     </div>
   </div>
@@ -311,7 +311,7 @@ export const appointmentUpcomingReminder = (
       <p>If you need to reschedule, please do so as soon as possible through the MedCare Hub platform.</p>
     </div>
     <div class="footer">
-      <p>MedCare Hub &copy; 2024</p>
+      <p>MedCare Hub &copy; 2025</p>
     </div>
   </div>
 </body>
@@ -418,7 +418,7 @@ export const doctorUpcomingAppointmentReminder = (
 			}
     </div>
     <div class="footer">
-      <p>MedCare Hub &copy; 2024</p>
+      <p>MedCare Hub &copy; 2025</p>
     </div>
   </div>
 </body>
@@ -431,6 +431,7 @@ export interface EmailTemplateParams {
 	reviewLink?: string;
 	reportIssueLink: string;
 	supportEmail: string;
+	isForDoctor?: boolean;
 }
 
 export function generateThankYouEmail(params: EmailTemplateParams): string {
@@ -708,9 +709,329 @@ export function generateImmediateStartEmail(
       <p>Please ensure your device, internet connection, and environment are prepared for a successful consultation.</p>
     </div>
     <div class="footer">
-      <p>MedCare Hub &copy; 2024</p>
+      <p>MedCare Hub &copy; 2025</p>
     </div>
   </div>
 </body>
 </html>`;
+}
+
+// Template for consultation completion confirmation request when meeting conditions weren't met
+export function generateConsultationConfirmationEmail(params: {
+	doctorName: string;
+	patientName: string;
+	reportIssueLink: string;
+	isForDoctor: boolean;
+}): string {
+	const { doctorName, isForDoctor, patientName, reportIssueLink } = params;
+	const recipient = isForDoctor ? `Dr. ${doctorName}` : patientName;
+	const otherParty = isForDoctor ? patientName : `Dr. ${doctorName}`;
+	const salutation = isForDoctor ? `Dr. ${doctorName}` : patientName;
+
+	return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consultation Confirmation Request</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      background-color: #FFA500;
+      color: #ffffff;
+      padding: 20px;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .content {
+      padding: 20px;
+    }
+    .content p {
+      margin: 0 0 15px;
+    }
+    .content .details {
+      background-color: #f4f7f6;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #4CAF50;
+      color: #ffffff !important;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      margin: 15px 0;
+      text-align: center;
+    }
+    .report-btn {
+      background-color: #FF9800;
+    }
+    .footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      background-color: #f9f9f9;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header">
+      <h1>Consultation Completion Confirmation</h1>
+    </div>
+    <div class="content">
+      <p>Dear ${salutation},</p>
+      <p>We noticed your consultation with ${otherParty} may not have been completed properly. Our system shows that the required conditions for automatic completion were not met.</p>
+      <div class="details">
+        <p>For a consultation to be automatically marked as complete, both the doctor and patient must be present in the video call for at least 5 minutes.</p>
+      </div>
+      <p>Please reply to this email to confirm if the consultation was completed successfully. Your confirmation will help us maintain accurate records and ensure proper service delivery.</p>
+      <p>If you experienced any technical issues during the consultation, please let us know so we can improve our service.</p>
+      <a href="${reportIssueLink}" class="btn report-btn">Report an Issue</a>
+      <p>Thank you for your cooperation.</p>
+    </div>
+    <div class="footer">
+      <p>MedCare Hub &copy; 2025</p>
+      <p>If you have any questions, please contact our support team.</p>
+    </div>
+  </div>
+</body>
+</html>`;
+}
+
+// Template for thank you email with review request after consultation is completed
+export function generateConsultationCompletedEmail(params: {
+	doctorName: string;
+	patientName: string;
+	reviewLink: string;
+	reportIssueLink: string;
+	isForDoctor: boolean;
+}): string {
+	const { doctorName, isForDoctor, patientName, reportIssueLink, reviewLink } =
+		params;
+	const recipient = isForDoctor ? `Dr. ${doctorName}` : patientName;
+
+	if (!isForDoctor) {
+		// Patient version with review request
+		return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consultation Completed</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      background-color: #4CAF50;
+      color: #ffffff;
+      padding: 20px;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .content {
+      padding: 20px;
+    }
+    .content p {
+      margin: 0 0 15px;
+    }
+    .content .details {
+      background-color: #f4f7f6;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #4CAF50;
+      color: #ffffff !important;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      margin: 15px 0;
+      text-align: center;
+    }
+    .report-btn {
+      background-color: #FF5722;
+      margin-left: 10px;
+    }
+    .footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      background-color: #f9f9f9;
+      color: #777;
+    }
+    .stars {
+      color: #FFD700;
+      font-size: 24px;
+      letter-spacing: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header">
+      <h1>Consultation Completed</h1>
+    </div>
+    <div class="content">
+      <p>Dear ${recipient},</p>
+      <p>Thank you for completing your consultation with Dr. ${doctorName}. We hope it was helpful and met your healthcare needs.</p>
+      <p>Your feedback is valuable to us and helps maintain high-quality healthcare services on our platform.</p>
+      <div class="details">
+        <p class="stars">★★★★★</p>
+        <p>Please take a moment to rate your experience and provide feedback:</p>
+      </div>
+      <center>
+        <a href="${reviewLink}" class="btn">Rate Your Experience</a>
+        <a href="${reportIssueLink}" class="btn report-btn">Report Issue</a>
+      </center>
+      <p>If you have any questions about your consultation or need further assistance, please don't hesitate to contact our support team.</p>
+    </div>
+    <div class="footer">
+      <p>MedCare Hub &copy; 2025</p>
+      <p>Thank you for choosing our platform for your healthcare needs.</p>
+    </div>
+  </div>
+</body>
+</html>`;
+	} else {
+		// Doctor version
+		return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consultation Completed</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      background-color: #4CAF50;
+      color: #ffffff;
+      padding: 20px;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .content {
+      padding: 20px;
+    }
+    .content p {
+      margin: 0 0 15px;
+    }
+    .content .details {
+      background-color: #f4f7f6;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #4CAF50;
+      color: #ffffff !important;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      margin: 15px 0;
+      text-align: center;
+    }
+    .report-btn {
+      background-color: #FF5722;
+    }
+    .footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      background-color: #f9f9f9;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header">
+      <h1>Consultation Report</h1>
+    </div>
+    <div class="content">
+      <p>Dear ${recipient},</p>
+      <p>Thank you for completing your consultation with ${patientName}. Your commitment to providing quality healthcare through our platform is greatly appreciated.</p>
+      <div class="details">
+        <p>The consultation has been marked as completed in our system. If you need to provide any follow-up information or prescriptions for the patient, please do so through our secure platform.</p>
+      </div>
+      <p>Remember that you can offer follow-up appointments at a discounted rate if needed.</p>
+      <center>
+        <a href="${reviewLink}" class="btn">View Consultation Records</a>
+        <a href="${reportIssueLink}" class="btn report-btn">Report Issue</a>
+      </center>
+      <p>Thank you for your continued partnership in providing excellent healthcare services.</p>
+    </div>
+    <div class="footer">
+      <p>MedCare Hub &copy; 2025</p>
+      <p>We value your expertise and dedication.</p>
+    </div>
+  </div>
+</body>
+</html>`;
+	}
 }
