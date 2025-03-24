@@ -1,6 +1,6 @@
 
 export const metadata = {
-	title: "Terms and Conditions | MedCare Hub",
+	title: "Terms and Conditions",
 	description:
 		"Terms and conditions for using MedCare Hub's telemedicine services",
 };
@@ -26,7 +26,7 @@ export default function TermsAndConditions() {
 			<div className='prose prose-slate dark:prose-invert max-w-none'>
 				<div className='bg-card p-8 rounded-lg shadow-sm border mb-8'>
 					<h2 className='text-2xl font-semibold text-primary mb-4 flex items-center'>
-						<span className='inline-block w-8 h-8 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-sm'>
+						<span className=' w-8 h-8 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-sm'>
 							1
 						</span>
 						Acceptance of Terms
@@ -40,7 +40,7 @@ export default function TermsAndConditions() {
 
 				<div className='bg-card p-8 rounded-lg shadow-sm border mb-8'>
 					<h2 className='text-2xl font-semibold text-primary mb-4 flex items-center'>
-						<span className='inline-block w-8 h-8 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-sm'>
+						<span className=' w-8 h-8 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-sm'>
 							2
 						</span>
 						Service Description
@@ -55,14 +55,14 @@ export default function TermsAndConditions() {
 
 				<div className='bg-card p-8 rounded-lg shadow-sm border mb-8'>
 					<h2 className='text-2xl font-semibold text-primary mb-4 flex items-center'>
-						<span className='inline-block w-8 h-8 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-sm'>
+						<span className=' w-8 h-8 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-sm'>
 							3
 						</span>
 						User Responsibilities
 					</h2>
 					<ul className='list-none pl-0 mb-4 space-y-3'>
 						<li className='flex items-start'>
-							<span className='inline-block w-5 h-5 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-xs mt-1'>
+							<span className=' w-5 h-5 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-xs mt-1'>
 								✓
 							</span>
 							<span className='text-muted-foreground'>
@@ -71,7 +71,7 @@ export default function TermsAndConditions() {
 							</span>
 						</li>
 						<li className='flex items-start'>
-							<span className='inline-block w-5 h-5 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-xs mt-1'>
+							<span className=' w-5 h-5 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-xs mt-1'>
 								✓
 							</span>
 							<span className='text-muted-foreground'>
@@ -79,7 +79,7 @@ export default function TermsAndConditions() {
 							</span>
 						</li>
 						<li className='flex items-start'>
-							<span className='inline-block w-5 h-5 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-xs mt-1'>
+							<span className=' w-5 h-5 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-xs mt-1'>
 								✓
 							</span>
 							<span className='text-muted-foreground'>
@@ -87,7 +87,7 @@ export default function TermsAndConditions() {
 							</span>
 						</li>
 						<li className='flex items-start'>
-							<span className='inline-block w-5 h-5 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-xs mt-1'>
+							<span className=' w-5 h-5 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-xs mt-1'>
 								✓
 							</span>
 							<span className='text-muted-foreground'>
@@ -99,7 +99,7 @@ export default function TermsAndConditions() {
 
 				<div className='bg-card p-8 rounded-lg shadow-sm border mb-8'>
 					<h2 className='text-2xl font-semibold text-primary mb-4 flex items-center'>
-						<span className='inline-block w-8 h-8 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-sm'>
+						<span className=' w-8 h-8 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-sm'>
 							4
 						</span>
 						Medical Disclaimer
@@ -113,7 +113,7 @@ export default function TermsAndConditions() {
 
 				<div className='bg-card p-8 rounded-lg shadow-sm border mb-8'>
 					<h2 className='text-2xl font-semibold text-primary mb-4 flex items-center'>
-						<span className='inline-block w-8 h-8 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-sm'>
+						<span className=' w-8 h-8 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-sm'>
 							5
 						</span>
 						Payment Terms
@@ -127,7 +127,7 @@ export default function TermsAndConditions() {
 
 				<div className='bg-card p-8 rounded-lg shadow-sm border mb-8'>
 					<h2 className='text-2xl font-semibold text-primary mb-4 flex items-center'>
-						<span className='inline-block w-8 h-8 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-sm'>
+						<span className=' w-8 h-8 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-sm'>
 							6
 						</span>
 						Privacy
@@ -141,7 +141,7 @@ export default function TermsAndConditions() {
 
 				<div className='bg-card p-8 rounded-lg shadow-sm border mb-8'>
 					<h2 className='text-2xl font-semibold text-primary mb-4 flex items-center'>
-						<span className='inline-block w-8 h-8 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-sm'>
+						<span className=' w-8 h-8 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-sm'>
 							7
 						</span>
 						Termination
@@ -154,7 +154,7 @@ export default function TermsAndConditions() {
 
 				<div className='bg-card p-8 rounded-lg shadow-sm border mb-8'>
 					<h2 className='text-2xl font-semibold text-primary mb-4 flex items-center'>
-						<span className='inline-block w-8 h-8 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-sm'>
+						<span className=' w-8 h-8 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-sm'>
 							8
 						</span>
 						Changes to Terms
@@ -167,7 +167,7 @@ export default function TermsAndConditions() {
 
 				<div className='bg-card p-8 rounded-lg shadow-sm border mb-8'>
 					<h2 className='text-2xl font-semibold text-primary mb-4 flex items-center'>
-						<span className='inline-block w-8 h-8 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-sm'>
+						<span className=' w-8 h-8 bg-primary/10 text-primary rounded-full mr-3 flex items-center justify-center text-sm'>
 							9
 						</span>
 						Contact Information

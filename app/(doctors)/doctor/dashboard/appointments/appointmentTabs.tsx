@@ -56,6 +56,11 @@ const AppointmentTabs = ({
 					<CompletedAppointment session={session} searchParams={searchParams} />
 				</Suspense>
 			</TabsContent>
+			<TabsContent value='cancelled'>
+				<Suspense fallback={<AppointmentsSkeleton />}>
+					<CompletedAppointment session={session} searchParams={searchParams} />
+				</Suspense>
+			</TabsContent>
 		</Tabs>
 	);
 };

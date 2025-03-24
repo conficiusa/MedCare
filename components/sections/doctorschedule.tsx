@@ -92,8 +92,8 @@ export default function Schedule({
 
 	return (
 		<div className='container'>
-			<h3 className='text-xl font-semibold mb-3'>Schedule Management</h3>
-			<p className='font-normal text-lg my-5'>Open a slot</p>
+			<h3 className='text-xl md:text-3xl font-bold mb-3'>Schedule Management</h3>
+			<p className='font-semibold text-lg mb-2'>Open a slot</p>
 			<div
 				className={cn(
 					"grid grid-cols-1 gap-6",
@@ -102,7 +102,7 @@ export default function Schedule({
 				)}
 			>
 				<div className='w-full'>
-					<p className='uppercase text-xs text-muted-foreground px-2 mb-4'>
+					<p className='uppercase text-xs text-muted-foreground mb-1'>
 						Select Date
 					</p>
 					<div>

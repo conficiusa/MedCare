@@ -20,7 +20,7 @@ const ButtonList = ({ specializations }: { specializations: Option[] }) => {
   };
   return (
     <>
-      {specializations.map((item, index) => (
+      {specializations.slice(0, 18).map((item, index) => (
         <Button
           key={index}
           variant="default"

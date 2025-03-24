@@ -1,29 +1,42 @@
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
-const Logo = ({ className }: { className?: string }) => {
-  return (
-    <svg
-      className={cn("w-8 h-8", className)}
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 4h16v16H4V4z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M9 9h6v6H9V9z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
+type LogoProps = {
+	// Define the size prop with default value
+	size?: "small" | "medium" | "large";
+	// Define the className prop
+	className?: string;
+} & React.ComponentPropsWithoutRef<"div">;
+
+const Logo = ({
+	className,
+	size = "medium",
+	...props
+}: {
+	className?: string;
+	size?: "small" | "medium" | "large";
+}) => {
+	// Define fixed dimensions based on size prop
+	const dimensions = {
+		small: { width: 24, height: 24 },
+		medium: { width: 62, height:62 },
+		large: { width: 100, height: 100 },
+	};
+
+	const { width, height } = dimensions[size];
+
+	return (
+		<div style={{ width }} className='relative flex-shrink-0' {...props}>
+			<Image
+				src={"/logo1.png"}
+				alt='logo'
+				width={width}
+				height={height}
+				className={cn("object-contain", className)}
+				priority={true}
+			/>
+		</div>
+	);
 };
 
 export default Logo;

@@ -65,7 +65,7 @@ const Hero = () => {
           </ul>
           <div className="w-full flex max-lg:justify-center">
             <Button className="mt-8 w-1/2 max-lg:mx-auto" size={"lg"} asChild>
-              <Link href={"/sign-in"}>Get Started</Link>
+              <Link href={"/sign-in"}>Get care now!</Link>
             </Button>
           </div>
         </div>

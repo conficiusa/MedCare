@@ -15,7 +15,7 @@ const Services = () => {
           />
         </div>
         <div className="space-y-4 py-8">
-          <h3 className="text-2xl font-light max-lg:text-center">
+          <h3 className="text-2xl font-bold max-lg:text-center">
             Our Services
           </h3>
           <ServiceCards />
