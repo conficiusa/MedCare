@@ -39,6 +39,7 @@ export function FeatureCard({
 				</Link>
 			</div>
 			<div className='relative h-[300px] w-full overflow-hidden rounded-2xl md:h-[350px]'>
+				<div className='absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,rgba(0,0,0,0.7)_100%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 rounded-lg'></div>
 				<Image
 					src={imageSrc}
 					alt={imageAlt}

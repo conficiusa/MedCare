@@ -2,58 +2,99 @@ export const buildDoctorAggregationPipeline = (
   filter: Record<string, any>,
   options: { sort?: Record<string, 1 | -1>; limit?: number; page?: number },
   searchQuery?: string,
-  showAll?: boolean // Add showAll parameter
+  showAll?: boolean,
+  useFuzzy = true // 👈 Allow switching between autocomplete and fuzzy
 ) => {
   const pipeline: any[] = [];
 
-  // Add $search stage if searchQuery exists
   if (searchQuery) {
     pipeline.push({
-      $search: {
-        index: "default", // Replace with your search index name
-        text: {
-          query: searchQuery,
-          path: [
-            "doctorInfo.specialities",
-            "doctorInfo.certifications",
-            "name",
-            "city",
-            "languages",
-          ], // Searches all fields, or specify fields like ['name', 'specialty']
-        },
-      },
+      $search: useFuzzy
+        ? {
+            index: "fuzzy", // Fuzzy Index
+            text: {
+              query: searchQuery,
+              path: [
+                "name",
+                "languages",
+                "doctorInfo.specialities",
+                "doctorInfo.certifications",
+              ],
+              fuzzy: {
+                maxEdits: 2,
+                prefixLength: 1,
+              },
+            },
+          }
+        : {
+            index: "default", // Autocomplete Index
+            compound: {
+              should: [
+                {
+                  autocomplete: {
+                    query: searchQuery,
+                    path: "name",
+                  },
+                },
+                {
+                  autocomplete: {
+                    query: searchQuery,
+                    path: "languages",
+                  },
+                },
+                {
+                  autocomplete: {
+                    query: searchQuery,
+                    path: "doctorInfo.specialities",
+                  },
+                },
+                {
+                  autocomplete: {
+                    query: searchQuery,
+                    path: "doctorInfo.certifications",
+                  },
+                },
+              ],
+              minimumShouldMatch: 1,
+            },
+          },
     });
   }
 
-  // Always apply the basic filter
+  // Apply filter
   pipeline.push({ $match: filter });
 
-  // Lookup and unwind availabilities
+  // Lookup availabilities
   pipeline.push(
     {
       $lookup: {
-        from: "availabilities", // Collection name for availabilities
+        from: "availabilities",
         localField: "_id",
         foreignField: "doctorId",
         as: "availability",
       },
     },
-    { $unwind: { path: "$availability", preserveNullAndEmptyArrays: true } } // Preserve doctors without availabilities
+    {
+      $unwind: {
+        path: "$availability",
+        preserveNullAndEmptyArrays: true,
+      },
+    }
   );
 
-  // Conditionally filter doctors based on availability if showAll is false
+  // Availability filter
   if (!showAll) {
     pipeline.push({
       $match: {
         $or: [
-          { "availability.date": { $gte: new Date() } }, // Future dates
-          { "availability.timeSlots": { $exists: true, $ne: [] } }, // Non-empty time slots
+          { "availability.date": { $gte: new Date() } },
+          { "availability.timeSlots": { $exists: true, $ne: [] } },
         ],
       },
     });
   }
 
-  // Group the results
+  // Grouping
   pipeline.push({
     $group: {
       _id: "$_id",
@@ -64,7 +105,7 @@ export const buildDoctorAggregationPipeline = (
     },
   });
 
-  // Project the desired fields
+  // Projection
   pipeline.push({
     $project: {
       name: 1,
@@ -74,14 +115,10 @@ export const buildDoctorAggregationPipeline = (
     },
   });
 
-  // Apply sorting if provided
+  // Sorting
   if (options.sort) {
     pipeline.push({ $sort: options.sort });
   }
-
-  // Don't apply pagination in this function anymore
-  // Pagination will be applied separately in the query function
-  // This allows us to get the total count first
 
   return pipeline;
 };

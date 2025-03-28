@@ -65,7 +65,7 @@ const CancelledAppointment = async ({
 	if (appointments.length === 0) {
 		return (
 			<div className='h-44 mt-6 w-full border border-dashed rounded-lg flex justify-center items-center'>
-				<h1 className='text-sm'>You have no pending appointments today</h1>
+				<h1 className='text-sm'>No cancelled appointments found</h1>
 			</div>
 		);
 	}
@@ -73,8 +73,7 @@ const CancelledAppointment = async ({
 	return (
 		<div className='space-y-8 mt-8'>
 			<p className='text-xs text-pretty text-muted-foreground'>
-				You&apos;ve completed these sessions. if these appointments were wrongly
-				marked as completed, please make a complaint lets rectify the issue
+				The appointments were either cancelled by you or the patient.
 			</p>
 			{appointments.map((appointment, index) => (
 				<div

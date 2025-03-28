@@ -17,8 +17,10 @@ export default function NotFound({
 			)}
 		>
 			{!search && <Frown className='w-10 text-muted-foreground' />}
-			<h2 className='text-xl font-semibold'>No Doctors Available </h2>
-			<p className='text-xs text-muted-foreground '>
+			{!search && (
+				<h2 className='text-xl font-semibold'>No Doctors Available </h2>
+			)}
+			<p className='text-sm text-muted-foreground '>
 				{search
 					? `No doctors found for "${search}"`
 					: "No doctors available for consultations at the moment, Come back later."}

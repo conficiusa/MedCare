@@ -25,95 +25,338 @@ export const appointmentConfirmPatient = (appointment: Appointment) => {
       `;
 };
 export const patientOnboardemail = (name: string) => {
-	return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      background-color: #ffffff;
-      margin: 20px auto;
-      padding: 20px;
-      max-width: 600px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-    .header {
-      text-align: center;
-      padding: 20px 0;
-    }
-    .logo {
-      width: 48px;
-      height: 48px;
-      margin-bottom: 10px;
-      color: #22c55e; /* Tailwind green-500 */
-    }
-    .header h1 {
-      color: #22c55e; /* Tailwind green-500 */
-      font-size: 24px;
-      margin: 0;
-    }
-    .content {
-      padding: 20px;
-      color: #555555;
-      line-height: 1.6;
-    }
-    .button {
-      display: inline-block;
-      padding: 12px 24px;
-      background-color: #22c55e; /* Tailwind green-500 */
-      color: #ffffff;
-      text-decoration: none;
-      border-radius: 4px;
-      margin-top: 20px;
-    }
-    .footer {
-      text-align: center;
-      color: #777777;
-      font-size: 12px;
-      padding: 20px 0;
-    }
-    .footer a {
-      color: #22c55e; /* Tailwind green-500 */
-      text-decoration: none;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <svg class="logo" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4 4h16v16H4V4z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        <path d="M9 9h6v6H9V9z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
-      <h1>Welcome to Medcare Hub!</h1>
+	return `
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html dir="ltr" lang="en">
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <meta name="x-apple-disable-message-reformatting" />
+  </head>
+  <body
+    style='background-color:rgb(245,249,247);font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'>
+    <!--$-->
+    <div
+      style="display:none;overflow:hidden;line-height:1px;opacity:0;max-height:0;max-width:0">
+      Welcome to MedCare Hub - Your Virtual Healthcare Partner
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
     </div>
-    <div class="content">
-      <p>Dear ${name},</p>
-      <p>Congratulations on completing your onboarding process! We're excited to have you as part of the Medcare Hub community. Our platform is designed to connect you with top medical professionals and provide you with convenient, high-quality care at your fingertips.</p>
-      <p>Here's what you can do next:</p>
-      <ul>
-        <li>Explore available doctors and schedule appointments easily.</li>
-        <li>Access your health records securely anytime, anywhere.</li>
-        <li>Receive personalized health recommendations and follow-ups.</li>
-      </ul>
-      <p>We're here to support you on your healthcare journey.</p>
-      <a href="medcare-hub.vercel.app" class="button">Visit Medcare Hub</a>
-    </div>
-    <div class="footer">
-      <p>If you have any questions, feel free to <a href="mailto:support@medcarehub.com">contact us</a>.</p>
-      <p>&copy; 2025 Medcare Hub. All rights reserved.</p>
-    </div>
-  </div>
-</body>
+    <table
+      align="center"
+      width="100%"
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      role="presentation"
+      style="margin-left:auto;margin-right:auto;padding-top:40px;padding-bottom:40px;padding-left:16px;padding-right:16px;max-width:600px">
+      <tbody>
+        <tr style="width:100%">
+          <td>
+            <table
+              align="center"
+              width="100%"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation"
+              style="text-align:center;margin-bottom:32px">
+              <tbody>
+                <tr>
+                  <td>
+                    <h1
+                      style="font-size:28px;font-weight:700;color:rgb(15,118,110);margin:0px">
+                      MedCare Hub
+                    </h1>
+                    <p
+                      style="font-size:16px;color:rgb(100,116,139);margin-top:4px;line-height:24px;margin-bottom:16px">
+                      Virtual Healthcare Solutions
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table
+              align="center"
+              width="100%"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation"
+              style="background-color:rgb(255,255,255);border-radius:16px;padding:32px;box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), 0 8px 30px rgba(0,0,0,0.08);margin-bottom:24px">
+              <tbody>
+                <tr>
+                  <td>
+                    <h1
+                      style="font-size:24px;font-weight:700;color:rgb(30,41,59);margin-bottom:16px">
+                      Welcome to MedCare Hub!
+                    </h1>
+                    <p
+                      style="font-size:16px;color:rgb(71,85,105);margin-bottom:24px;line-height:24px;margin-top:16px">
+                      Dear ${name},
+                    </p>
+                    <p
+                      style="font-size:16px;color:rgb(71,85,105);margin-bottom:24px;line-height:24px;margin-top:16px">
+                      Thank you for choosing MedCare Hub as your telemedicine
+                      healthcare provider. We&#x27;re excited to have you join
+                      our community of patients who enjoy convenient,
+                      high-quality healthcare from the comfort of their homes.
+                    </p>
+                    <table
+                      align="center"
+                      width="100%"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation"
+                      style="background-color:rgb(240,253,250);padding:24px;border-radius:12px;margin-bottom:28px;border-left-width:4px;border-color:rgb(15,118,110);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), 0 4px 12px rgba(15,118,110,0.08)">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <p
+                              style="font-size:18px;font-weight:500;color:rgb(30,41,59);margin-bottom:16px;margin:0px;line-height:24px;margin-top:16px">
+                              Your Account is Ready
+                            </p>
+                            <p
+                              style="font-size:16px;color:rgb(71,85,105);margin-bottom:16px;line-height:24px;margin-top:16px">
+                              Your MedCare Hub patient account has been
+                              successfully created. You can now access our full
+                              range of telemedicine services.
+                            </p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <table
+                      align="center"
+                      width="100%"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation"
+                      style="text-align:center;margin-bottom:32px">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <a
+                              class="hover:bg-[#115e59]"
+                              href="https://medcarehub.com/patient-portal"
+                              style="background-color:rgb(15,118,110);color:rgb(255,255,255);font-weight:500;padding-top:14px;padding-bottom:14px;padding-left:32px;padding-right:32px;border-radius:8px;font-size:16px;text-decoration-line:none;text-align:center;box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), 0 4px 12px rgba(15,118,110,0.25);box-sizing:border-box;line-height:100%;text-decoration:none;display:inline-block;max-width:100%;mso-padding-alt:0px;padding:14px 32px 14px 32px"
+                              target="_blank"
+                              ><span
+                                ><!--[if mso]><i style="mso-font-width:400%;mso-text-raise:21" hidden>&#8202;&#8202;&#8202;&#8202;</i><![endif]--></span
+                              ><span
+                                style="max-width:100%;display:inline-block;line-height:120%;mso-padding-alt:0px;mso-text-raise:10.5px"
+                                >Access Your Patient Portal</span
+                              ><span
+                                ><!--[if mso]><i style="mso-font-width:400%" hidden>&#8202;&#8202;&#8202;&#8202;&#8203;</i><![endif]--></span
+                              ></a
+                            >
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <table
+                      align="center"
+                      width="100%"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation"
+                      style="margin-bottom:28px">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <p
+                              style="font-size:18px;font-weight:500;color:rgb(30,41,59);margin-bottom:16px;line-height:24px;margin-top:16px">
+                              What You Can Do Now:
+                            </p>
+                            <table
+                              align="center"
+                              width="100%"
+                              border="0"
+                              cellpadding="0"
+                              cellspacing="0"
+                              role="presentation"
+                              style="background-color:rgb(250,250,250);padding:24px;border-radius:12px;box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), 0 4px 12px rgba(0,0,0,0.03)">
+                              <tbody>
+                                <tr>
+                                  <td>
+                                    <p
+                                      style="font-size:16px;color:rgb(71,85,105);margin-bottom:12px;margin:0px;display:flex;line-height:24px;margin-top:16px">
+                                      <span
+                                        style="color:rgb(15,118,110);font-weight:700;margin-right:12px"
+                                        >✓</span
+                                      >Schedule telemedicine appointments with
+                                      our healthcare providers
+                                    </p>
+                                    <p
+                                      style="font-size:16px;color:rgb(71,85,105);margin-bottom:12px;margin:0px;display:flex;line-height:24px;margin-top:16px">
+                                      <span
+                                        style="color:rgb(15,118,110);font-weight:700;margin-right:12px"
+                                        >✓</span
+                                      >Access your medical records and test
+                                      results securely
+                                    </p>
+                                    <p
+                                      style="font-size:16px;color:rgb(71,85,105);margin-bottom:12px;margin:0px;display:flex;line-height:24px;margin-top:16px">
+                                      <span
+                                        style="color:rgb(15,118,110);font-weight:700;margin-right:12px"
+                                        >✓</span
+                                      >Request prescription refills and receive
+                                      digital prescriptions
+                                    </p>
+                                    <p
+                                      style="font-size:16px;color:rgb(71,85,105);margin-bottom:12px;margin:0px;display:flex;line-height:24px;margin-top:16px">
+                                      <span
+                                        style="color:rgb(15,118,110);font-weight:700;margin-right:12px"
+                                        >✓</span
+                                      >Message your healthcare team securely
+                                    </p>
+                                    <p
+                                      style="font-size:16px;color:rgb(71,85,105);margin:0px;display:flex;line-height:24px;margin-bottom:16px;margin-top:16px">
+                                      <span
+                                        style="color:rgb(15,118,110);font-weight:700;margin-right:12px"
+                                        >✓</span
+                                      >Pay bills and manage your healthcare
+                                      finances
+                                    </p>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <table
+                      align="center"
+                      width="100%"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation"
+                      style="margin-bottom:28px">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <p
+                              style="font-size:18px;font-weight:500;color:rgb(30,41,59);margin-bottom:16px;line-height:24px;margin-top:16px">
+                              Getting Started is Easy
+                            </p>
+                            <p
+                              style="font-size:16px;color:rgb(71,85,105);margin-bottom:12px;line-height:24px;margin-top:16px">
+                              1.
+                              <span style="font-weight:500"
+                                >Complete your health profile</span
+                              >
+                              - Update your medical history, allergies, and
+                              current medications if you haven&apos;t already to help our providers deliver
+                              better care.
+                            </p>
+                            <p
+                              style="font-size:16px;color:rgb(71,85,105);margin-bottom:12px;line-height:24px;margin-top:16px">
+                              2.
+                              <span style="font-weight:500"
+                                >Schedule your first appointment</span
+                              >
+                              - Book a consultation with one of our qualified
+                              healthcare providers.
+                            </p>
+                            <p
+                              style="font-size:16px;color:rgb(71,85,105);line-height:24px;margin-bottom:16px;margin-top:16px">
+                              3.
+                              <span style="font-weight:500"
+                                >Download our mobile app</span
+                              >
+                              - For even more convenient access to your
+                              healthcare on the go.
+                            </p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <p
+                      style="font-size:16px;color:rgb(71,85,105);margin-bottom:24px;line-height:24px;margin-top:16px">
+                      If you have any questions or need assistance, our support
+                      team is here to help. Contact us at
+                      <a
+                        href="mailto:support@medcarehub.com"
+                        style="color:rgb(15,118,110);text-decoration-line:none"
+                        target="_blank"
+                        >support@medcarehub.com</a
+                      >
+                      or call
+                      <span style="color:rgb(30,41,59);font-weight:500"
+                        >0249906015</span
+                      >.
+                    </p>
+                    <p
+                      style="font-size:16px;color:rgb(71,85,105);margin-bottom:16px;line-height:24px;margin-top:16px">
+                      We look forward to providing you with exceptional
+                      healthcare services.
+                    </p>
+                    <p
+                      style="font-size:16px;color:rgb(71,85,105);margin-bottom:8px;line-height:24px;margin-top:16px">
+                      Warm regards,
+                    </p>
+                    <p
+                      style="font-size:16px;font-weight:500;color:rgb(30,41,59);line-height:24px;margin-bottom:16px;margin-top:16px">
+                      The MedCare Hub Team
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table
+              align="center"
+              width="100%"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation"
+              style="text-align:center">
+              <tbody>
+                <tr>
+                  <td>
+                    <p
+                      style="font-size:14px;color:rgb(100,116,139);margin:0px;line-height:24px;margin-bottom:16px;margin-top:16px">
+                      ©
+                      <!-- -->2025<!-- -->
+                      MedCare Hub. All rights reserved.
+                    </p>
+                    <p
+                      style="font-size:14px;color:rgb(100,116,139);margin:0px;line-height:24px;margin-bottom:16px;margin-top:16px">
+                     TTH Road, Tamale, Ghana
+                    </p>
+                    <p
+                      style="font-size:14px;color:rgb(100,116,139);margin-bottom:8px;margin:0px;line-height:24px;margin-top:16px">
+                      <a
+                        href="https://medcarehub.com/privacy"
+                        style="color:rgb(100,116,139);text-decoration-line:underline"
+                        target="_blank"
+                        >Privacy Policy</a
+                      >
+                      •<a
+                        href="https://medcarehub.com/terms"
+                        style="color:rgb(100,116,139);text-decoration-line:underline"
+                        target="_blank"
+                        >Terms of Service</a
+                      >
+                    </p>
+                    
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!--7--><!--/$-->
+  </body>
 </html>
+
 `;
 };
 

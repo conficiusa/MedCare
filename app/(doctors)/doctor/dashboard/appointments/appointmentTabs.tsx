@@ -6,6 +6,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import AppointmentsSkeleton from "@/components/skeletons/appointments-skeleton";
 import PendingAppointment from "./pending";
 import CompletedAppointment from "./completed";
+import CancelledAppointment from "./cancelled";
 
 const tabs = [
 	{ value: "upcoming", label: "Upcoming Today" },
@@ -43,12 +44,12 @@ const AppointmentTabs = ({
 			</div>
 			<TabsContent value='upcoming'>
 				<Suspense fallback={<AppointmentsSkeleton />}>
-					<UpcomingAppointment session={session}searchParams={searchParams} />
+					<UpcomingAppointment session={session} searchParams={searchParams} />
 				</Suspense>
 			</TabsContent>
 			<TabsContent value='pending'>
 				<Suspense fallback={<AppointmentsSkeleton />}>
-					<PendingAppointment session={session} searchParams={searchParams}/>
+					<PendingAppointment session={session} searchParams={searchParams} />
 				</Suspense>
 			</TabsContent>
 			<TabsContent value='completed'>
@@ -58,7 +59,7 @@ const AppointmentTabs = ({
 			</TabsContent>
 			<TabsContent value='cancelled'>
 				<Suspense fallback={<AppointmentsSkeleton />}>
-					<CompletedAppointment session={session} searchParams={searchParams} />
+					<CancelledAppointment session={session} searchParams={searchParams} />
 				</Suspense>
 			</TabsContent>
 		</Tabs>
