@@ -744,104 +744,329 @@ export function generateThankYouEmail(params: EmailTemplateParams): string {
   `;
 }
 
-export function bankUpdateEmail(token: string): string {
+export function bankUpdateEmail(token: string, name: string): string {
 	return `<!DOCTYPE html>
-<html lang="en">
+<html dir="ltr" lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
-    <title>Bank Details Update Verification</title>
-    <style type="text/css">
-      /* Some email clients strip out head styles, so critical styles should be inline. */
-      @media only screen and (max-width: 600px) {
-        .container {
-          width: 100% !important;
-        }
-        .mobile-padding {
-          padding-left: 20px !important;
-          padding-right: 20px !important;
-        }
-      }
-    </style>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <meta name="x-apple-disable-message-reformatting" />
   </head>
-  <body style="margin: 0; padding: 0; background-color: #f2f4f6; font-family: Arial, sans-serif;">
-    <!-- Wrapper Table -->
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr>
-        <td align="center" style="padding: 20px 0;">
-          <!-- Container Table -->
-          <table
-            class="container"
-            border="0"
-            cellpadding="0"
-            cellspacing="0"
-            width="600"
-            style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1); overflow: hidden;"
-          >
-            <!-- Header -->
-            <tr>
-              <td align="center" style="padding: 20px;">
-                <img
-                  src="https://medcare-hub.vercel.app/logo.png"
-                  alt="Medcare hub"
-                  width="150"
-                  style="display: block; max-width: 100%; height: auto;"
-                />
-              </td>
-            </tr>
-            <!-- Title Section -->
-            <tr>
-              <td class="mobile-padding" style="padding: 0 40px 20px 40px; text-align: center;">
-                <h1 style="margin: 0; font-size: 24px; color: #333333;">Bank Details Update Request</h1>
-              </td>
-            </tr>
-            <!-- Body Content -->
-            <tr>
-              <td class="mobile-padding" style="padding: 0 40px 20px 40px; color: #333333;">
-                <p style="font-size: 16px; line-height: 1.5; margin: 0 0 10px 0;">Hello,</p>
-                <p style="font-size: 16px; line-height: 1.5; margin: 0 0 10px 0;">
-                  We received a request to update your bank details on your Medcare Hub account.
-                  To ensure the security of your account, please use the verification token below.
-                </p>
-                <p style="font-size: 16px; line-height: 1.5; margin: 0 0 20px 0;">
-                  Enter the token in the designated field on our website to proceed.
-                </p>
-                <!-- Token Display -->
-                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 20px 0;">
-                  <tr>
-                    <td align="center">
-                      <span style="display: inline-block; padding: 12px 20px; font-size: 24px; letter-spacing: 2px; font-weight: bold; color: #d9534f; background-color: #f7f7f7; border: 2px dashed #cccccc; border-radius: 4px;">
-                        ${token}
-                      </span>
-                    </td>
-                  </tr>
-                </table>
-                <p style="font-size: 16px; line-height: 1.5; margin: 0 0 10px 0;">
-                  This token is valid for <strong>10 minutes</strong>.
-                </p>
-                <p style="font-size: 16px; line-height: 1.5; margin: 0 0 20px 0;">
-                  If you did not request this update, please disregard this email or contact our support team immediately.
-                </p>
-                <p style="font-size: 16px; line-height: 1.5; margin: 0;">Thank you,</p>
-                <p style="font-size: 16px; line-height: 1.5; margin: 0;">The Telemedicine Platform Team</p>
-              </td>
-            </tr>
-            <!-- Footer -->
-            <tr>
-              <td align="center" style="background-color: #f2f4f6; padding: 20px; font-size: 12px; color: #888888;">
-                <p style="margin: 0;">© 2025 Medcare Hub. All rights reserved.</p>
-                <p style="margin: 0;">1234 Example Street, Suite 100, City, Country</p>
-              </td>
-            </tr>
-          </table>
-          <!-- End Container Table -->
-        </td>
-      </tr>
+  <body
+    style='background-color:rgb(245,249,247);font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'>
+    <!--$-->
+    <div
+      style="display:none;overflow:hidden;line-height:1px;opacity:0;max-height:0;max-width:0">
+      Security Alert: Bank Details Update Request - Action Required
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <table
+      align="center"
+      width="100%"
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      role="presentation"
+      style="margin-left:auto;margin-right:auto;padding-top:40px;padding-bottom:40px;padding-left:16px;padding-right:16px;max-width:600px">
+      <tbody>
+        <tr style="width:100%">
+          <td>
+            <table
+              align="center"
+              width="100%"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation"
+              style="text-align:center;margin-bottom:32px">
+              <tbody>
+                <tr>
+                  <td>
+                    <h1
+                      style="font-size:28px;font-weight:700;color:rgb(15,118,110);margin:0px">
+                      MedCare Hub
+                    </h1>
+                    <p
+                      style="font-size:16px;color:rgb(100,116,139);margin-top:4px;line-height:24px;margin-bottom:16px">
+                      Provider Security Alert
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table
+              align="center"
+              width="100%"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation"
+              style="background-color:rgb(255,255,255);border-radius:16px;padding:32px;box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), 0 8px 30px rgba(0,0,0,0.08);margin-bottom:24px">
+              <tbody>
+                <tr>
+                  <td>
+                    <table
+                      align="center"
+                      width="100%"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation"
+                      style="background-color:rgb(255,251,235);padding:16px;border-radius:8px;border-left-width:4px;border-color:rgb(245,158,11);margin-bottom:24px">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <p
+                              style="font-size:16px;font-weight:500;color:rgb(146,64,14);margin:0px;line-height:24px;margin-bottom:16px;margin-top:16px">
+                              Security Alert: A request to update your bank
+                              details has been initiated
+                            </p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <h1
+                      style="font-size:22px;font-weight:700;color:rgb(30,41,59);margin-bottom:16px">
+                      Bank Details Update Verification
+                    </h1>
+                    <p
+                      style="font-size:16px;color:rgb(71,85,105);margin-bottom:24px;line-height:24px;margin-top:16px">
+                      Dear Dr. ${name},
+                    </p>
+                    <p
+                      style="font-size:16px;color:rgb(71,85,105);margin-bottom:24px;line-height:24px;margin-top:16px">
+                      We have received a request to update the bank account
+                      details associated with your MedCare Hub provider account.
+                      To ensure the security of your financial information, we
+                      require additional verification.
+                    </p>
+                    <p
+                      style="font-size:16px;color:rgb(71,85,105);margin-bottom:24px;line-height:24px;margin-top:16px">
+                      <strong>If you did not initiate this request</strong>,
+                      please contact our Provider Support team immediately at
+                      (123) 456-7890 and disregard this email.
+                    </p>
+                    <table
+                      align="center"
+                      width="100%"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation"
+                      style="background-color:rgb(240,253,250);padding:24px;border-radius:12px;margin-bottom:28px;border-width:1px;border-color:rgb(15,118,110);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), 0 4px 12px rgba(15,118,110,0.08)">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <p
+                              style="font-size:18px;font-weight:500;color:rgb(30,41,59);margin-bottom:16px;text-align:center;margin:0px;line-height:24px;margin-top:16px">
+                              Your Security Verification Token
+                            </p>
+                            <p
+                              style='font-size:24px;font-weight:700;color:rgb(15,118,110);text-align:center;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;letter-spacing:2px;margin-bottom:16px;line-height:24px;margin-top:16px'>
+                              ${token}
+                            </p>
+                            <p
+                              style="font-size:14px;color:rgb(71,85,105);text-align:center;margin:0px;line-height:24px;margin-bottom:16px;margin-top:16px">
+                              This token will expire in 30 minutes for your
+                              security.
+                            </p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <table
+                      align="center"
+                      width="100%"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation"
+                      style="text-align:center;margin-bottom:28px">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <a
+                              class="hover:bg-[#115e59]"
+                              href="https://medcarehub.com/provider-portal/banking-verification"
+                              style="background-color:rgb(15,118,110);color:rgb(255,255,255);font-weight:500;padding-top:14px;padding-bottom:14px;padding-left:32px;padding-right:32px;border-radius:8px;font-size:16px;text-decoration-line:none;text-align:center;box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), 0 4px 12px rgba(15,118,110,0.25);box-sizing:border-box;line-height:100%;text-decoration:none;display:inline-block;max-width:100%;mso-padding-alt:0px;padding:14px 32px 14px 32px"
+                              target="_blank"
+                              ><span
+                                ><!--[if mso]><i style="mso-font-width:400%;mso-text-raise:21" hidden>&#8202;&#8202;&#8202;&#8202;</i><![endif]--></span
+                              ><span
+                                style="max-width:100%;display:inline-block;line-height:120%;mso-padding-alt:0px;mso-text-raise:10.5px"
+                                >Complete Bank Details Update</span
+                              ><span
+                                ><!--[if mso]><i style="mso-font-width:400%" hidden>&#8202;&#8202;&#8202;&#8202;&#8203;</i><![endif]--></span
+                              ></a
+                            >
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <table
+                      align="center"
+                      width="100%"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation"
+                      style="margin-bottom:28px">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <p
+                              style="font-size:18px;font-weight:500;color:rgb(30,41,59);margin-bottom:16px;line-height:24px;margin-top:16px">
+                              How to Complete This Process:
+                            </p>
+                            <p
+                              style="font-size:16px;color:rgb(71,85,105);margin-bottom:12px;line-height:24px;margin-top:16px">
+                              1.
+                              <span style="font-weight:500"
+                                >Click the button above</span
+                              >
+                              to access the secure verification page.
+                            </p>
+                            <p
+                              style="font-size:16px;color:rgb(71,85,105);margin-bottom:12px;line-height:24px;margin-top:16px">
+                              2.
+                              <span style="font-weight:500"
+                                >Enter the security token</span
+                              >
+                              displayed in this email when prompted.
+                            </p>
+                            <p
+                              style="font-size:16px;color:rgb(71,85,105);margin-bottom:12px;line-height:24px;margin-top:16px">
+                              3.
+                              <span style="font-weight:500"
+                                >Verify your identity</span
+                              >
+                              using your MedCare Hub credentials.
+                            </p>
+                            <p
+                              style="font-size:16px;color:rgb(71,85,105);line-height:24px;margin-bottom:16px;margin-top:16px">
+                              4.
+                              <span style="font-weight:500"
+                                >Review and confirm</span
+                              >
+                              the new bank details.
+                            </p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <table
+                      align="center"
+                      width="100%"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation"
+                      style="background-color:rgb(241,245,249);padding:24px;border-radius:12px;margin-bottom:28px">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <p
+                              style="font-size:16px;font-weight:500;color:rgb(30,41,59);margin-bottom:12px;margin:0px;line-height:24px;margin-top:16px">
+                              Important Security Information
+                            </p>
+                            <p
+                              style="font-size:15px;color:rgb(71,85,105);margin-bottom:12px;margin:0px;line-height:24px;margin-top:16px">
+                              • MedCare Hub will never ask for your full banking
+                              details or password via email.
+                            </p>
+                            <p
+                              style="font-size:15px;color:rgb(71,85,105);margin-bottom:12px;margin:0px;line-height:24px;margin-top:16px">
+                              • Always verify that you&#x27;re on our secure
+                              website (https://medcarehub.com) before entering
+                              sensitive information.
+                            </p>
+                            <p
+                              style="font-size:15px;color:rgb(71,85,105);margin:0px;line-height:24px;margin-bottom:16px;margin-top:16px">
+                              • For added security, consider using our mobile
+                              app for financial updates.
+                            </p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <p
+                      style="font-size:16px;color:rgb(71,85,105);margin-bottom:24px;line-height:24px;margin-top:16px">
+                      If you have any questions or concerns, please contact our
+                      Provider Support team at
+                      <a
+                        href="mailto:provider-support@medcarehub.com"
+                        style="color:rgb(15,118,110);text-decoration-line:none"
+                        target="_blank"
+                        >provider-support@medcarehub.com</a
+                      >
+                      or call
+                      <span style="color:rgb(30,41,59);font-weight:500"
+                        >(123) 456-7890</span
+                      >.
+                    </p>
+                    <p
+                      style="font-size:16px;color:rgb(71,85,105);margin-bottom:8px;line-height:24px;margin-top:16px">
+                      Thank you for your attention to this security matter,
+                    </p>
+                    <p
+                      style="font-size:16px;font-weight:500;color:rgb(30,41,59);margin-bottom:4px;line-height:24px;margin-top:16px">
+                      MedCare Hub Security Team
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table
+              align="center"
+              width="100%"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation"
+              style="text-align:center">
+              <tbody>
+                <tr>
+                  <td>
+                    <p
+                      style="font-size:14px;color:rgb(100,116,139);margin:0px;line-height:24px;margin-bottom:16px;margin-top:16px">
+                      ©
+                      <!-- -->2025<!-- -->
+                      MedCare Hub. All rights reserved.
+                    </p>
+                    <p
+                      style="font-size:14px;color:rgb(100,116,139);margin:0px;line-height:24px;margin-bottom:16px;margin-top:16px">
+                      123 Healthcare Avenue, Accra, Ghana
+                    </p>
+                    <p
+                      style="font-size:14px;color:rgb(100,116,139);margin-bottom:8px;margin:0px;line-height:24px;margin-top:16px">
+                      <a
+                        href="https://medcarehub.com/privacy"
+                        style="color:rgb(100,116,139);text-decoration-line:underline"
+                        target="_blank"
+                        >Privacy Policy</a
+                      >
+                      •<a
+                        href="https://medcarehub.com/terms"
+                        style="color:rgb(100,116,139);text-decoration-line:underline"
+                        target="_blank"
+                        >Terms of Service</a
+                      >
+                    </p>
+                    <p
+                      style="font-size:14px;color:rgb(100,116,139);margin:0px;line-height:24px;margin-bottom:16px;margin-top:16px">
+                      This is a security-critical message. You cannot
+                      unsubscribe from these alerts.
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
     </table>
-    <!-- End Wrapper Table -->
+    <!--7--><!--/$-->
   </body>
 </html>
 `;
