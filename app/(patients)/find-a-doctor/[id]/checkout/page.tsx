@@ -32,12 +32,13 @@ const Booking = async ({ params, searchParams }: Bookingprops) => {
   }
   if ("data" in data && "data" in appointment) {
     const { data: doctor } = data;
+    console.log(doctor);
     return (
       <main className="min-h-[calc(100dvh_-_4rem)] container max-md:mb-10">
         <div className="grid md:grid-cols-2 md:gap-10 gap-6 pt-4 md:p-6 lg:p-10">
           <div className="max-md:order-2">
             <CheckOutForm
-              rate={doctor?.doctorInfo?.rate ?? 0}
+              rate={100}
               id={appointment?.data?.id as string}
             />
           </div>
